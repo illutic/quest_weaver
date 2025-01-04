@@ -1,7 +1,13 @@
 plugins {
-    alias(libs.plugins.questweaver.android.app)
+    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.androidApplication)
+    alias(libs.plugins.questweaver.compose.multiplatform)
+    alias(libs.plugins.questweaver.app)
 }
 
-dependencies {
-
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+        }
+    }
 }

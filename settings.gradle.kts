@@ -17,9 +17,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "QuestWeaver"
 include(":androidApp")
-include(":core:common")
-include(":core:data")
-include(":core:designsystem")
-include(":core:domain")
-include(":core:model")
-include(":core:network")

@@ -13,9 +13,10 @@ dependencies {
     compileOnly(libs.plugins.composeCompiler.toDep())
 }
 
-fun Provider<PluginDependency>.toDep() = map {
-    "${it.pluginId}:${it.pluginId}.gradle.plugin:${it.version}"
-}
+fun Provider<PluginDependency>.toDep() =
+    map {
+        "${it.pluginId}:${it.pluginId}.gradle.plugin:${it.version}"
+    }
 
 tasks {
     validatePlugins {
@@ -27,24 +28,25 @@ tasks {
 gradlePlugin {
     plugins {
         register("kotlinMultiplatform") {
-            id = libs.plugins.questweaver.kotlin.multiplatform.get().pluginId
-            implementationClass = "KMPConventionPlugin"
+            id =
+                libs.plugins.questweaver.kotlin.multiplatform
+                    .get()
+                    .pluginId
+            implementationClass = "KotlinMultiplatformConventionPlugin"
         }
-        register("androidApp") {
-            id = libs.plugins.questweaver.android.app.get().pluginId
-            implementationClass = "AndroidAppConventionPlugin"
+        register("app") {
+            id =
+                libs.plugins.questweaver.app
+                    .get()
+                    .pluginId
+            implementationClass = "AppConventionPlugin"
         }
-        register("androidLibrary") {
-            id = libs.plugins.questweaver.android.library.get().pluginId
-            implementationClass = "AndroidLibraryConventionPlugin"
-        }
-        register("androidFeature") {
-            id = libs.plugins.questweaver.android.feature.get().pluginId
-            implementationClass = "AndroidFeatureConventionPlugin"
-        }
-        register("androidCompose") {
-            id = libs.plugins.questweaver.android.compose.get().pluginId
-            implementationClass = "AndroidComposeConventionPlugin"
+        register("composeMultiplatform") {
+            id =
+                libs.plugins.questweaver.compose.multiplatform
+                    .get()
+                    .pluginId
+            implementationClass = "ComposeMultiplatformConventionPlugin"
         }
     }
 }
