@@ -1,0 +1,100 @@
+[versions]
+android-compileSdk = "35"
+android-minSdk = "24"
+android-targetSdk = "35"
+compose-multiplatform = "1.7.1"
+
+# Google
+android-accompanistPermissions = "0.34.0"
+android-firebaseBom = "33.7.0"
+android-firebaseCrashlytics = "3.0.2"
+
+# Android
+android-agp = "8.7.3"
+android-coreKtx = "1.15.0"
+android-activityCompose = "1.9.3"
+android-composeBom = "2024.12.01"
+android-appcompat = "1.7.0"
+android-composeAnimation = "1.7.6"
+android-hilt = "2.51.1"
+android-hiltNavigation = "1.2.0"
+android-navigation = "2.8.5"
+android-splashScreen = "1.0.1"
+android-coil = "2.6.0"
+android-junit4 = "4.13.2"
+android-material3 = "1.3.1"
+android-adaptive = "1.0.0"
+
+# Kotlin
+kotlin = "2.1.0"
+kotlinxCoroutines = "1.9.0"
+kotlinxSerialization = "1.7.3"
+koin = "4.0.0"
+ktor = "3.0.2"
+
+# Logging
+slf4j = "1.7.36"
+
+[libraries]
+coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "android-coil" }
+coil = { group = "io.coil-kt", name = "coil", version.ref = "android-coil" }
+
+# Google
+accompanistPermissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "android-accompanistPermissions" }
+firebaseBom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "android-firebaseBom" }
+firebase-config = { group = "com.google.firebase", name = "firebase-config" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
+firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
+
+# AndroidX
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "android-coreKtx" }
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "android-activityCompose" }
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "android-composeBom" }
+androidx-compose-animation = { group = "androidx.compose.animation", name = "animation", version.ref = "android-composeAnimation" }
+androidx-ui = { group = "androidx.compose.ui", name = "ui" }
+androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3-android", version.ref = "android-material3" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "android-appcompat" }
+androidx-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "android-navigation" }
+androidx-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "android-splashScreen" }
+androidx-material3-adaptive-navigation-suite-android = { group = "androidx.compose.material3", name = "android-material3-adaptive-navigation-suite-android", version.ref = "android-material3" }
+androidx-adaptive-android = { group = "androidx.compose.material3.adaptive", name = "adaptive-android", version.ref = "android-adaptive" }
+
+# Kotlin
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-contentNegotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
+
+# Dependency Injection
+koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
+koin-core = { module = "io.insert-koin:koin-core" }
+koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose" }
+
+# Logging
+slf4j = { module = "org.slf4j:slf4j-android", version.ref = "slf4j" }
+
+[plugins]
+androidApplication = { id = "com.android.application", version.ref = "android-agp" }
+androidLibrary = { id = "com.android.library", version.ref = "android-agp" }
+composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
+composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+
+# Plugins defined in project
+questweaver-android-app = { id = "questweaver.android.app" }
+questweaver-android-library = { id = "questweaver.android.library" }
+questweaver-android-compose = { id = "questweaver.android.compose" }
+questweaver-android-feature = { id = "questweaver.android.feature" }
+questweaver-kotlin-multiplatform = { id = "questweaver.kotlin.multiplatform" }
