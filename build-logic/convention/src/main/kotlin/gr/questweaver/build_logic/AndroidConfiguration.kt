@@ -27,8 +27,8 @@ internal fun Project.configureAndroidApp(
         defaultConfig {
             applicationId = "gr.questweaver.android"
             targetSdk = TARGET_SDK
-            versionCode = 1
-            versionName = "1.0"
+            versionCode = property("gr.questweaver.version.code").toString().toInt()
+            versionName = property("gr.questweaver.version.name").toString()
         }
 
         dependencies {
@@ -39,7 +39,7 @@ internal fun Project.configureAndroidApp(
 
 internal fun configureAndroidLibrary(
     commonExtension: CommonExtension<*, *, *, *, *, *>
-) = with (commonExtension) {
+) = with(commonExtension) {
     namespace = "gr.questweaver"
     compileSdk = COMPILE_SDK
 
@@ -68,6 +68,7 @@ internal fun configureAndroidLibrary(
     }
 }
 
+@Suppress("UnstableApiUsage")
 internal fun Project.configureAndroidCompose(
     commonExtension: CommonExtension<*, *, *, *, *, *>,
 ) {
