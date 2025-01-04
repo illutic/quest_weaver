@@ -7,19 +7,15 @@ plugins {
 kotlin {
     sourceSets {
         androidMain.dependencies {
-            implementation(libs.ktor.client.okhttp)
             implementation(libs.kotlinx.coroutines.android)
+            implementation(libs.google.playServicesNearby)
         }
         commonMain.dependencies {
             implementation(projects.core.model)
             implementation(projects.core.common)
             implementation(libs.kotlinx.serialization.json)
-            implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.logging)
-            implementation(libs.ktor.client.contentNegotiation)
         }
         iosMain.dependencies {
-            implementation(libs.ktor.client.darwin)
         }
     }
 }

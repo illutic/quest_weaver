@@ -7,12 +7,13 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.getByType
 
 class AndroidComposeConventionPlugin : Plugin<Project> {
-    override fun apply(target: Project) = with(target) {
-        with(pluginManager) {
-            apply("questweaver.android.library")
-            apply(libs.getPlugin("composeCompiler"))
-        }
+    override fun apply(target: Project) =
+        with(target) {
+            with(pluginManager) {
+                apply("questweaver.android.library")
+                apply(libs.getPlugin("composeCompiler"))
+            }
 
-        configureAndroidCompose(extensions.getByType<LibraryExtension>())
-    }
+            configureAndroidCompose(extensions.getByType<LibraryExtension>())
+        }
 }

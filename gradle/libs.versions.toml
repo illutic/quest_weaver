@@ -8,6 +8,7 @@ compose-multiplatform = "1.7.1"
 android-accompanistPermissions = "0.34.0"
 android-firebaseBom = "33.7.0"
 android-firebaseCrashlytics = "3.0.2"
+playServicesNearby = "19.3.0"
 
 # Android
 android-agp = "8.7.3"
@@ -45,6 +46,7 @@ firebaseBom = { group = "com.google.firebase", name = "firebase-bom", version.re
 firebase-config = { group = "com.google.firebase", name = "firebase-config" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
+google-playServicesNearby = { group = "com.google.android.gms", name = "play-services-nearby", version.ref = "playServicesNearby" }
 
 # AndroidX
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "android-coreKtx" }
@@ -77,6 +79,7 @@ ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "kto
 # Dependency Injection
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
 koin-core = { module = "io.insert-koin:koin-core" }
+koin-android = { module = "io.insert-koin:koin-android" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose" }
 
 # Logging
