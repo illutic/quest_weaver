@@ -13,13 +13,11 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.core.model)
             implementation(projects.core.common)
-            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.kotlinx.serialization.protobuf)
         }
         iosMain.dependencies {
         }
     }
 }
 
-
 android.namespace += ".core.network"
-
