@@ -1,4 +1,4 @@
-package gr.questweaver.build_logic
+package gr.questweaver.buildlogic
 
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalog

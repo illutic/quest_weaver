@@ -62,7 +62,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3-a
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "android-appcompat" }
 androidx-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "android-navigation" }
 androidx-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "android-splashScreen" }
-androidx-material3-adaptive-navigation-suite-android = { group = "androidx.compose.material3", name = "android-material3-adaptive-navigation-suite-android", version.ref = "android-material3" }
+androidx-material3-adaptive-navigation-suite-android = { group = "androidx.compose.material3", name = "material3-adaptive-navigation-suite", version.ref = "android-material3" }
 androidx-adaptive-android = { group = "androidx.compose.material3.adaptive", name = "adaptive-android", version.ref = "android-adaptive" }
 
 # Kotlin

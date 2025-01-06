@@ -1,7 +1,7 @@
-import gr.questweaver.build_logic.configureKotlinMultiplatform
-import gr.questweaver.build_logic.getLibrary
-import gr.questweaver.build_logic.getPlugin
-import gr.questweaver.build_logic.libs
+import gr.questweaver.buildlogic.configureKotlinMultiplatform
+import gr.questweaver.buildlogic.getLibrary
+import gr.questweaver.buildlogic.getPlugin
+import gr.questweaver.buildlogic.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
