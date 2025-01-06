@@ -4,6 +4,6 @@ import gr.questweaver.network.model.Stream
 import java.io.InputStream
 
 @JvmInline
-value class StreamAndroidImpl(
+internal value class StreamAndroidImpl(
     val value: InputStream,
 ) : Stream

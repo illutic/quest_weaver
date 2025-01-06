@@ -5,12 +5,12 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromByteArray
 
 @Serializable
-data class FileMetadata(
+internal data class FileMetadata(
     val name: String?,
     val mimeType: String?,
 )
 
-fun ByteArray.metadataOrNull() =
+internal fun ByteArray.metadataOrNull() =
     try {
         ProtobufSerializer.decodeFromByteArray<FileMetadata>(this)
     } catch (e: Exception) {

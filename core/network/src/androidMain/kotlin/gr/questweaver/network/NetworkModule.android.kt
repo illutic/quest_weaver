@@ -6,7 +6,7 @@ import org.koin.android.ext.koin.androidApplication
 import org.koin.core.definition.KoinDefinition
 import org.koin.core.module.Module
 
-actual fun Module.provideNearbyConnectionsClient(): KoinDefinition<NearbyConnectionsClient> =
+internal actual fun Module.provideNearbyConnectionsClient(): KoinDefinition<NearbyConnectionsClient> =
     single<NearbyConnectionsClient> {
         NearbyConnectionsClientAndroidImpl(
             serviceId = SERVICE_ID,

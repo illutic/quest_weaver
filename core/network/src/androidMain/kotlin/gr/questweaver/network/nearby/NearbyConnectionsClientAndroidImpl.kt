@@ -19,11 +19,12 @@ import com.google.android.gms.nearby.connection.Strategy
 import gr.questweaver.model.Device
 import gr.questweaver.model.DeviceState
 import gr.questweaver.network.NearbyConnectionsClient
-import gr.questweaver.network.StreamAndroidImpl
-import gr.questweaver.network.model.File
 import gr.questweaver.network.model.Message
 import gr.questweaver.network.model.Payload
 import gr.questweaver.network.model.metadataOrNull
+import gr.questweaver.network.model.toDomain
+import gr.questweaver.network.model.toNetworkDto
+import gr.questweaver.network.serializer.toByteArray
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
@@ -33,8 +34,13 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ProducerScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
@@ -42,19 +48,26 @@ import kotlin.coroutines.resume
 private typealias NearbyApiPayload = com.google.android.gms.nearby.connection.Payload
 private typealias NearbyApiPayloadType = com.google.android.gms.nearby.connection.Payload.Type
 
-class NearbyConnectionsClientAndroidImpl(
+internal class NearbyConnectionsClientAndroidImpl(
     ioDispatcher: CoroutineDispatcher,
     private val context: Context,
     private val serviceId: String,
-) : NearbyConnectionsClient {
-    override val outgoingPayloads = mutableSetOf<Long>()
+) : NearbyConnectionsClient,
+    CoroutineScope by CoroutineScope(SupervisorJob() + ioDispatcher) {
     private val incomingPayloadsChannel = Channel<Payload>()
     private val client: ConnectionsClient = Nearby.getConnectionsClient(context)
-    private val discoveryJob = SupervisorJob() + ioDispatcher + CoroutineName("Discovery")
-    private val advertisingJob = SupervisorJob() + ioDispatcher + CoroutineName("Advertising")
-    private val callbackJob = SupervisorJob() + ioDispatcher + CoroutineName("Callback")
+    private val discoveryJob = CoroutineName("Discovery") + coroutineContext
+    private val advertisingJob = CoroutineName("Advertising") + coroutineContext
+    private val callbackJob = CoroutineName("Callback") + coroutineContext
 
-    override val incomingPayloads: Flow<Payload> = incomingPayloadsChannel.receiveAsFlow()
+    private val outgoingPayloads = mutableSetOf<Long>()
+    override val incomingPayloads: Flow<Any> =
+        incomingPayloadsChannel
+            .receiveAsFlow()
+            .filterIsInstance<Message>()
+            .mapNotNull { it.dto.toDomain() }
+            .stateIn(scope = this, started = SharingStarted.Companion.Eagerly, initialValue = null)
+            .filterNotNull()
 
     override fun startDiscovery(): Flow<Set<Device>> =
         callbackFlow {
@@ -264,7 +277,7 @@ class NearbyConnectionsClientAndroidImpl(
 
     override suspend fun sendPayload(
         ids: List<String>,
-        payload: Payload,
+        payload: Any,
     ): Result<Unit> =
         suspendCancellableCoroutine { continuation ->
             client
@@ -273,19 +286,17 @@ class NearbyConnectionsClientAndroidImpl(
                 .addOnFailureListener { continuation.resume(Result.failure(it)) }
         }
 
-    private fun Payload.toNearbyPayload() =
-        when (this) {
-            is Message -> NearbyApiPayload.fromBytes(value)
-            is File ->
-                uri
-                    .toUri()
-                    .openFileDescriptor(context)
-                    ?.let { pfd -> NearbyApiPayload.fromFile(pfd) }
-                    ?: error("Error opening file uri $uri")
-
-            is StreamAndroidImpl -> NearbyApiPayload.fromStream(value)
-            else -> error("Unsupported payload type $this")
+    private fun Any.toNearbyPayload(): NearbyApiPayload {
+        if (this is gr.questweaver.model.File) {
+            return uri
+                .toUri()
+                .openFileDescriptor(context)
+                ?.let { pfd -> NearbyApiPayload.fromFile(pfd) }
+                ?: error("Error opening file uri $uri")
         }
+
+        return NearbyApiPayload.fromBytes(toNetworkDto().toByteArray())
+    }
 
     private fun <T> ProducerScope<T>.emit(data: T) {
         launch(discoveryJob) { send(data) }

@@ -6,7 +6,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 
-class StreamPayloadCallbackDelegate(
+internal class StreamPayloadCallbackDelegate(
     coroutineScope: CoroutineScope,
     private val incomingPayloadsChannel: Channel<gr.questweaver.network.model.Payload>,
 ) : CoroutineScope by coroutineScope {

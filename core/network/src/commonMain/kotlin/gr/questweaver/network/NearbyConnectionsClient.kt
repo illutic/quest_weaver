@@ -2,12 +2,10 @@ package gr.questweaver.network
 
 import gr.questweaver.model.Device
 import gr.questweaver.model.DeviceState
-import gr.questweaver.network.model.Payload
 import kotlinx.coroutines.flow.Flow
 
 interface NearbyConnectionsClient {
-    val incomingPayloads: Flow<Payload>
-    val outgoingPayloads: Set<Long>
+    val incomingPayloads: Flow<Any>
 
     fun startDiscovery(): Flow<Set<Device>>
 
@@ -32,6 +30,6 @@ interface NearbyConnectionsClient {
 
     suspend fun sendPayload(
         ids: List<String>,
-        payload: Payload,
+        payload: Any,
     ): Result<Unit>
 }

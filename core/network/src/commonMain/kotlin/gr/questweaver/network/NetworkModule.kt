@@ -9,6 +9,6 @@ val networkModule: Module =
         provideNearbyConnectionsClient()
     }
 
-expect fun Module.provideNearbyConnectionsClient(): KoinDefinition<NearbyConnectionsClient>
+internal expect fun Module.provideNearbyConnectionsClient(): KoinDefinition<NearbyConnectionsClient>
 
 internal const val SERVICE_ID = "gr.questweaver"

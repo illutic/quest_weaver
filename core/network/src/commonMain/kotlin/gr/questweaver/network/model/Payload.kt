@@ -1,17 +1,19 @@
 package gr.questweaver.network.model
 
+import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 
-interface Payload
+internal interface Payload
 
-interface Stream : Payload
+internal interface Stream : Payload
 
+@Serializable
 @JvmInline
-value class Message(
-    val value: ByteArray,
+internal value class Message(
+    val dto: NetworkDto,
 ) : Payload
 
-class File(
+internal class File(
     val meta: FileMetadata,
     val uri: String,
 ) : Payload

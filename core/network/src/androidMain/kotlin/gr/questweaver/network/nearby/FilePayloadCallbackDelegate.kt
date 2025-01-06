@@ -11,7 +11,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 
-class FilePayloadCallbackDelegate(
+internal class FilePayloadCallbackDelegate(
     coroutineScope: CoroutineScope,
     private val context: Context,
     private val incomingPayloadsChannel: Channel<gr.questweaver.network.model.Payload>,
