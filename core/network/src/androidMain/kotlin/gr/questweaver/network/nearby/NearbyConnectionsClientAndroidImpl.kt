@@ -3,6 +3,7 @@ package gr.questweaver.network.nearby
 import android.content.Context
 import androidx.core.net.toUri
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.Status
 import com.google.android.gms.nearby.Nearby
 import com.google.android.gms.nearby.connection.AdvertisingOptions
 import com.google.android.gms.nearby.connection.ConnectionInfo
@@ -25,13 +26,12 @@ import gr.questweaver.network.model.metadataOrNull
 import gr.questweaver.network.model.toDomain
 import gr.questweaver.network.model.toNetworkDto
 import gr.questweaver.network.serializer.toByteArray
+import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.ProducerScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -41,7 +41,6 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
@@ -56,8 +55,6 @@ internal class NearbyConnectionsClientAndroidImpl(
     CoroutineScope by CoroutineScope(SupervisorJob() + ioDispatcher) {
     private val incomingPayloadsChannel = Channel<Payload>()
     private val client: ConnectionsClient = Nearby.getConnectionsClient(context)
-    private val discoveryJob = CoroutineName("Discovery") + coroutineContext
-    private val advertisingJob = CoroutineName("Advertising") + coroutineContext
     private val callbackJob = CoroutineName("Callback") + coroutineContext
 
     private val outgoingPayloads = mutableSetOf<Long>()
@@ -75,7 +72,7 @@ internal class NearbyConnectionsClientAndroidImpl(
             val discoveryOptions =
                 DiscoveryOptions
                     .Builder()
-                    .setStrategy(Strategy.P2P_POINT_TO_POINT)
+                    .setStrategy(Strategy.P2P_STAR)
                     .build()
 
             val callback =
@@ -92,12 +89,12 @@ internal class NearbyConnectionsClientAndroidImpl(
                             )
                         devicesFound.add(device)
 
-                        emit(devicesFound)
+                        trySend(devicesFound)
                     }
 
                     override fun onEndpointLost(endpointId: String) {
                         devicesFound.removeIf { it.id == endpointId }
-                        emit(devicesFound)
+                        trySend(devicesFound)
                     }
                 }
 
@@ -112,7 +109,6 @@ internal class NearbyConnectionsClientAndroidImpl(
 
     override fun stopDiscovery() {
         client.stopDiscovery()
-        discoveryJob.cancelChildren()
     }
 
     override fun startAdvertising(name: String): Flow<Set<Device>> =
@@ -127,16 +123,22 @@ internal class NearbyConnectionsClientAndroidImpl(
 
             val connectionLifecycleCallback =
                 createConnectionCallback(
-                    coroutineScope = CoroutineScope(advertisingJob),
                     onConnectionInitiated = { endpointId, connectionInfo ->
-                        devicesToConnect
-                            .find { it.id == endpointId }
-                            ?.copy(
-                                name = connectionInfo.endpointName,
-                                state = DeviceState.Connecting,
-                            )?.let { devicesToConnect.add(it) }
+                        val device =
+                            if (connectionInfo.isIncomingConnection) {
+                                Device(
+                                    id = endpointId,
+                                    name = connectionInfo.endpointName,
+                                    state = DeviceState.Connecting,
+                                )
+                            } else {
+                                devicesToConnect.find { it.id == endpointId }!!
+                            }
 
-                        emit(devicesToConnect)
+                        devicesToConnect.remove(device)
+                        devicesToConnect.add(device.copy(state = DeviceState.Connecting))
+
+                        trySend(devicesToConnect)
                     },
                     onConnectionResult = { endpointId, connectionResolution ->
                         when (connectionResolution.status.statusCode) {
@@ -146,7 +148,7 @@ internal class NearbyConnectionsClientAndroidImpl(
                                     ?.copy(state = DeviceState.Connected)
                                     ?.let { devicesToConnect.add(it) }
 
-                                emit(devicesToConnect)
+                                trySend(devicesToConnect)
                             }
 
                             else -> {
@@ -155,7 +157,7 @@ internal class NearbyConnectionsClientAndroidImpl(
                                     ?.copy(state = DeviceState.Error)
                                     ?.let { devicesToConnect.add(it) }
 
-                                emit(devicesToConnect)
+                                trySend(devicesToConnect)
                             }
                         }
                     },
@@ -165,7 +167,7 @@ internal class NearbyConnectionsClientAndroidImpl(
                             ?.copy(state = DeviceState.Error)
                             ?.let { devicesToConnect.add(it) }
 
-                        emit(devicesToConnect)
+                        trySend(devicesToConnect)
                     },
                 )
 
@@ -181,43 +183,45 @@ internal class NearbyConnectionsClientAndroidImpl(
 
     override fun stopAdvertising() {
         client.stopAdvertising()
-        advertisingJob.cancelChildren()
     }
 
     override suspend fun requestConnection(
-        from: Device,
+        from: String,
         to: Device,
-    ): Result<DeviceState> =
-        suspendCancellableCoroutine {
+    ): Flow<Result<DeviceState>> =
+        callbackFlow {
             val callback =
                 createConnectionCallback(
-                    coroutineScope = CoroutineScope(discoveryJob),
                     onConnectionInitiated = { endpointId, _ ->
                         client.acceptConnection(
                             endpointId,
                             Callback(),
                         )
-                        it.resume(Result.success(DeviceState.Connecting))
+                        trySend(Result.success(DeviceState.Connecting))
                     },
                     onConnectionResult = { _, connectionResolution ->
                         when (connectionResolution.status.statusCode) {
                             ConnectionsStatusCodes.STATUS_OK -> {
-                                it.resume(Result.success(DeviceState.Connected))
+                                trySend(Result.success(DeviceState.Connected))
+                            }
+
+                            ConnectionsStatusCodes.STATUS_CONNECTION_REJECTED -> {
+                                trySend(Result.success(DeviceState.Error))
                             }
 
                             else -> {
-                                it.resume(Result.failure(Throwable(connectionResolution.status.statusMessage)))
+                                trySend(Result.failure(Throwable(connectionResolution.status.statusMessage)))
                             }
                         }
                     },
                     onDisconnected = { _ ->
-                        it.resume(Result.success(DeviceState.Error))
+                        trySend(Result.success(DeviceState.Error))
                     },
                 )
 
             val result =
                 client.requestConnection(
-                    from.name,
+                    from,
                     to.id,
                     callback,
                 )
@@ -225,18 +229,16 @@ internal class NearbyConnectionsClientAndroidImpl(
             result.addOnFailureListener { exception ->
                 when {
                     exception is ApiException && exception.statusCode == ConnectionsStatusCodes.STATUS_ALREADY_CONNECTED_TO_ENDPOINT -> {
-                        it.resume(Result.success(DeviceState.Connected))
+                        trySend(Result.success(DeviceState.Connected))
                     }
 
                     else -> {
-                        it.resume(Result.failure(exception))
+                        trySend(Result.failure(exception))
                     }
                 }
             }
 
-            it.invokeOnCancellation {
-                stopDiscovery()
-            }
+            awaitClose { stopDiscovery() }
         }
 
     override suspend fun acceptConnection(device: Device): Result<DeviceState> =
@@ -244,11 +246,15 @@ internal class NearbyConnectionsClientAndroidImpl(
             val result = client.acceptConnection(device.id, Callback())
 
             result.addOnSuccessListener { _ ->
-                it.resume(Result.success(DeviceState.Connected))
+                if (it.isActive) {
+                    it.resumeIfActive(Result.success(DeviceState.Connected))
+                }
             }
 
             result.addOnFailureListener { exception ->
-                it.resume(Result.failure(exception))
+                if (it.isActive) {
+                    it.resumeIfActive(Result.failure(exception))
+                }
             }
         }
 
@@ -257,11 +263,15 @@ internal class NearbyConnectionsClientAndroidImpl(
             val result = client.rejectConnection(id)
 
             result.addOnSuccessListener { _ ->
-                it.resume(Result.success(DeviceState.Error))
+                if (it.isActive) {
+                    it.resumeIfActive(Result.success(DeviceState.Error))
+                }
             }
 
             result.addOnFailureListener { exception ->
-                it.resume(Result.failure(exception))
+                if (it.isActive) {
+                    it.resumeIfActive(Result.failure(exception))
+                }
             }
         }
 
@@ -271,8 +281,8 @@ internal class NearbyConnectionsClientAndroidImpl(
         suspendCancellableCoroutine { continuation ->
             client
                 .cancelPayload(id)
-                .addOnSuccessListener { continuation.resume(Result.success(Unit)) }
-                .addOnFailureListener { continuation.resume(Result.failure(it)) }
+                .addOnSuccessListener { continuation.resumeIfActive(Result.success(Unit)) }
+                .addOnFailureListener { continuation.resumeIfActive(Result.failure(it)) }
         }
 
     override suspend fun sendPayload(
@@ -282,8 +292,8 @@ internal class NearbyConnectionsClientAndroidImpl(
         suspendCancellableCoroutine { continuation ->
             client
                 .sendPayload(ids, payload.toNearbyPayload())
-                .addOnSuccessListener { continuation.resume(Result.success(Unit)) }
-                .addOnFailureListener { continuation.resume(Result.failure(it)) }
+                .addOnSuccessListener { continuation.resumeIfActive(Result.success(Unit)) }
+                .addOnFailureListener { continuation.resumeIfActive(Result.failure(it)) }
         }
 
     private fun Any.toNearbyPayload(): NearbyApiPayload {
@@ -298,32 +308,33 @@ internal class NearbyConnectionsClientAndroidImpl(
         return NearbyApiPayload.fromBytes(toNetworkDto().toByteArray())
     }
 
-    private fun <T> ProducerScope<T>.emit(data: T) {
-        launch(discoveryJob) { send(data) }
-    }
-
     private inline fun createConnectionCallback(
-        coroutineScope: CoroutineScope,
-        crossinline onConnectionInitiated: suspend (endpointId: String, connectionInfo: ConnectionInfo) -> Unit,
-        crossinline onConnectionResult: suspend (endpointId: String, connectionResolution: ConnectionResolution) -> Unit,
-        crossinline onDisconnected: suspend (endpointId: String) -> Unit,
+        crossinline onConnectionInitiated: (endpointId: String, connectionInfo: ConnectionInfo) -> Unit,
+        crossinline onConnectionResult: (endpointId: String, connectionResolution: ConnectionResolution) -> Unit,
+        crossinline onDisconnected: (endpointId: String) -> Unit,
     ) = object : ConnectionLifecycleCallback() {
         override fun onConnectionInitiated(
             endpointId: String,
             connectionInfo: ConnectionInfo,
         ) {
-            coroutineScope.launch { onConnectionInitiated(endpointId, connectionInfo) }
+            onConnectionInitiated(endpointId, connectionInfo)
         }
 
         override fun onConnectionResult(
             endpointId: String,
             connectionResolution: ConnectionResolution,
         ) {
-            coroutineScope.launch { onConnectionResult(endpointId, connectionResolution) }
+            onConnectionResult(endpointId, connectionResolution)
         }
 
         override fun onDisconnected(endpointId: String) {
-            coroutineScope.launch { onDisconnected(endpointId) }
+            onDisconnected(endpointId)
+        }
+    }
+
+    private fun <T> CancellableContinuation<T>.resumeIfActive(value: T) {
+        if (isActive) {
+            resume(value)
         }
     }
 

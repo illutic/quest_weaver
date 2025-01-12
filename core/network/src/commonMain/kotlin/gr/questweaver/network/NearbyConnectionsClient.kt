@@ -18,9 +18,9 @@ interface NearbyConnectionsClient {
     fun disconnect(id: String)
 
     suspend fun requestConnection(
-        from: Device,
+        from: String,
         to: Device,
-    ): Result<DeviceState>
+    ): Flow<Result<DeviceState>>
 
     suspend fun acceptConnection(device: Device): Result<DeviceState>
 
