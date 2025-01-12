@@ -10,11 +10,11 @@ import org.gradle.kotlin.dsl.dependencies
 import org.jetbrains.kotlin.compose.compiler.gradle.ComposeCompilerGradlePluginExtension
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
-internal val JAVA_VERSION = JavaVersion.VERSION_17
-internal val JVM_TARGET = JvmTarget.JVM_17
+internal val JAVA_VERSION = JavaVersion.VERSION_21
+internal val JVM_TARGET = JvmTarget.JVM_21
 internal const val COMPILE_SDK = 35
 internal const val MIN_SDK = 24
-internal const val TARGET_SDK = 24
+internal const val TARGET_SDK = 35
 
 internal fun Project.configureAndroidApp(applicationExtension: ApplicationExtension) {
     applicationExtension.apply {
