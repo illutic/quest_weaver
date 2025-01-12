@@ -9,12 +9,14 @@ import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 import org.jetbrains.kotlin.compose.compiler.gradle.ComposeCompilerGradlePluginExtension
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.utils.property
 
 internal val JAVA_VERSION = JavaVersion.VERSION_21
 internal val JVM_TARGET = JvmTarget.JVM_21
 internal const val COMPILE_SDK = 35
 internal const val MIN_SDK = 24
 internal const val TARGET_SDK = 35
+internal const val APP_NAME_PLACEHOLDER = "appName"
 
 internal fun Project.configureAndroidApp(applicationExtension: ApplicationExtension) {
     applicationExtension.apply {
@@ -27,6 +29,13 @@ internal fun Project.configureAndroidApp(applicationExtension: ApplicationExtens
             targetSdk = TARGET_SDK
             versionCode = property("gr.questweaver.version.code").toString().toInt()
             versionName = property("gr.questweaver.version.name").toString()
+            manifestPlaceholders[APP_NAME_PLACEHOLDER] = property("gr.questweaver.app.name").toString()
+        }
+
+        buildTypes {
+            debug {
+                manifestPlaceholders[APP_NAME_PLACEHOLDER] = property("gr.questweaver.app.name").toString() + " Debug"
+            }
         }
 
         dependencies {

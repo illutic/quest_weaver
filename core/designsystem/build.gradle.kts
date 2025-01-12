@@ -9,9 +9,14 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(projects.core.common)
+            api(compose.components.resources)
         }
     }
 }
 
+compose.resources {
+    publicResClass = true
+    generateResClass = auto
+}
 
 android.namespace += ".core.designsystem"

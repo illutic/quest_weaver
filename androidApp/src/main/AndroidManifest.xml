@@ -38,6 +38,7 @@
         android:minSdkVersion="33" />
 
     <application
+        android:label="${appName}"
         android:name=".MainApp"
         android:allowBackup="false"
         android:supportsRtl="true"
