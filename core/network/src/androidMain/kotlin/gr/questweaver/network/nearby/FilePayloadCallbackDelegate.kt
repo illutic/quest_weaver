@@ -6,7 +6,6 @@ import androidx.core.net.toUri
 import com.google.android.gms.nearby.connection.Payload
 import com.google.android.gms.nearby.connection.PayloadTransferUpdate
 import gr.questweaver.network.model.File
-import gr.questweaver.network.model.FileMetadata
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
@@ -16,47 +15,28 @@ internal class FilePayloadCallbackDelegate(
     private val context: Context,
     private val incomingPayloadsChannel: Channel<gr.questweaver.network.model.Payload>,
 ) : CoroutineScope by coroutineScope {
-    private val pending = hashMapOf<Long, TransferData>()
+    private val pending = hashMapOf<Long, Payload>()
 
     fun contains(id: Long) = pending.contains(id)
 
-    fun updateMetadata(
-        id: Long,
-        fileMetadata: FileMetadata,
-    ) {
-        val transferData = pending[id] ?: return
-        pending[id] = transferData.copy(fileMetadata = fileMetadata)
-    }
-
     fun onPayloadReceived(data: Payload) {
-        pending[data.id] =
-            TransferData(
-                payload = data,
-                fileMetadata = FileMetadata(name = null, mimeType = null),
-            )
+        pending[data.id] = data
     }
 
     fun onPayloadTransferUpdate(data: PayloadTransferUpdate) {
         when (data.status) {
             PayloadTransferUpdate.Status.SUCCESS -> {
-                val transferData = pending.remove(data.payloadId) ?: return
-                checkNotNull(transferData.fileMetadata.name) {
-                    "We should have a name for a file payload by the time it's finished"
-                }
+                val uri = pending.remove(data.payloadId)?.asUri() ?: return
+                val fileName = uri.lastPathSegment ?: return
 
-                transferData.payload.asUri()?.let {
-                    it.copyToCache(transferData.fileMetadata.name)
-                    it.delete()
-                }
+                uri.copyToCache(fileName)
+                uri.delete()
 
-                val cacheUri = getFile(transferData.fileMetadata.name).toUri().toString()
+                val cacheUri = getFile(fileName).toUri().toString()
 
                 launch {
                     incomingPayloadsChannel.send(
-                        File(
-                            uri = cacheUri,
-                            meta = transferData.fileMetadata,
-                        ),
+                        File(uri = cacheUri, name = fileName),
                     )
                 }
             }
@@ -64,7 +44,6 @@ internal class FilePayloadCallbackDelegate(
             PayloadTransferUpdate.Status.FAILURE -> {
                 pending
                     .remove(data.payloadId)
-                    ?.payload
                     ?.asUri()
                     ?.delete()
             }
@@ -86,11 +65,4 @@ internal class FilePayloadCallbackDelegate(
             .resolve(fileName)
 
     private fun Payload.asUri() = asFile()?.asUri()
-
-    private data class TransferData(
-        val payload: Payload,
-        val fileMetadata: FileMetadata,
-    )
 }
-
-internal fun Uri.openFileDescriptor(context: Context) = context.contentResolver.openFileDescriptor(this, "r")

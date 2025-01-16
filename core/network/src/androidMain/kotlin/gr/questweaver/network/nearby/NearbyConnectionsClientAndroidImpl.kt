@@ -1,9 +1,7 @@
 package gr.questweaver.network.nearby
 
 import android.content.Context
-import androidx.core.net.toUri
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.common.api.Status
 import com.google.android.gms.nearby.Nearby
 import com.google.android.gms.nearby.connection.AdvertisingOptions
 import com.google.android.gms.nearby.connection.ConnectionInfo
@@ -20,10 +18,12 @@ import com.google.android.gms.nearby.connection.Strategy
 import gr.questweaver.model.Device
 import gr.questweaver.model.DeviceState
 import gr.questweaver.network.NearbyConnectionsClient
+import gr.questweaver.network.model.File
 import gr.questweaver.network.model.Message
 import gr.questweaver.network.model.Payload
-import gr.questweaver.network.model.metadataOrNull
 import gr.questweaver.network.model.toDomain
+import gr.questweaver.network.model.toDto
+import gr.questweaver.network.model.toFilePayload
 import gr.questweaver.network.model.toNetworkDto
 import gr.questweaver.network.serializer.toByteArray
 import kotlinx.coroutines.CancellableContinuation
@@ -33,10 +33,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -61,9 +61,13 @@ internal class NearbyConnectionsClientAndroidImpl(
     override val incomingPayloads: Flow<Any> =
         incomingPayloadsChannel
             .receiveAsFlow()
-            .filterIsInstance<Message>()
-            .mapNotNull { it.dto.toDomain() }
-            .stateIn(scope = this, started = SharingStarted.Companion.Eagerly, initialValue = null)
+            .mapNotNull {
+                when (it) {
+                    is Message -> it.dto.toDomain()
+                    is File -> it.toDto().toDomain()
+                    else -> null
+                }
+            }.stateIn(scope = this, started = SharingStarted.Companion.Eagerly, initialValue = null)
             .filterNotNull()
 
     override fun startDiscovery(): Flow<Set<Device>> =
@@ -289,24 +293,20 @@ internal class NearbyConnectionsClientAndroidImpl(
         ids: List<String>,
         payload: Any,
     ): Result<Unit> =
-        suspendCancellableCoroutine { continuation ->
-            client
-                .sendPayload(ids, payload.toNearbyPayload())
-                .addOnSuccessListener { continuation.resumeIfActive(Result.success(Unit)) }
-                .addOnFailureListener { continuation.resumeIfActive(Result.failure(it)) }
-        }
+        coroutineScope {
+            when (payload) {
+                is gr.questweaver.model.File -> {
+                    sendPayload(ids, payload.toFilePayload(context))
+                }
 
-    private fun Any.toNearbyPayload(): NearbyApiPayload {
-        if (this is gr.questweaver.model.File) {
-            return uri
-                .toUri()
-                .openFileDescriptor(context)
-                ?.let { pfd -> NearbyApiPayload.fromFile(pfd) }
-                ?: error("Error opening file uri $uri")
+                else -> {
+                    sendPayload(
+                        ids,
+                        NearbyApiPayload.fromBytes(payload.toNetworkDto().toByteArray()),
+                    )
+                }
+            }
         }
-
-        return NearbyApiPayload.fromBytes(toNetworkDto().toByteArray())
-    }
 
     private inline fun createConnectionCallback(
         crossinline onConnectionInitiated: (endpointId: String, connectionInfo: ConnectionInfo) -> Unit,
@@ -330,6 +330,19 @@ internal class NearbyConnectionsClientAndroidImpl(
         override fun onDisconnected(endpointId: String) {
             onDisconnected(endpointId)
         }
+    }
+
+    private suspend fun sendPayload(
+        ids: List<String>,
+        payload: NearbyApiPayload,
+    ) = suspendCancellableCoroutine<Result<Unit>> { continuation ->
+        client
+            .sendPayload(ids, payload)
+            .addOnSuccessListener {
+                continuation.resumeIfActive(Result.success(Unit))
+            }.addOnFailureListener {
+                continuation.resumeIfActive(Result.failure(it))
+            }
     }
 
     private fun <T> CancellableContinuation<T>.resumeIfActive(value: T) {
@@ -365,17 +378,7 @@ internal class NearbyConnectionsClientAndroidImpl(
             payload: NearbyApiPayload,
         ) {
             when (payload.type) {
-                NearbyApiPayloadType.BYTES -> {
-                    if (fileCallbackDelegate.contains(payload.id)) {
-                        payload
-                            .asBytes()
-                            ?.metadataOrNull()
-                            ?.let { fileCallbackDelegate.updateMetadata(payload.id, it) }
-                    } else {
-                        messageCallbackDelegate.onPayloadReceived(payload)
-                    }
-                }
-
+                NearbyApiPayloadType.BYTES -> messageCallbackDelegate.onPayloadReceived(payload)
                 NearbyApiPayloadType.STREAM -> streamCallbackDelegate.onPayloadReceived(payload)
                 NearbyApiPayloadType.FILE -> fileCallbackDelegate.onPayloadReceived(payload)
             }

@@ -7,22 +7,12 @@ import kotlinx.serialization.Serializable
 internal data class FileDto(
     val uri: String,
     val name: String,
-    val extension: String,
-    val size: Long,
 ) : NetworkDto
 
-internal fun File.toDto(): FileDto =
-    FileDto(
-        uri = uri,
-        name = name,
-        extension = extension,
-        size = size,
-    )
+internal fun File.toDto(): FileDto = FileDto(uri = uri, name = name)
 
 internal fun FileDto.toDomain(): File =
     File(
         uri = uri,
         name = name,
-        extension = extension,
-        size = size,
     )

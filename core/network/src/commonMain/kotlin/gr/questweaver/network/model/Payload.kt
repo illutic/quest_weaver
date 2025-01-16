@@ -13,7 +13,9 @@ internal value class Message(
     val dto: NetworkDto,
 ) : Payload
 
-internal class File(
-    val meta: FileMetadata,
+internal data class File(
     val uri: String,
+    val name: String,
 ) : Payload
+
+internal fun File.toDto(): FileDto = FileDto(uri = uri, name = name)
