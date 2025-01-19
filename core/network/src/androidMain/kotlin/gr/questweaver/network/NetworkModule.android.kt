@@ -1,6 +1,6 @@
 package gr.questweaver.network
 
-import gr.questweaver.coroutines.provideIoDispatcher
+import gr.questweaver.common.coroutines.provideIoDispatcher
 import gr.questweaver.network.nearby.NearbyConnectionsClientAndroidImpl
 import org.koin.android.ext.koin.androidApplication
 import org.koin.core.definition.KoinDefinition

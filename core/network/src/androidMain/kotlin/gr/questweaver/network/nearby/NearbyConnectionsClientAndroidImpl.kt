@@ -262,9 +262,9 @@ internal class NearbyConnectionsClientAndroidImpl(
             }
         }
 
-    override suspend fun rejectConnection(id: String): Result<DeviceState> =
+    override suspend fun rejectConnection(device: Device): Result<DeviceState> =
         suspendCancellableCoroutine {
-            val result = client.rejectConnection(id)
+            val result = client.rejectConnection(device.id)
 
             result.addOnSuccessListener { _ ->
                 if (it.isActive) {

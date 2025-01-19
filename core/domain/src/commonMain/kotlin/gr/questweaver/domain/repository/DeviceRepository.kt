@@ -1,31 +1,31 @@
 package gr.questweaver.domain.repository
 
 import gr.questweaver.model.Device
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 
 interface DeviceRepository {
+    val devices: StateFlow<Set<Device>>
+
     // Discoverer
-    fun discover(): Flow<Set<Device>>
+    suspend fun discover()
 
     fun stopDiscovery()
 
     // Controller
-    fun advertise(name: String): Flow<Set<Device>>
+    suspend fun advertise(name: String)
 
     fun stopAdvertising()
 
     // Connection
-    fun requestConnection(
+    suspend fun requestConnection(
         id: String,
         name: String,
-    ): Flow<Device>
+    )
 
-    fun acceptConnection(id: String): Flow<Device>
+    suspend fun acceptConnection(id: String)
 
-    fun rejectConnection(id: String): Flow<Device>
+    suspend fun rejectConnection(id: String)
 
     // Disconnection
-    fun disconnect(id: String): Flow<Device>
-
-    suspend fun getDeviceState(id: String): Result<Device>
+    fun disconnect(id: String)
 }

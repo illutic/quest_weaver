@@ -6,12 +6,12 @@ plugins {
 kotlin {
     sourceSets {
         androidMain.dependencies {
-            api(libs.slf4j)
         }
         commonMain.dependencies {
             api(libs.kotlinx.coroutines.core)
             api(project.dependencies.platform(libs.koin.bom))
             api(libs.koin.core)
+            api(libs.napier)
         }
     }
 }

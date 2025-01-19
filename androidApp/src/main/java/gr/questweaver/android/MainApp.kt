@@ -1,7 +1,8 @@
 package gr.questweaver.android
 
 import android.app.Application
-import gr.questweaver.coroutines.coroutinesModule
+import gr.questweaver.common.coroutines.coroutinesModule
+import gr.questweaver.data.repository.deviceModule
 import gr.questweaver.network.networkModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -11,7 +12,11 @@ class MainApp : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@MainApp)
-            modules(coroutinesModule, networkModule)
+            modules(
+                coroutinesModule,
+                networkModule,
+                deviceModule,
+            )
         }
     }
 }

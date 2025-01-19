@@ -1,4 +1,4 @@
-package gr.questweaver.coroutines
+package gr.questweaver.common.coroutines
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

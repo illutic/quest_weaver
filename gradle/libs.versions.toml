@@ -34,7 +34,7 @@ koin = "4.0.0"
 ktor = "3.0.2"
 
 # Logging
-slf4j = "1.7.36"
+napier = "2.7.1"
 
 [libraries]
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "android-coil" }
@@ -84,7 +84,7 @@ koin-android = { module = "io.insert-koin:koin-android" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose" }
 
 # Logging
-slf4j = { module = "org.slf4j:slf4j-android", version.ref = "slf4j" }
+napier = { module = "io.github.aakira:napier", version.ref = "napier" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "android-agp" }

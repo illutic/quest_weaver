@@ -24,7 +24,7 @@ interface NearbyConnectionsClient {
 
     suspend fun acceptConnection(device: Device): Result<DeviceState>
 
-    suspend fun rejectConnection(id: String): Result<DeviceState>
+    suspend fun rejectConnection(device: Device): Result<DeviceState>
 
     suspend fun cancelPayload(id: Long): Result<Unit>
 
