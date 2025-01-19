@@ -6,15 +6,22 @@ import kotlinx.coroutines.flow.Flow
 interface DeviceRepository {
     // Discoverer
     fun discover(): Flow<Set<Device>>
+
     fun stopDiscovery()
 
     // Controller
     fun advertise(name: String): Flow<Set<Device>>
+
     fun stopAdvertising()
 
     // Connection
-    fun requestConnection(id: String, name: String): Flow<Device>
+    fun requestConnection(
+        id: String,
+        name: String,
+    ): Flow<Device>
+
     fun acceptConnection(id: String): Flow<Device>
+
     fun rejectConnection(id: String): Flow<Device>
 
     // Disconnection

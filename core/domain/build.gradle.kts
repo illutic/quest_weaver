@@ -13,6 +13,4 @@ kotlin {
     }
 }
 
-
 android.namespace += ".core.domain"
-

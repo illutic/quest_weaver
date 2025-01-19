@@ -4,4 +4,3 @@ plugins {
 }
 
 android.namespace += ".core.model"
-
