@@ -97,8 +97,6 @@ kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 
 # Plugins defined in project
-questweaver-android-app = { id = "questweaver.android.app" }
-questweaver-android-library = { id = "questweaver.android.library" }
-questweaver-android-compose = { id = "questweaver.android.compose" }
-questweaver-android-feature = { id = "questweaver.android.feature" }
+questweaver-app = { id = "questweaver.android.app" }
 questweaver-kotlin-multiplatform = { id = "questweaver.kotlin.multiplatform" }
+questweaver-compose-multiplatform = { id = "questweaver.compose.multiplatform" }

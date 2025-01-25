@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.kotlinSerialization)
-    alias(libs.plugins.questweaver.android.library)
     alias(libs.plugins.questweaver.kotlin.multiplatform)
 }
 
@@ -19,5 +18,3 @@ kotlin {
         }
     }
 }
-
-android.namespace += ".core.network"

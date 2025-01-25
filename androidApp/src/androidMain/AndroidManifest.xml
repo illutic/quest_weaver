@@ -25,13 +25,13 @@
         android:usesPermissionFlags="neverForLocation" />
 
     <application
-        android:name=".MainApp"
+        android:name="gr.questweaver.android.MainApp"
         android:allowBackup="false"
         android:label="${appName}"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name="gr.questweaver.android.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

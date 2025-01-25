@@ -1,8 +1,6 @@
 plugins {
-    alias(libs.plugins.questweaver.android.library)
     alias(libs.plugins.questweaver.kotlin.multiplatform)
-    alias(libs.plugins.composeCompiler)
-    alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.questweaver.compose.multiplatform)
 }
 
 kotlin {
@@ -18,5 +16,3 @@ compose.resources {
     publicResClass = true
     generateResClass = auto
 }
-
-android.namespace += ".core.designsystem"

@@ -1,5 +1,4 @@
 plugins {
-    alias(libs.plugins.questweaver.android.library)
     alias(libs.plugins.questweaver.kotlin.multiplatform)
 }
 
@@ -13,5 +12,3 @@ kotlin {
         }
     }
 }
-
-android.namespace += ".core.data"

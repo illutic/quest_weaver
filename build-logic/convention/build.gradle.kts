@@ -32,35 +32,21 @@ gradlePlugin {
                 libs.plugins.questweaver.kotlin.multiplatform
                     .get()
                     .pluginId
-            implementationClass = "KMPConventionPlugin"
+            implementationClass = "KotlinMultiplatformConventionPlugin"
         }
-        register("androidApp") {
+        register("app") {
             id =
-                libs.plugins.questweaver.android.app
+                libs.plugins.questweaver.app
                     .get()
                     .pluginId
-            implementationClass = "AndroidAppConventionPlugin"
+            implementationClass = "AppConventionPlugin"
         }
-        register("androidLibrary") {
+        register("composeMultiplatform") {
             id =
-                libs.plugins.questweaver.android.library
+                libs.plugins.questweaver.compose.multiplatform
                     .get()
                     .pluginId
-            implementationClass = "AndroidLibraryConventionPlugin"
-        }
-        register("androidFeature") {
-            id =
-                libs.plugins.questweaver.android.feature
-                    .get()
-                    .pluginId
-            implementationClass = "AndroidFeatureConventionPlugin"
-        }
-        register("androidCompose") {
-            id =
-                libs.plugins.questweaver.android.compose
-                    .get()
-                    .pluginId
-            implementationClass = "AndroidComposeConventionPlugin"
+            implementationClass = "ComposeMultiplatformConventionPlugin"
         }
     }
 }
