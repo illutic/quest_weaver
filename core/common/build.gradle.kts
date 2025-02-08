@@ -7,6 +7,7 @@ kotlin {
         androidMain.dependencies {
         }
         commonMain.dependencies {
+            implementation(libs.kotlinx.serialization.protobuf)
         }
     }
 }

@@ -1,6 +1,6 @@
 package gr.questweaver.data.repository
 
-import gr.questweaver.common.coroutines.provideDefaultDispatcher
+import gr.questweaver.common.coroutines.provideIoDispatcher
 import gr.questweaver.domain.repository.DeviceRepository
 import gr.questweaver.model.Device
 import gr.questweaver.network.NearbyConnectionsClient
@@ -15,7 +15,7 @@ import org.koin.dsl.module
 
 val deviceModule =
     module {
-        single<DeviceRepository> { DeviceRepositoryImpl(get(), provideDefaultDispatcher()) }
+        single<DeviceRepository> { DeviceRepositoryImpl(get(), provideIoDispatcher()) }
     }
 
 class DeviceRepositoryImpl(
