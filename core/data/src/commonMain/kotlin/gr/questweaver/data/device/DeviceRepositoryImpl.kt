@@ -1,16 +1,15 @@
-package gr.questweaver.data.repository
+package gr.questweaver.data.device
 
 import gr.questweaver.common.coroutines.provideIoDispatcher
 import gr.questweaver.domain.repository.DeviceRepository
+import gr.questweaver.domain.repository.ScopeExecutor
+import gr.questweaver.domain.repository.ScopeExecutorImpl
 import gr.questweaver.model.Device
 import gr.questweaver.network.NearbyConnectionsClient
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.supervisorScope
-import kotlinx.coroutines.withContext
 import org.koin.dsl.module
 
 val deviceModule =
@@ -21,12 +20,13 @@ val deviceModule =
 class DeviceRepositoryImpl(
     private val nearbyClient: NearbyConnectionsClient,
     private val dispatcher: CoroutineDispatcher,
-) : DeviceRepository {
+) : DeviceRepository,
+    ScopeExecutor by ScopeExecutorImpl(dispatcher) {
     private val _devices = MutableStateFlow<Set<Device>>(emptySet())
     override val devices: StateFlow<Set<Device>> = _devices
 
-    override suspend fun discover() =
-        withDispatcherScope {
+    override suspend fun discover(): Result<Unit> =
+        tryExecuteInScope {
             nearbyClient.stopDiscovery()
             _devices.value = emptySet()
 
@@ -39,8 +39,8 @@ class DeviceRepositoryImpl(
 
     override fun stopDiscovery() = nearbyClient.stopDiscovery()
 
-    override suspend fun advertise(name: String) =
-        withDispatcherScope {
+    override suspend fun advertise(name: String): Result<Unit> =
+        tryExecuteInScope {
             nearbyClient.stopAdvertising()
             _devices.value = emptySet()
 
@@ -56,24 +56,25 @@ class DeviceRepositoryImpl(
     override suspend fun requestConnection(
         id: String,
         name: String,
-    ) = withDispatcherScope {
-        val device = getDeviceById(id)
-        nearbyClient
-            .requestConnection(name, device)
-            .collectLatest {
-                _devices.value += device.copy(state = it.getOrThrow())
-            }
-    }
+    ): Result<Unit> =
+        tryExecuteInScope {
+            val device = getDeviceById(id)
+            nearbyClient
+                .requestConnection(name, device)
+                .collectLatest {
+                    _devices.value += device.copy(state = it.getOrThrow())
+                }
+        }
 
-    override suspend fun acceptConnection(id: String) =
-        withDispatcherScope {
+    override suspend fun acceptConnection(id: String): Result<Unit> =
+        tryExecuteInScope {
             val deviceToAccept = getDeviceById(id)
             val state = nearbyClient.acceptConnection(deviceToAccept).getOrThrow()
             _devices.value += deviceToAccept.copy(state = state)
         }
 
-    override suspend fun rejectConnection(id: String) =
-        withDispatcherScope {
+    override suspend fun rejectConnection(id: String): Result<Unit> =
+        tryExecuteInScope {
             val deviceToReject = getDeviceById(id)
             val state = nearbyClient.rejectConnection(deviceToReject).getOrThrow()
             _devices.value += deviceToReject.copy(state = state)
@@ -85,12 +86,4 @@ class DeviceRepositoryImpl(
     }
 
     private fun getDeviceById(id: String): Device = _devices.value.find { it.id == id } ?: error("Device with $id not found")
-
-    private suspend inline fun withDispatcherScope(crossinline block: suspend CoroutineScope.() -> Unit) {
-        supervisorScope {
-            withContext(dispatcher) {
-                block()
-            }
-        }
-    }
 }
