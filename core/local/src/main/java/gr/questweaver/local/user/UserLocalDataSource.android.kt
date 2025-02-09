@@ -18,7 +18,7 @@ import org.koin.core.module.Module
 import java.io.InputStream
 import java.io.OutputStream
 
-internal actual fun Module.provideUserLocalDataSource(): KoinDefinition<UserLocalDataSource> =
+actual fun Module.provideUserLocalDataSource(): KoinDefinition<UserLocalDataSource> =
     single {
         UserLocalDataSourceAndroidImpl(
             context = androidApplication(),
@@ -38,6 +38,15 @@ private class UserLocalDataSourceAndroidImpl(
     override suspend fun getUser(): UserLocalDto? = context.dataStore.data.first()
 
     override suspend fun saveUser(user: UserLocalDto): UserLocalDto = context.dataStore.updateData { user }
+
+    override suspend fun clearUser() {
+        context.dataStore.updateData {
+            UserLocalDtoAndroidImpl(
+                id = "",
+                name = "",
+            )
+        }
+    }
 
     private inner class UserLocalDtoSerializer : Serializer<UserLocalDto> {
         override val defaultValue: UserLocalDto =
