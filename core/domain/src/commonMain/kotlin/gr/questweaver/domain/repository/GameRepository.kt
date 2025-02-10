@@ -3,7 +3,7 @@ package gr.questweaver.domain.repository
 import gr.questweaver.model.Game
 
 interface GameRepository {
-    suspend fun saveGame(game: Game): Result<Game>
+    suspend fun saveGame(game: Game): Result<List<Game>>
 
     suspend fun getGame(id: String): Result<Game>
 

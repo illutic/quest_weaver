@@ -5,6 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.core.Serializer
 import androidx.datastore.dataStore
 import gr.questweaver.common.serialization.ProtobufSerializer
+import gr.questweaver.domain.error.NoGameError
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
@@ -46,7 +47,7 @@ private class GameLocalDataSourceAndroidImpl(
         context.dataStore.data
             .first()
             .find { it.id == id }
-            ?: error("Game with id $id not found")
+            ?: throw NoGameError()
 
     override suspend fun removeGame(id: String) {
         context.dataStore.updateData {

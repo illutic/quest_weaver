@@ -7,6 +7,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.core.model)
+            implementation(projects.core.domain)
             implementation(projects.core.common)
             implementation(libs.kotlinx.serialization.protobuf)
         }
