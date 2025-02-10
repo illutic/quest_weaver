@@ -1,6 +1,6 @@
 package gr.questweaver.data.user
 
-import gr.questweaver.common.coroutines.provideIoDispatcher
+import gr.questweaver.common.coroutines.provideDefaultDispatcher
 import gr.questweaver.data.common.ScopeExecutor
 import gr.questweaver.data.common.ScopeExecutorImpl
 import gr.questweaver.domain.error.NoUserError
@@ -19,14 +19,14 @@ val userModule =
         single<UserRepository> {
             UserRepositoryImpl(
                 userLocalDataSource = get(),
-                dispatcher = provideIoDispatcher(),
+                dispatcher = provideDefaultDispatcher(),
             )
         }
     }
 
 private class UserRepositoryImpl(
     private val userLocalDataSource: UserLocalDataSource,
-    private val dispatcher: CoroutineDispatcher,
+    dispatcher: CoroutineDispatcher,
 ) : UserRepository,
     ScopeExecutor by ScopeExecutorImpl(dispatcher) {
     override suspend fun getUser(): Result<User> =

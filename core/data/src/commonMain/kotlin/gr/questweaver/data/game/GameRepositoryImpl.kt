@@ -1,6 +1,6 @@
 package gr.questweaver.data.game
 
-import gr.questweaver.common.coroutines.provideIoDispatcher
+import gr.questweaver.common.coroutines.provideDefaultDispatcher
 import gr.questweaver.data.common.ScopeExecutor
 import gr.questweaver.data.common.ScopeExecutorImpl
 import gr.questweaver.domain.repository.GameRepository
@@ -18,7 +18,7 @@ val gameModule =
         single<GameRepository> {
             GameRepositoryImpl(
                 gameLocalDataSource = get(),
-                dispatcher = provideIoDispatcher(),
+                dispatcher = provideDefaultDispatcher(),
             )
         }
     }

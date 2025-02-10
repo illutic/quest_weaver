@@ -1,6 +1,6 @@
 package gr.questweaver.data.device
 
-import gr.questweaver.common.coroutines.provideIoDispatcher
+import gr.questweaver.common.coroutines.provideDefaultDispatcher
 import gr.questweaver.data.common.ScopeExecutor
 import gr.questweaver.data.common.ScopeExecutorImpl
 import gr.questweaver.domain.repository.DeviceRepository
@@ -14,12 +14,17 @@ import org.koin.dsl.module
 
 val deviceModule =
     module {
-        single<DeviceRepository> { DeviceRepositoryImpl(get(), provideIoDispatcher()) }
+        single<DeviceRepository> {
+            DeviceRepositoryImpl(
+                nearbyClient = get(),
+                dispatcher = provideDefaultDispatcher(),
+            )
+        }
     }
 
 class DeviceRepositoryImpl(
     private val nearbyClient: NearbyConnectionsClient,
-    private val dispatcher: CoroutineDispatcher,
+    dispatcher: CoroutineDispatcher,
 ) : DeviceRepository,
     ScopeExecutor by ScopeExecutorImpl(dispatcher) {
     private val _devices = MutableStateFlow<Set<Device>>(emptySet())

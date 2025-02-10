@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.Serializer
 import androidx.datastore.dataStore
+import gr.questweaver.common.coroutines.provideIoDispatcher
 import gr.questweaver.common.serialization.ProtobufSerializer
 import gr.questweaver.domain.error.NoGameError
 import kotlinx.coroutines.CoroutineDispatcher
@@ -21,7 +22,7 @@ actual fun Module.provideGameLocalDataSource(): KoinDefinition<GameLocalDataSour
     single {
         GameLocalDataSourceAndroidImpl(
             context = get(),
-            coroutineDispatcher = get(),
+            coroutineDispatcher = provideIoDispatcher(),
         )
     }
 
