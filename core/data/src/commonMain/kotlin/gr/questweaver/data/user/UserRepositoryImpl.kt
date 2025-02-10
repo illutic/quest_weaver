@@ -1,7 +1,8 @@
 package gr.questweaver.data.user
 
-import ScopeExecutorImpl
 import gr.questweaver.common.coroutines.provideIoDispatcher
+import gr.questweaver.data.common.ScopeExecutor
+import gr.questweaver.data.common.ScopeExecutorImpl
 import gr.questweaver.domain.error.NoUserError
 import gr.questweaver.domain.repository.UserRepository
 import gr.questweaver.local.user.UserLocalDataSource

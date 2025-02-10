@@ -1,7 +1,8 @@
 package gr.questweaver.data.device
 
-import ScopeExecutorImpl
 import gr.questweaver.common.coroutines.provideIoDispatcher
+import gr.questweaver.data.common.ScopeExecutor
+import gr.questweaver.data.common.ScopeExecutorImpl
 import gr.questweaver.domain.repository.DeviceRepository
 import gr.questweaver.model.Device
 import gr.questweaver.network.NearbyConnectionsClient

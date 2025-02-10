@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class GameDto(
+    val id: String,
     val title: String,
     val dm: UserDto,
     val imageUri: String? = null,
@@ -15,6 +16,7 @@ internal data class GameDto(
 
 internal fun Game.toDto(): GameDto =
     GameDto(
+        id = id,
         title = title,
         dm = dm.toDto(),
         imageUri = imageUri,
@@ -24,6 +26,7 @@ internal fun Game.toDto(): GameDto =
 
 internal fun GameDto.toDomain(): Game =
     Game(
+        id = id,
         title = title,
         dm = dm.toDomain(),
         imageUri = imageUri,

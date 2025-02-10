@@ -1,7 +1,8 @@
 package gr.questweaver.data.game
 
-import ScopeExecutorImpl
 import gr.questweaver.common.coroutines.provideIoDispatcher
+import gr.questweaver.data.common.ScopeExecutor
+import gr.questweaver.data.common.ScopeExecutorImpl
 import gr.questweaver.domain.repository.GameRepository
 import gr.questweaver.local.game.GameLocalDataSource
 import gr.questweaver.local.game.provideGameLocalDataSource
