@@ -31,16 +31,20 @@ class ComposeMultiplatformConventionPlugin : Plugin<Project> {
             ensureKotlinMultiplatformPluginIsApplied(this)
             extensions.configure<KotlinMultiplatformExtension> {
                 sourceSets.apply {
+                    androidMain {
+                        dependencies {
+                            implementation(composeDeps.uiTooling)
+                            implementation(composeDeps.preview)
+                        }
+                    }
                     commonMain {
                         dependencies {
                             implementation(composeDeps.runtime)
                             implementation(composeDeps.foundation)
                             implementation(composeDeps.material3)
                             implementation(composeDeps.materialIconsExtended)
-                            implementation(composeDeps.material)
                             implementation(composeDeps.ui)
                             implementation(composeDeps.components.resources)
-                            implementation(composeDeps.components.uiToolingPreview)
                         }
                     }
                 }
