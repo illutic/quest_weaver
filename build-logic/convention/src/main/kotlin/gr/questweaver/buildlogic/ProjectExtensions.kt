@@ -9,5 +9,3 @@ val Project.libs
     get(): VersionCatalog = extensions.getByType<VersionCatalogsExtension>().named("libs")
 
 fun VersionCatalog.getLibrary(libraryName: String) = findLibrary(libraryName).get()
-
-fun VersionCatalog.getPlugin(pluginName: String): String = findPlugin(pluginName).get().get().pluginId

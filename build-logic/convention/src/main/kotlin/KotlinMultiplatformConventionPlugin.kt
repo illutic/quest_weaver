@@ -2,8 +2,6 @@ import com.android.build.api.dsl.LibraryExtension
 import gr.questweaver.buildlogic.TARGET_SDK
 import gr.questweaver.buildlogic.configureAndroidLibrary
 import gr.questweaver.buildlogic.configureKotlinMultiplatform
-import gr.questweaver.buildlogic.getPlugin
-import gr.questweaver.buildlogic.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -13,8 +11,8 @@ class KotlinMultiplatformConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) =
         with(target) {
             with(pluginManager) {
-                apply(libs.getPlugin("androidLibrary"))
-                apply(libs.getPlugin("kotlinMultiplatform"))
+                apply("com.android.library")
+                apply("org.jetbrains.kotlin.multiplatform")
             }
 
             extensions.configure<LibraryExtension> {
