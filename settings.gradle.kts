@@ -17,3 +17,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "QuestWeaver"
 include(":androidApp")
+include(":ui")
