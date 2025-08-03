@@ -1,0 +1,99 @@
+name: Get and Run Kt Lint
+
+on: [ push ]
+
+jobs:
+  run_kt_lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: ${{ github.event_name == 'pull_request' && 0 || 1 }}
+
+      - name: Get changed files
+        id: changed_files
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            files=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
+          else
+            files=$(git ls-files)
+          fi
+          
+          kt_files=$(echo "$files" | grep -E '\.kt$|\.kts$')
+          files_for_output=$(echo "$kt_files" | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          echo "files_list=$files_for_output" >> $GITHUB_OUTPUT
+          echo "Files to lint:"
+          echo "$kt_files"
+
+      - name: Restore KtLint Cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ./lint
+          key: kt-lint
+
+      - name: Fetch Kt Lint
+        id: fetch_kt_lint
+        working-directory: ./scripts
+        run: |
+          source "./kt_lint.sh"
+          get_kt_lint "$KTLINT_DIR"
+        env:
+          KTLINT_DIR: ${{ github.workspace }}/lint/ktlint
+
+      - name: Fetch Kt Lint Rules
+        id: fetch_kt_lint_rules
+        working-directory: ./scripts
+        run: |
+          source "./kt_lint.sh"
+          get_compose_ruleset "$KTLINT_RULES_DIR"
+        env:
+          KTLINT_RULES_DIR: ${{ github.workspace }}/lint/ktlint-rules
+
+      - name: Run Kt Lint
+        id: run_kt_lint
+        continue-on-error: true
+        run: |
+          CHANGED_FILES=$(echo '${{ steps.changed_files.outputs.files_list }}' | jq -r 'join(" ")')
+          if [ -z "$CHANGED_FILES" ]; then
+              echo "No changed files to lint."
+              exit 0
+          fi
+          
+          "${KTLINT_EXECUTABLE_PATH}" \
+              --ruleset="${COMPOSE_RULESET_JAR_PATH}" \
+              $CHANGED_FILES \
+              --reporter=json?group_by_file,output="$REPORTER_OUTPUT_FILE"
+        env:
+          KTLINT_EXECUTABLE_PATH: ${{ github.workspace }}/lint/ktlint/ktlint
+          COMPOSE_RULESET_JAR_PATH: ${{ github.workspace }}/lint/ktlint-rules/compose-ruleset.jar
+          REPORTER_OUTPUT_FILE: ${{ github.workspace }}/lint/ktlint-report.json
+
+      - name: Kt Lint Report Summary
+        working-directory: ./scripts
+        run: |
+          source "./report_kt_lint.sh"
+          echo "$(convert_json_to_markdown $KT_LINT_REPORT)" >> $GITHUB_STEP_SUMMARY
+        env:
+          KT_LINT_REPORT: ${{ github.workspace }}/lint/ktlint-report.json
+
+      - name: Annotate PR with Kt Lint Issues
+        working-directory: ./scripts
+        run: |
+            source "./report_kt_lint.sh"
+            echo "Annotating PR with Kt Lint issues..."
+            if [ -s $KT_LINT_REPORT ]; then
+                echo "Issues found, annotating..."
+                annotate_kt_lint "$KT_LINT_REPORT"
+            else
+                echo "No issues found."
+            fi
+        env:
+          KT_LINT_REPORT: ${{ github.workspace }}/lint/ktlint-report.json
+
+      - name: Upload Kt Lint Cache
+        uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: ./lint
+          key: kt-lint
