@@ -10,10 +10,15 @@ function get_kt_lint() {
   local cache_dir="$1"
   local executable_path="${cache_dir}/ktlint"
   local version_file="${cache_dir}/ktlint.version"
+  local version
 
   ensure_path "$cache_dir"
 
-  if ! is_cached "$url" "$(cat "$version_file")"; then
+  if [ -f "$version_file" ]; then
+    version=$(cat "$version_file")
+  fi
+
+  if ! is_cached "$url" "$version"; then
     download_kt_lint "$url" "$executable_path"
   else
     echo "✅ ktlint is up to date (version $(cat "$version_file")). Using cached version."
@@ -53,13 +58,18 @@ function get_compose_ruleset() {
   local cache_dir="$1"
   local executable_path="${cache_dir}/compose-ruleset.jar"
   local version_file="${cache_dir}/compose-ruleset.version"
+  local version
 
   ensure_path "$cache_dir"
 
-  if ! is_cached "$url" "$(cat "$version_file")"; then
-    download_kt_lint "$url" "$executable_path"
+  if [ -f "$version_file" ]; then
+    version=$(cat "$version_file")
+  fi
+
+  if ! is_cached "$url" "$version"; then
+    download_compose_ruleset "$url" "$executable_path"
   else
-    echo "✅ ktlint is up to date (version $(cat "$version_file")). Using cached version."
+    echo "✅ compose ruleset is up to date (version $(cat "$version_file")). Using cached version."
   fi
 }
 

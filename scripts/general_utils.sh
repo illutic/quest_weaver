@@ -49,7 +49,7 @@ function make_executable() {
   local path="$1"
 
   if ! chmod +x "$path"; then
-      echo "❌ ERROR: Failed to make ktlint executable at $path. Exiting." >&2
+      echo "❌ ERROR: Failed to make executable at $path. Exiting." >&2
       return 1
   fi
 }
