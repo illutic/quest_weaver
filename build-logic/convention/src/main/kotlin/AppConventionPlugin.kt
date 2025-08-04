@@ -15,6 +15,7 @@ class AppConventionPlugin : Plugin<Project> {
 
             val kmpExtension = extensions.getByType<KotlinMultiplatformExtension>()
             val appExtension = extensions.getByType<ApplicationExtension>()
+
             configureIosApp(kmpExtension)
             configureAndroidApp(kmpExtension)
             configureAndroidApp(appExtension)
