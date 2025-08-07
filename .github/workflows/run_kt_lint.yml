@@ -1,13 +1,13 @@
-name: Get and Run Kt Lint
+name: Static Analysis
 
-on: 
+on:
   push:
     branches:
       - main
   pull_request:
 
 jobs:
-  run_kt_lint:
+  kt_lint:
     runs-on: ubuntu-latest
     steps:
       - name: Get base depth
@@ -96,14 +96,14 @@ jobs:
       - name: Annotate PR with Kt Lint Issues
         working-directory: ./scripts
         run: |
-            source "./report_kt_lint.sh"
-            echo "Annotating PR with Kt Lint issues..."
-            if [ -s $KT_LINT_REPORT ]; then
-                echo "Issues found, annotating..."
-                annotate_kt_lint "$KT_LINT_REPORT"
-            else
-                echo "No issues found."
-            fi
+          source "./report_kt_lint.sh"
+          echo "Annotating PR with Kt Lint issues..."
+          if [ -s $KT_LINT_REPORT ]; then
+              echo "Issues found, annotating..."
+              annotate_kt_lint "$KT_LINT_REPORT"
+          else
+              echo "No issues found."
+          fi
         env:
           KT_LINT_REPORT: ${{ github.workspace }}/lint/ktlint-report.json
 
