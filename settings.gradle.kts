@@ -18,3 +18,4 @@ dependencyResolutionManagement {
 rootProject.name = "QuestWeaver"
 include(":androidApp")
 include(":ui")
+include(":feature:onboarding")
