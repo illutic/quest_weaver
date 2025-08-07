@@ -1,0 +1,46 @@
+name: Compile Project
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  compile:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup project environment
+        uses: ./.github/actions/setup
+
+      - name: Build with Gradle
+        run: ./gradlew compileDebugSources
+
+  test:
+    runs-on: macos-latest
+    needs: compile
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup project environment
+        uses: ./.github/actions/setup
+
+      - name: Run tests with Gradle
+        run: ./gradlew test
+
+  lint:
+    runs-on: macos-latest
+    needs: compile
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup project environment
+        uses: ./.github/actions/setup
+
+      - name: Run lint with Gradle
+        run: ./gradlew lint
