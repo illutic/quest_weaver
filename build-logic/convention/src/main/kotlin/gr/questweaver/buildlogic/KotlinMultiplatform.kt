@@ -7,35 +7,25 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 internal fun Project.configureKotlinMultiplatform(kmpExtension: KotlinMultiplatformExtension) =
     kmpExtension.apply {
-        androidTarget {
-            compilations.all {
-                compileTaskProvider.configure {
-                    compilerOptions {
-                        jvmTarget.set(JVM_TARGET)
-                    }
-                }
-            }
-        }
-
-        listOf(iosArm64(), iosSimulatorArm64())
+        configureMultiplatformAndroidLibrary(this)
+        configureIosLibrary(this)
 
         applyDefaultHierarchyTemplate()
 
         sourceSets.apply {
             commonMain.dependencies {
                 val koinBom = libs.getLibrary("koin-bom").get()
-                api(libs.getLibrary("kotlinx-coroutines-core"))
-                api(project.dependencies.platform(koinBom))
-                api(libs.findLibrary("koin-core").get())
-                api(libs.findLibrary("napier").get())
+                implementation(libs.getLibrary("kotlinx-coroutines-core"))
+                implementation(project.dependencies.platform(koinBom))
+                implementation(libs.findLibrary("koin-core").get())
+                implementation(libs.findLibrary("napier").get())
             }
             androidMain.dependencies {
                 implementation(libs.findLibrary("androidx-core-ktx").get())
                 implementation(libs.findLibrary("androidx-navigation").get())
                 implementation(libs.findLibrary("kotlinx-coroutines-core").get())
                 implementation(libs.findLibrary("kotlinx-coroutines-android").get())
-
-                api(libs.findLibrary("koin-android").get())
+                implementation(libs.findLibrary("koin-android").get())
             }
         }
     }

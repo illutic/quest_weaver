@@ -6,7 +6,7 @@ android-firebaseBom = "33.15.0"
 playServicesNearby = "19.3.0"
 
 # Android
-android-agp = "8.11.1"
+android-agp = "8.13.2"
 android-coreKtx = "1.16.0"
 android-activityCompose = "1.10.1"
 android-composeBom = "2025.06.00"
@@ -15,14 +15,17 @@ android-composeAnimation = "1.8.2"
 android-navigation = "2.9.0"
 android-splashScreen = "1.0.1"
 android-coil = "2.7.0"
-android-datastore = "1.1.7"
+androidx-room = "2.8.4"
+androidx-sqlite = "2.6.2"
+androidx-viewmodel = "2.10.0"
 
 # Kotlin
-kotlin = "2.1.21"
+kotlin = "2.3.0"
 kotlinxCoroutines = "1.10.1"
 kotlinxSerialization = "1.8.1"
 koin = "4.0.0"
 ktor = "3.0.2"
+kspVersion = "2.3.4"
 
 # Logging
 napier = "2.7.1"
@@ -51,7 +54,10 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "android-appcompat" }
 androidx-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "android-navigation" }
 androidx-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "android-splashScreen" }
-androidx-datastore = { group = "androidx.datastore", name = "datastore", version.ref = "android-datastore" }
+androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "androidx-sqlite" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "androidx-room" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "androidx-room" }
+androidx-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel", version.ref = "androidx-viewmodel" }
 
 # Kotlin
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
@@ -76,15 +82,18 @@ napier = { module = "io.github.aakira:napier", version.ref = "napier" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "android-agp" }
-androidLibrary = { id = "com.android.library", version.ref = "android-agp" }
+androidLibrary = { id = "com.android.kotlin.multiplatform.library", version.ref = "android-agp" }
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+androidx-room = { id = "androidx.room", version.ref = "androidx-room" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "kspVersion" }
 
 # Plugins defined in project
 questweaver-app = { id = "questweaver.android.app" }
 questweaver-kotlin-multiplatform = { id = "questweaver.kotlin.multiplatform" }
 questweaver-compose-multiplatform = { id = "questweaver.compose.multiplatform" }
+questweaver-room-multiplatform = { id = "questweaver.room.multiplatform" }

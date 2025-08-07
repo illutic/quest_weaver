@@ -1,4 +1,6 @@
 import gr.questweaver.buildlogic.configureCompose
+import gr.questweaver.buildlogic.getLibrary
+import gr.questweaver.buildlogic.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -45,6 +47,7 @@ class ComposeMultiplatformConventionPlugin : Plugin<Project> {
                             implementation(composeDeps.materialIconsExtended)
                             implementation(composeDeps.ui)
                             implementation(composeDeps.components.resources)
+                            implementation(libs.getLibrary("androidx-lifecycle-viewmodel").get())
                         }
                     }
                 }
