@@ -14,7 +14,8 @@ internal fun Project.configureAndroidApp(applicationExtension: ApplicationExtens
             targetSdk = TARGET_SDK
             versionCode = property("gr.questweaver.version.code").toString().toInt()
             versionName = property("gr.questweaver.version.name").toString()
-            manifestPlaceholders[APP_NAME_PLACEHOLDER] = property("gr.questweaver.app.name").toString()
+            manifestPlaceholders[APP_NAME_PLACEHOLDER] =
+                property("gr.questweaver.app.name").toString()
         }
 
         buildTypes {
@@ -26,6 +27,7 @@ internal fun Project.configureAndroidApp(applicationExtension: ApplicationExtens
 
         dependencies {
             "implementation"(libs.getLibrary("androidx-core-ktx").get())
+            "implementation"(libs.getLibrary("androidx-activity-compose").get())
         }
     }
 }

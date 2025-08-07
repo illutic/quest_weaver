@@ -1,5 +1,5 @@
 package gr.questweaver.android
 
-import androidx.core.app.ComponentActivity
+import androidx.activity.ComponentActivity
 
 class MainActivity : ComponentActivity()
