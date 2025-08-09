@@ -9,19 +9,42 @@ internal fun Project.configureAndroidApp(applicationExtension: ApplicationExtens
     applicationExtension.apply {
         configureAndroidLibrary(this)
 
+        signingConfigs {
+            create("release") {
+                storeFile = file("$rootDir/keystore/questweaver")
+                storePassword = getEnvOrWarn("KEYSTORE_PASSWORD").orEmpty()
+                keyAlias = getEnvOrWarn("KEY_ALIAS").orEmpty()
+                keyPassword = getEnvOrWarn("KEY_PASSWORD").orEmpty()
+            }
+        }
+
         defaultConfig {
             applicationId = "gr.questweaver.app.android"
             targetSdk = TARGET_SDK
-            versionCode = property("gr.questweaver.version.code").toString().toInt()
-            versionName = property("gr.questweaver.version.name").toString()
-            manifestPlaceholders[APP_NAME_PLACEHOLDER] =
-                property("gr.questweaver.app.name").toString()
+            versionCode = getEnvOrWarn("VERSION_CODE")?.toIntOrNull() ?: 1
+            versionName = getEnvOrWarn("VERSION_NAME") ?: "1.0.0"
+            manifestPlaceholders[APP_NAME_PLACEHOLDER] = "QuestWeaver"
+            setProperty("archivesBaseName", "questweaver_v$versionName")
         }
 
         buildTypes {
             debug {
-                manifestPlaceholders[APP_NAME_PLACEHOLDER] =
-                    property("gr.questweaver.app.name").toString() + " Debug"
+                manifestPlaceholders[APP_NAME_PLACEHOLDER] = "QuestWeaver Debug"
+                isMinifyEnabled = false
+                isDebuggable = true
+                applicationIdSuffix = ".debug"
+            }
+
+            release {
+                isDebuggable = false
+                isMinifyEnabled = true
+                isShrinkResources = true
+                ndk.debugSymbolLevel = "FULL"
+                proguardFiles(
+                    getDefaultProguardFile("proguard-android-optimize.txt"),
+                    "proguard-rules.pro",
+                )
+                signingConfig = signingConfigs.getByName("release")
             }
         }
 
@@ -52,7 +75,7 @@ internal fun Project.configureIosApp(kmpExtension: KotlinMultiplatformExtension)
             iosSimulatorArm64(),
         ).forEach { iosTarget ->
             iosTarget.binaries.framework {
-                baseName = "ComposeApp"
+                baseName = "QuestWeaver"
                 isStatic = true
                 optimized = true
             }

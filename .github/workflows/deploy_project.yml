@@ -1,0 +1,109 @@
+name: Deploy Project
+
+on:
+  release:
+    types: [ published ]
+
+jobs:
+  compile:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup project environment
+        uses: ./.github/actions/setup
+
+      - name: Build with Gradle
+        run: ./gradlew compileDebugSources
+
+  test:
+    runs-on: macos-latest
+    needs: compile
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup project environment
+        uses: ./.github/actions/setup
+
+      - name: Run tests with Gradle
+        run: ./gradlew test
+
+  lint:
+    runs-on: macos-latest
+    needs: compile
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup project environment
+        uses: ./.github/actions/setup
+
+      - name: Run lint with Gradle
+        run: ./gradlew lint
+
+  build:
+    permissions:
+      contents: write
+      pull-requests: write
+      repository-projects: write
+    environment:
+      name: Production
+    runs-on: macos-latest
+    needs: [ compile, test, lint ]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup project environment
+        uses: ./.github/actions/setup
+
+      - name: Get version name
+        id: version_name
+        run: |
+          source scripts/version_utils.sh
+          VERSION_NAME=$(sanitize_version_name "$VERSION_NAME)")
+          echo "version_name=$VERSION_NAME" >> $GITHUB_OUTPUT
+        env:
+          VERSION_NAME: ${{ github.event.release.tag_name }}
+
+      - name: Build APK with Gradle
+        run: ./gradlew bundleRelease
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          VERSION_CODE: ${{ vars.VERSION_CODE }}
+          VERSION_NAME: ${{ steps.version_name.outputs.version_name }}
+
+      - name: Upload Bundle Assets to release
+        run: |
+          source scripts/github_release_utils.sh
+          upload_release_asset "$FILE_PATTERN" "$REPO_NAME" "$RELEASE_ID" "$TOKEN"
+        env:
+          FILE_PATTERN: "questweaver*.aab"
+          REPO_NAME: ${{ github.repository }}
+          TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          RELEASE_ID: ${{ github.event.release.id }}
+
+      - name: Upload APK Assets to release
+        run: |
+          source scripts/github_release_utils.sh
+          upload_release_asset "$FILE_PATTERN" "$REPO_NAME" "$RELEASE_ID" "$TOKEN"
+        env:
+          FILE_PATTERN: "questweaver*.apk"
+          REPO_NAME: ${{ github.repository }}
+          TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          RELEASE_ID: ${{ github.event.release.id }}
+
+      - name: Increment version code
+        run: |
+          source scripts/github_api_utils.sh
+          INCREMENTED_VERSION_CODE=$((VERSION_CODE + 1))
+          update_variable "VERSION_CODE" "$INCREMENTED_VERSION_CODE" "$REPO_NAME" "$ENV_NAME" "$TOKEN"
+        env:
+          VERSION_CODE: ${{ vars.VERSION_CODE }}
+          REPO_NAME: ${{ github.repository }}
+          ENV_NAME: "Production"
+          TOKEN: ${{ secrets.RELEASE_TOKEN }}
