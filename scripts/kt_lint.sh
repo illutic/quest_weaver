@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-source ./github_release_utils.sh
-source ./github_cache_utils.sh
-source ./general_utils.sh
+source "scripts/github_release_utils.sh"
+source "scripts/github_cache_utils.sh"
+source "scripts/general_utils.sh"
 
 # KT Lint Helper Functions
 

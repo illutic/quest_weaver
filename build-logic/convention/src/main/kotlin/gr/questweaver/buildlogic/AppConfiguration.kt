@@ -9,6 +9,15 @@ internal fun Project.configureAndroidApp(applicationExtension: ApplicationExtens
     applicationExtension.apply {
         configureAndroidLibrary(this)
 
+        signingConfigs {
+            create("release") {
+                storeFile = file("$rootDir/keystore/questweaver")
+                storePassword = System.getenv("KEYSTORE_PASSWORD").orEmpty()
+                keyAlias = System.getenv("KEY_ALIAS").orEmpty()
+                keyPassword = System.getenv("KEY_PASSWORD").orEmpty()
+            }
+        }
+
         defaultConfig {
             applicationId = "gr.questweaver.app.android"
             targetSdk = TARGET_SDK
@@ -16,12 +25,27 @@ internal fun Project.configureAndroidApp(applicationExtension: ApplicationExtens
             versionName = property("gr.questweaver.version.name").toString()
             manifestPlaceholders[APP_NAME_PLACEHOLDER] =
                 property("gr.questweaver.app.name").toString()
+            setProperty("archivesBaseName", "questweaver_v$versionName")
         }
 
         buildTypes {
             debug {
                 manifestPlaceholders[APP_NAME_PLACEHOLDER] =
                     property("gr.questweaver.app.name").toString() + " Debug"
+                isMinifyEnabled = false
+                isDebuggable = true
+                applicationIdSuffix = ".debug"
+            }
+
+            release {
+                isDebuggable = false
+                isMinifyEnabled = true
+                isShrinkResources = true
+                proguardFiles(
+                    getDefaultProguardFile("proguard-android-optimize.txt"),
+                    "proguard-rules.pro",
+                )
+                signingConfig = signingConfigs.getByName("release")
             }
         }
 

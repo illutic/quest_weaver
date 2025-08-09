@@ -107,3 +107,49 @@ function ensure_path() {
     echo "INFO: Path '$path' did not exist. Creating it." >&2
   fi
 }
+
+function get_value() {
+  local field="$1"
+  local properties_file="$2"
+
+  if [[ ! -f "$properties_file" ]]; then
+    echo "❌ Error: File '$properties_file' not found in $0" >&2
+    return 1
+  fi
+
+  if [[ -z "$field" ]]; then
+    echo "❌ Error: Field must be provided." >&2
+    return 1
+  fi
+
+  local value
+  value=$(grep "^$field\s*=" "$properties_file" | sed -E "s/^$field\s*=\s*//")
+
+  if [[ -z "$value" ]]; then
+    echo "❌ Error: Field '$field' not found in '$properties_file'." >&2
+    echo "$properties_file content:" >&2
+    cat "$properties_file" >&2
+    echo ""
+    return 1
+  fi
+
+  echo "$value" | tr -d '\r' | tr -d '\n' | tr -d ' '
+}
+
+function replace_field_in_properties() {
+  local field="$1"
+  local value="$2"
+  local properties_file="$3"
+
+  if [[ ! -f "$properties_file" ]]; then
+    echo "❌ Error: File '$properties_file' not found in $0" >&2
+    return 1
+  fi
+
+  if [[ -z "$field" || -z "$value" ]]; then
+    echo "❌ Error: Field and value must be provided." >&2
+    return 1
+  fi
+
+  sed -i '' -E "s/($field[[:space:]]*=[[:space:]]*).*/\1$value/" "$properties_file"
+}

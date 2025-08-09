@@ -1,0 +1,96 @@
+name: Deploy Project
+
+on:
+  release:
+    types: [ published ]
+
+jobs:
+  compile:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup project environment
+        uses: ./.github/actions/setup
+
+      - name: Build with Gradle
+        run: ./gradlew compileDebugSources
+
+  test:
+    runs-on: macos-latest
+    needs: compile
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup project environment
+        uses: ./.github/actions/setup
+
+      - name: Run tests with Gradle
+        run: ./gradlew test
+
+  lint:
+    runs-on: macos-latest
+    needs: compile
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup project environment
+        uses: ./.github/actions/setup
+
+      - name: Run lint with Gradle
+        run: ./gradlew lint
+
+  build:
+    permissions:
+      contents: write
+    runs-on: macos-latest
+    needs: [ compile, test, lint ]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Setup project environment
+        uses: ./.github/actions/setup
+
+      - name: Increment version
+        run: |
+          source scripts/version_utils.sh
+          increment_version_code
+
+      - name: Get version name
+        id: version_name
+        run: |
+          source scripts/version_utils.sh
+          VERSION_NAME=$(sanitize_version_name "$VERSION_NAME)")
+          update_version_name "$VERSION_NAME"
+          echo "version_name=$VERSION_NAME" >> $GITHUB_OUTPUT
+        env:
+          VERSION_NAME: ${{ github.event.release.tag_name }}
+
+      - name: Build APK with Gradle
+        run: ./gradlew assembleRelease
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-v${{ steps.version_name.outputs.version_name }}
+          if-no-files-found: error
+          path: |
+            ./**/*.apk
+            ./**/*.aab
+
+      - name: Commit version bump
+        run: |
+          git config --global user.name 'Deploy Bot'
+          git config --global user.email 'deploy-bot@users.noreply.github.com'
+          git commit -m "Increment version to v${{ steps.version_name.outputs.version_name }}" ./gradle.properties
+          git push
