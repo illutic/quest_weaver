@@ -44,40 +44,34 @@ jobs:
         run: ./gradlew lint
 
   build:
-    permissions:
-      contents: write
+    environment:
+      name: Production
     runs-on: macos-latest
     needs: [ compile, test, lint ]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref }}
 
       - name: Setup project environment
         uses: ./.github/actions/setup
-
-      - name: Increment version
-        run: |
-          source scripts/version_utils.sh
-          increment_version_code
 
       - name: Get version name
         id: version_name
         run: |
           source scripts/version_utils.sh
           VERSION_NAME=$(sanitize_version_name "$VERSION_NAME)")
-          update_version_name "$VERSION_NAME"
           echo "version_name=$VERSION_NAME" >> $GITHUB_OUTPUT
         env:
           VERSION_NAME: ${{ github.event.release.tag_name }}
 
       - name: Build APK with Gradle
-        run: ./gradlew assembleRelease
+        run: ./gradlew bundleRelease
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          VERSION_CODE: ${{ env.VERSION_CODE }}
+          VERSION_NAME: ${{ steps.version_name.outputs.version_name }}
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
@@ -88,9 +82,9 @@ jobs:
             ./**/*.apk
             ./**/*.aab
 
-      - name: Commit version bump
+      - name: Increment version code
         run: |
-          git config --global user.name 'Deploy Bot'
-          git config --global user.email 'deploy-bot@users.noreply.github.com'
-          git commit -m "Increment version to v${{ steps.version_name.outputs.version_name }}" ./gradle.properties
-          git push
+          INCREMENTED_VERSION_CODE=$((VERSION_CODE + 1))
+          echo "VERSION_CODE=${INCREMENTED_VERSION_CODE}" >> $GITHUB_ENV
+        env:
+          VERSION_CODE: ${{ env.VERSION_CODE }}
