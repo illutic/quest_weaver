@@ -100,7 +100,7 @@ function upload_release_assets() {
   local token="$3"
   local files
 
-  files=$(find . -type f \( -name "questweaver*.aab" -o -name "questweaver*.apk" \))
+  files=$(find . -type f \( -name "quest_weaver*.aab" -o -name "quest_weaver*.apk" \))
 
   if [ -z "$files" ]; then
       echo "❌ ERROR: No files found to upload. Exiting." >&2

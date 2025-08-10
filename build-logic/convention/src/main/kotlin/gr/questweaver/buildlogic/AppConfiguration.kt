@@ -24,7 +24,7 @@ internal fun Project.configureAndroidApp(applicationExtension: ApplicationExtens
             versionCode = getEnvOrWarn("VERSION_CODE")?.toIntOrNull() ?: 1
             versionName = getEnvOrWarn("VERSION_NAME") ?: "1.0.0"
             manifestPlaceholders[APP_NAME_PLACEHOLDER] = "QuestWeaver"
-            setProperty("archivesBaseName", "questweaver_v$versionName")
+            setProperty("archivesBaseName", "quest_weaver_v$versionName")
         }
 
         buildTypes {
@@ -46,6 +46,7 @@ internal fun Project.configureAndroidApp(applicationExtension: ApplicationExtens
                     "proguard-rules.pro",
                 )
                 applicationIdSuffix = ".staging"
+                setProperty("archivesBaseName", "quest_weaver_v${defaultConfig.versionName}")
             }
 
             release {
@@ -59,7 +60,7 @@ internal fun Project.configureAndroidApp(applicationExtension: ApplicationExtens
                     "proguard-rules.pro",
                 )
                 signingConfig = signingConfigs.getByName("release")
-                setProperty("archivesBaseName", "questweaver_v${defaultConfig.versionName}")
+                setProperty("archivesBaseName", "quest_weaver_v${defaultConfig.versionName}")
             }
         }
 
