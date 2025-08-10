@@ -1,4 +1,4 @@
-name: Compile Project
+name: Compile and Test Project
 
 on:
   push:
