@@ -35,7 +35,21 @@ internal fun Project.configureAndroidApp(applicationExtension: ApplicationExtens
                 applicationIdSuffix = ".debug"
             }
 
+            create("staging") {
+                manifestPlaceholders[APP_NAME_PLACEHOLDER] = "QuestWeaver Staging"
+                isDebuggable = false
+                isMinifyEnabled = true
+                isShrinkResources = true
+                ndk.debugSymbolLevel = "FULL"
+                proguardFiles(
+                    getDefaultProguardFile("proguard-android-optimize.txt"),
+                    "proguard-rules.pro",
+                )
+                applicationIdSuffix = ".staging"
+            }
+
             release {
+                manifestPlaceholders[APP_NAME_PLACEHOLDER] = "QuestWeaver"
                 isDebuggable = false
                 isMinifyEnabled = true
                 isShrinkResources = true
@@ -45,6 +59,7 @@ internal fun Project.configureAndroidApp(applicationExtension: ApplicationExtens
                     "proguard-rules.pro",
                 )
                 signingConfig = signingConfigs.getByName("release")
+                setProperty("archivesBaseName", "questweaver_v${defaultConfig.versionName}")
             }
         }
 
