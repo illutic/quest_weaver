@@ -97,10 +97,10 @@ function upload_release_asset() {
     -H "X-GitHub-Api-Version: 2022-11-28" \
     -H "Content-Type: application/octet-stream" \
     "https://uploads.github.com/repos/$repo_name/releases/$release_id/assets?name=$file_name" \
-    --data-binary "@$file_path" \
+    --data-binary "@$file_path"
 
   if [ $? -ne 0 ]; then
-      echo "❌ ERROR: Failed to upload file $file_path to $url. Exiting." >&2
+      echo "❌ ERROR: Failed to upload file $file_path. Exiting." >&2
       return 1
   fi
 

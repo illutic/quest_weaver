@@ -10,7 +10,10 @@ function sanitize_version_name() {
   fi
 
   # Remove any non-numeric and non-dot characters and make sure the version follows the format X.Y.Z
-  version_name=$(echo "$version_name" | grep -oE '[0-9]+(\.[0-9]+){0,2}' | tail -n1)
+  if [[ -z "$version_name" ]]; then
+    echo "❌ Error: Version name must contain at least one numeric character." >&2
+    return 1
+  fi
 
   IFS='.' read -r x y z <<< "$version_name"
   x=${x:-0}

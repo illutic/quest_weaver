@@ -44,10 +44,6 @@ jobs:
         run: ./gradlew lint
 
   build:
-    permissions:
-      contents: write
-      pull-requests: write
-      repository-projects: write
     environment:
       name: Production
     runs-on: macos-latest
@@ -63,7 +59,7 @@ jobs:
         id: version_name
         run: |
           source scripts/version_utils.sh
-          VERSION_NAME=$(sanitize_version_name "$VERSION_NAME)")
+          VERSION_NAME=$(sanitize_version_name "$VERSION_NAME")
           echo "version_name=$VERSION_NAME" >> $GITHUB_OUTPUT
         env:
           VERSION_NAME: ${{ github.event.release.tag_name }}
