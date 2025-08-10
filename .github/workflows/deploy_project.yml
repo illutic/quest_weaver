@@ -73,19 +73,10 @@ jobs:
           VERSION_CODE: ${{ vars.VERSION_CODE }}
           VERSION_NAME: ${{ steps.version_name.outputs.version_name }}
 
-      - name: Upload Bundle Assets to release
+      - name: Upload Assets to release
         run: |
           source scripts/github_release_utils.sh
-          upload_release_asset "questweaver*.aab" "$REPO_NAME" "$RELEASE_ID" "$TOKEN"
-        env:
-          REPO_NAME: ${{ github.repository }}
-          TOKEN: ${{ secrets.RELEASE_TOKEN }}
-          RELEASE_ID: ${{ github.event.release.id }}
-
-      - name: Upload APK Assets to release
-        run: |
-          source scripts/github_release_utils.sh
-          upload_release_asset "questweaver*.apk" "$REPO_NAME" "$RELEASE_ID" "$TOKEN"
+          upload_release_assets "$REPO_NAME" "$RELEASE_ID" "$TOKEN"
         env:
           REPO_NAME: ${{ github.repository }}
           TOKEN: ${{ secrets.RELEASE_TOKEN }}

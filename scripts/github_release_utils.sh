@@ -68,25 +68,12 @@ function get_download_url() {
   echo "$download_url"
 }
 
-function upload_release_asset() {
-  local file_pattern="$1"
-  local repo_name="$2"
-  local release_id="$3"
-  local token="$4"
-  local file_path
+function upload_file() {
+  local repo_name="$1"
+  local release_id="$2"
+  local token="$3"
+  local file_path="$4"
   local file_name
-
-  # Find the first file matching the pattern recursively in the current directory
-  if [ -z "$file_pattern" ]; then
-    echo "❌ ERROR: File pattern not provided. Exiting." >&2
-    return 1
-  fi
-  file_path=$(find . -type f -name "$file_pattern" | head -n 1)
-
-  if [ ! -f "$file_path" ]; then
-    echo "⚠️ WARN: File $file_path with $file_pattern does not exist. Exiting." >&2
-    return 0
-  fi
 
   file_name=$(basename "$file_path")
 
@@ -105,4 +92,24 @@ function upload_release_asset() {
   fi
 
   echo "✅ File $file_path uploaded successfully."
+}
+
+function upload_release_assets() {
+  local repo_name="$1"
+  local release_id="$2"
+  local token="$3"
+  local files
+
+  files=$(find . -type f \( -name "questweaver*.aab" -o -name "questweaver*.apk" \))
+
+  if [ -z "$files" ]; then
+      echo "❌ ERROR: No files found to upload. Exiting." >&2
+      return 1
+  fi
+
+  echo "Found files to upload: $files"
+
+  for file_path in $files; do
+      upload_file "$repo_name" "$release_id" "$token" "$file_path"
+  done
 }
