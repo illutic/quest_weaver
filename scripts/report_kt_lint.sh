@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 convert_json_to_markdown() {
     local json_input_file="$1"
     local json_input

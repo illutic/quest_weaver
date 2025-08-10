@@ -11,3 +11,8 @@ kotlin {
         }
     }
 }
+
+base {
+    archivesName =
+        if (android.defaultConfig.versionName != null) "questweaver-v${android.defaultConfig.versionName}" else "questweaver"
+}
