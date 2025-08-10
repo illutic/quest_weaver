@@ -76,9 +76,8 @@ jobs:
       - name: Upload Bundle Assets to release
         run: |
           source scripts/github_release_utils.sh
-          upload_release_asset "$FILE_PATTERN" "$REPO_NAME" "$RELEASE_ID" "$TOKEN"
+          upload_release_asset "questweaver*.aab" "$REPO_NAME" "$RELEASE_ID" "$TOKEN"
         env:
-          FILE_PATTERN: "questweaver*.aab"
           REPO_NAME: ${{ github.repository }}
           TOKEN: ${{ secrets.RELEASE_TOKEN }}
           RELEASE_ID: ${{ github.event.release.id }}
@@ -86,9 +85,8 @@ jobs:
       - name: Upload APK Assets to release
         run: |
           source scripts/github_release_utils.sh
-          upload_release_asset "$FILE_PATTERN" "$REPO_NAME" "$RELEASE_ID" "$TOKEN"
+          upload_release_asset "questweaver*.apk" "$REPO_NAME" "$RELEASE_ID" "$TOKEN"
         env:
-          FILE_PATTERN: "questweaver*.apk"
           REPO_NAME: ${{ github.repository }}
           TOKEN: ${{ secrets.RELEASE_TOKEN }}
           RELEASE_ID: ${{ github.event.release.id }}
