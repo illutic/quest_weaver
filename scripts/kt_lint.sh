@@ -8,7 +8,6 @@ source "scripts/general_utils.sh"
 function get_kt_lint() {
   local url="https://api.github.com/repos/pinterest/ktlint/releases/latest"
   local cache_dir="$1"
-  local gh_token="$2"
   local executable_path="${cache_dir}/ktlint"
   local version_file="${cache_dir}/ktlint.version"
   local version
@@ -19,7 +18,7 @@ function get_kt_lint() {
     version=$(cat "$version_file")
   fi
 
-  if ! is_cached "$url" "$version" "$gh_token"; then
+  if ! is_cached "$url" "$version"; then
     download_kt_lint "$url" "$executable_path"
   else
     echo "✅ ktlint is up to date (version $(cat "$version_file")). Using cached version."
@@ -29,12 +28,11 @@ function get_kt_lint() {
 function download_kt_lint() {
   local url="$1"
   local kt_lint_path="$2"
-  local gh_token="$3"
   local release_info
   local version
   local download_url
 
-  release_info=$(get_release_info "$url" "$gh_token")
+  release_info=$(get_release_info "$url")
   version=$(get_github_release_version "$release_info")
   download_url=$(get_download_url "$release_info" "ktlint")
 
@@ -58,7 +56,6 @@ function download_kt_lint() {
 function get_compose_ruleset() {
   local url="https://api.github.com/repos/mrmans0n/compose-rules/releases/latest"
   local cache_dir="$1"
-  local gh_token="$2"
   local executable_path="${cache_dir}/compose-ruleset.jar"
   local version_file="${cache_dir}/compose-ruleset.version"
   local version
@@ -69,8 +66,8 @@ function get_compose_ruleset() {
     version=$(cat "$version_file")
   fi
 
-  if ! is_cached "$url" "$version" "$gh_token"; then
-    download_compose_ruleset "$url" "$executable_path" "$gh_token"
+  if ! is_cached "$url" "$version"; then
+    download_compose_ruleset "$url" "$executable_path"
   else
     echo "✅ compose ruleset is up to date (version $(cat "$version_file")). Using cached version."
   fi
@@ -79,12 +76,11 @@ function get_compose_ruleset() {
 function download_compose_ruleset() {
   local url="$1"
   local ruleset_path="$2"
-  local gh_token="$3"
   local release_info
   local version
   local download_url
 
-  release_info=$(get_release_info "$url" "$gh_token")
+  release_info=$(get_release_info "$url")
   version=$(get_github_release_version "$release_info")
   download_url=$(get_download_url "$release_info" "ktlint")
 
