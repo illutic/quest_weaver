@@ -8,16 +8,16 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 internal val JAVA_VERSION = JavaVersion.VERSION_21
 internal val JVM_TARGET = JvmTarget.JVM_21
-internal const val COMPILE_SDK = 35
+internal const val COMPILE_SDK = 36
 internal const val MIN_SDK = 24
-internal const val TARGET_SDK = 35
+internal const val TARGET_SDK = 36
 internal const val APP_NAME_PLACEHOLDER = "appName"
 
 internal fun Project.configureMultiplatformAndroidLibrary(kmpExtension: KotlinMultiplatformExtension) =
     kmpExtension.apply {
         androidLibrary {
             namespace = moduleName
-            
+
             compileSdk {
                 version = release(COMPILE_SDK)
             }
