@@ -8,4 +8,5 @@ dependencies {
     implementation(projects.core.common)
     implementation(projects.core.database)
     implementation(projects.feature.onboarding)
+    implementation(projects.feature.user.data)
 }
