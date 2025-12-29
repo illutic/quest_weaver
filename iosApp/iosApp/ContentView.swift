@@ -1,5 +1,5 @@
 import SwiftUI
-import Shared
+import QuestWeaver
 
 struct ContentView: View {
     @State private var showContent = false

@@ -16,9 +16,8 @@ internal const val APP_NAME_PLACEHOLDER = "appName"
 internal fun Project.configureMultiplatformAndroidLibrary(kmpExtension: KotlinMultiplatformExtension) =
     kmpExtension.apply {
         androidLibrary {
-            val moduleName = path.split(":").drop(2).joinToString(".")
-            namespace =
-                if (moduleName.isNotEmpty()) "gr.questweaver.app.$moduleName" else "gr.questweaver.app"
+            namespace = moduleName
+            
             compileSdk {
                 version = release(COMPILE_SDK)
             }
@@ -50,9 +49,6 @@ internal fun Project.configureMultiplatformAndroidLibrary(kmpExtension: KotlinMu
 
 internal fun Project.configureIosLibrary(kmpExtension: KotlinMultiplatformExtension) =
     kmpExtension.apply {
-        val moduleName = path.split(":").drop(2).joinToString(".")
-        val bundleId =
-            if (moduleName.isNotEmpty()) "gr.questweaver.$moduleName" else "gr.questweaver"
         listOf(
             iosArm64(),
             iosSimulatorArm64(),
@@ -60,7 +56,17 @@ internal fun Project.configureIosLibrary(kmpExtension: KotlinMultiplatformExtens
             iosTarget.binaries.framework {
                 baseName = "QuestWeaver"
                 isStatic = true
-                binaryOption("bundleId", bundleId)
+                optimized = !debuggable
+                binaryOption("bundleId", moduleName)
             }
         }
+    }
+
+private val Project.moduleName: String
+    get() {
+        val moduleName = path
+            .split(":")
+            .drop(1)
+            .joinToString(".")
+        return if (moduleName.isNotEmpty()) "gr.questweaver.app.$moduleName" else "gr.questweaver.app"
     }
