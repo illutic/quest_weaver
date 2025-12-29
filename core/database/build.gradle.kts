@@ -7,6 +7,7 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.core.common)
             implementation(libs.koin.core)
+            implementation(projects.feature.user.data)
         }
     }
 }
