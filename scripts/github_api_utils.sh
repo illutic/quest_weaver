@@ -5,7 +5,6 @@ function update_variable() {
   local new_value="$2"
   local repos_name="$3"
   local environment="$4"
-  local token="$5"
   local json_body
   local url
 
@@ -19,7 +18,6 @@ function update_variable() {
   curl -L \
     -X PATCH \
     -H "Accept: application/vnd.github+json" \
-    -H "Authorization: Bearer $token" \
     -H "X-GitHub-Api-Version: 2022-11-28" \
     "$url" \
     -d "$json_body"

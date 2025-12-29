@@ -3,11 +3,13 @@ package gr.questweaver.buildlogic
 import com.android.build.api.dsl.ApplicationExtension
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
-import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 internal fun Project.configureAndroidApp(applicationExtension: ApplicationExtension) {
     applicationExtension.apply {
-        configureAndroidLibrary(this)
+        compileOptions {
+            sourceCompatibility = JAVA_VERSION
+            targetCompatibility = JAVA_VERSION
+        }
 
         signingConfigs {
             create("release") {
@@ -21,7 +23,16 @@ internal fun Project.configureAndroidApp(applicationExtension: ApplicationExtens
         defaultConfig {
             manifestPlaceholders[APP_NAME_PLACEHOLDER] = "QuestWeaver"
             applicationId = "gr.questweaver.app.android"
-            targetSdk = TARGET_SDK
+            namespace = "gr.questweaver.app.android"
+            targetSdk {
+                version = release(TARGET_SDK)
+            }
+            minSdk {
+                version = release(MIN_SDK)
+            }
+            compileSdk {
+                version = release(COMPILE_SDK)
+            }
             versionCode = getEnvOrWarn("VERSION_CODE")?.toIntOrNull() ?: 1
             versionName = getEnvOrWarn("VERSION_NAME")
             setProperty("archivesBaseName", "quest_weaver${versionName?.let { "_v$it" }}")
@@ -46,6 +57,7 @@ internal fun Project.configureAndroidApp(applicationExtension: ApplicationExtens
                     "proguard-rules.pro",
                 )
                 applicationIdSuffix = ".staging"
+                signingConfig = signingConfigs.getByName("debug")
                 setProperty(
                     "archivesBaseName",
                     "quest_weaver${defaultConfig.versionName?.let { "_v$it" }}",
@@ -71,35 +83,11 @@ internal fun Project.configureAndroidApp(applicationExtension: ApplicationExtens
         }
 
         dependencies {
+            val koinPlatform = libs.getLibrary("koin-bom").get()
             "implementation"(libs.getLibrary("androidx-core-ktx").get())
             "implementation"(libs.getLibrary("androidx-activity-compose").get())
+            "implementation"(project.dependencies.platform(koinPlatform))
+            "implementation"(libs.getLibrary("koin-android").get())
         }
     }
 }
-
-internal fun Project.configureAndroidApp(kmpExtension: KotlinMultiplatformExtension) =
-    kmpExtension.apply {
-        androidTarget {
-            compilations.all {
-                compileTaskProvider.configure {
-                    compilerOptions {
-                        jvmTarget.set(JVM_TARGET)
-                    }
-                }
-            }
-        }
-    }
-
-internal fun Project.configureIosApp(kmpExtension: KotlinMultiplatformExtension) =
-    kmpExtension.apply {
-        listOf(
-            iosArm64(),
-            iosSimulatorArm64(),
-        ).forEach { iosTarget ->
-            iosTarget.binaries.framework {
-                baseName = "QuestWeaver"
-                isStatic = true
-                optimized = true
-            }
-        }
-    }

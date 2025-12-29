@@ -1,3 +1,4 @@
+
 plugins {
     `kotlin-dsl`
 }
@@ -5,12 +6,14 @@ plugins {
 group = "gr.questweaver.buildlogic"
 
 dependencies {
-    compileOnly(libs.plugins.androidApplication.toDep())
     compileOnly(libs.plugins.androidLibrary.toDep())
+    compileOnly(libs.plugins.androidApplication.toDep())
     compileOnly(libs.plugins.composeMultiplatform.toDep())
     compileOnly(libs.plugins.kotlinMultiplatform.toDep())
     compileOnly(libs.plugins.kotlinSerialization.toDep())
     compileOnly(libs.plugins.composeCompiler.toDep())
+    implementation(libs.plugins.androidx.room.toDep())
+    implementation(libs.plugins.ksp.toDep())
 }
 
 fun Provider<PluginDependency>.toDep() =
@@ -47,6 +50,13 @@ gradlePlugin {
                     .get()
                     .pluginId
             implementationClass = "ComposeMultiplatformConventionPlugin"
+        }
+        register("roomMultiplatform") {
+            id =
+                libs.plugins.questweaver.room.multiplatform
+                    .get()
+                    .pluginId
+            implementationClass = "RoomMultiplatformConventionPlugin"
         }
     }
 }
