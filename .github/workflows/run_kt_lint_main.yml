@@ -1,7 +1,9 @@
 name: Static Analysis
 
 on:
-  pull_request:
+  push:
+    branches:
+      - main
 
 jobs:
   kt_lint:
@@ -44,6 +46,22 @@ jobs:
           path: ./lint
           key: kt-lint
 
+      - name: Fetch Kt Lint
+        id: fetch_kt_lint
+        run: |
+          source "scripts/kt_lint.sh"
+          get_kt_lint "$KTLINT_DIR"
+        env:
+          KTLINT_DIR: ${{ github.workspace }}/lint/ktlint
+
+      - name: Fetch Kt Lint Rules
+        id: fetch_kt_lint_rules
+        run: |
+          source "scripts/kt_lint.sh"
+          get_compose_ruleset "$KTLINT_RULES_DIR"
+        env:
+          KTLINT_RULES_DIR: ${{ github.workspace }}/lint/ktlint-rules
+
       - name: Run Kt Lint
         id: run_kt_lint
         continue-on-error: true
@@ -82,3 +100,10 @@ jobs:
           fi
         env:
           KT_LINT_REPORT: ${{ github.workspace }}/lint/ktlint-report.json
+
+      - name: Upload Kt Lint Cache
+        uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: ./lint
+          key: kt-lint
