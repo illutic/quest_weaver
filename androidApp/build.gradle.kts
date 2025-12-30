@@ -4,9 +4,5 @@ plugins {
 }
 
 dependencies {
-    implementation(projects.core.ui)
-    implementation(projects.core.common)
-    implementation(projects.core.database)
-    implementation(projects.feature.onboarding)
-    implementation(projects.feature.user.data)
+    implementation(projects.shared)
 }

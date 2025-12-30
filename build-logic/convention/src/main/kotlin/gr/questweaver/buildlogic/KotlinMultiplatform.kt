@@ -8,8 +8,9 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 internal fun Project.configureKotlinMultiplatform(kmpExtension: KotlinMultiplatformExtension) =
     kmpExtension.apply {
         configureMultiplatformAndroidLibrary(this)
-        configureIosLibrary(this)
 
+        iosArm64()
+        iosSimulatorArm64()
         applyDefaultHierarchyTemplate()
 
         sourceSets.apply {
@@ -22,7 +23,6 @@ internal fun Project.configureKotlinMultiplatform(kmpExtension: KotlinMultiplatf
             }
             androidMain.dependencies {
                 implementation(libs.findLibrary("androidx-core-ktx").get())
-                implementation(libs.findLibrary("androidx-navigation").get())
                 implementation(libs.findLibrary("kotlinx-coroutines-core").get())
                 implementation(libs.findLibrary("kotlinx-coroutines-android").get())
                 implementation(libs.findLibrary("koin-android").get())

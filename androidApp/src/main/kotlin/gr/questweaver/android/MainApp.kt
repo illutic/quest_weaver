@@ -1,14 +1,11 @@
 package gr.questweaver.android
 
 import android.app.Application
-import org.koin.core.context.startKoin
+import gr.questweaver.shared.initKoin
 
 class MainApp : Application() {
     override fun onCreate() {
         super.onCreate()
-        startKoin {
-            setupAndroid(this@MainApp)
-            injectModules()
-        }
+        initKoin(this)
     }
 }

@@ -12,10 +12,9 @@ val userDataModule = module {
     single {
         UserRepositoryImpl(userDataSource = LocalUserDataSource(dao = get()))
     }
-    includes(userUseCasesModule)
 }
 
-private val userUseCasesModule = module {
+val userUseCasesModule = module {
     single {
         GetUserUseCase(
             userRepository = get(),
