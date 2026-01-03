@@ -37,6 +37,7 @@ class ComposeMultiplatformConventionPlugin : Plugin<Project> {
                         dependencies {
                             implementation(composeDeps.uiTooling)
                             implementation(composeDeps.preview)
+                            implementation(libs.getLibrary("androidx-viewmodel-compose").get())
                         }
                     }
                     commonMain {

@@ -9,7 +9,7 @@ actual val databaseModule: Module = module {
     single<AppDatabase> {
         getRoomDatabase(
             builder = getDatabaseBuilder(),
-            coroutineDispatcher = get(named<QuestWeaverDispatchers.IO>())
+            coroutineDispatcher = get(named(QuestWeaverDispatchers.Io))
         )
     }
 }
