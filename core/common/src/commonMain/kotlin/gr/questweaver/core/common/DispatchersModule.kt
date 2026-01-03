@@ -1,26 +1,17 @@
 package gr.questweaver.core.common
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
-import org.koin.core.module.dsl.createdAtStart
-import org.koin.core.module.dsl.withOptions
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val dispatchersModule =
-    module {
-        single { Dispatchers.IO } withOptions {
-            named<QuestWeaverDispatchers.IO>()
-            createdAtStart()
-        }
+    module(createdAtStart = true) {
+        single(named(QuestWeaverDispatchers.Io)) { ioDispatcher }
 
-        single { Dispatchers.Default } withOptions {
-            named<QuestWeaverDispatchers.Default>()
-            createdAtStart()
-        }
+        single(named(QuestWeaverDispatchers.Default)) { Dispatchers.Default }
 
-        single { Dispatchers.Main } withOptions {
-            named<QuestWeaverDispatchers.Main>()
-            createdAtStart()
-        }
+        single(named(QuestWeaverDispatchers.Main)) { Dispatchers.Main }
     }
+
+internal expect val ioDispatcher: CoroutineDispatcher

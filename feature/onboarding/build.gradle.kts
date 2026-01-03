@@ -8,6 +8,8 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.core.ui)
             implementation(projects.core.common)
+            implementation(projects.core.navigation)
+            implementation(projects.feature.user.domain)
         }
     }
 }
