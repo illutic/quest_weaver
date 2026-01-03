@@ -1,3 +1,6 @@
 package gr.questweaver.navigation
 
-interface Route
+interface Route {
+    val path: String
+    val id: String
+}

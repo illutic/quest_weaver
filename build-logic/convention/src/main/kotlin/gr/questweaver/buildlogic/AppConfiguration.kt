@@ -6,6 +6,10 @@ import org.gradle.kotlin.dsl.dependencies
 
 internal fun Project.configureAndroidApp(applicationExtension: ApplicationExtension) {
     applicationExtension.apply {
+        buildFeatures {
+            compose = true
+        }
+        
         compileOptions {
             sourceCompatibility = JAVA_VERSION
             targetCompatibility = JAVA_VERSION
@@ -35,7 +39,6 @@ internal fun Project.configureAndroidApp(applicationExtension: ApplicationExtens
             }
             versionCode = getEnvOrWarn("VERSION_CODE")?.toIntOrNull() ?: 1
             versionName = getEnvOrWarn("VERSION_NAME")
-            setProperty("archivesBaseName", "quest_weaver${versionName?.let { "_v$it" }}")
         }
 
         buildTypes {
@@ -58,10 +61,6 @@ internal fun Project.configureAndroidApp(applicationExtension: ApplicationExtens
                 )
                 applicationIdSuffix = ".staging"
                 signingConfig = signingConfigs.getByName("debug")
-                setProperty(
-                    "archivesBaseName",
-                    "quest_weaver${defaultConfig.versionName?.let { "_v$it" }}",
-                )
             }
 
             release {
@@ -75,10 +74,6 @@ internal fun Project.configureAndroidApp(applicationExtension: ApplicationExtens
                     "proguard-rules.pro",
                 )
                 signingConfig = signingConfigs.getByName("release")
-                setProperty(
-                    "archivesBaseName",
-                    "quest_weaver${defaultConfig.versionName?.let { "_v$it" }}",
-                )
             }
         }
 

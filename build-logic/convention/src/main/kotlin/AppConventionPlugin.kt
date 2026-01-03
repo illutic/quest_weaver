@@ -9,6 +9,7 @@ class AppConventionPlugin : Plugin<Project> {
         with(target) {
             with(pluginManager) {
                 apply("com.android.application")
+                apply("org.jetbrains.kotlin.plugin.compose")
             }
 
             val appExtension = extensions.getByType<ApplicationExtension>()

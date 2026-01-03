@@ -5,4 +5,6 @@ plugins {
 
 dependencies {
     implementation(projects.shared)
+    implementation(libs.koin.android)
+    implementation(libs.androidx.splashscreen)
 }
