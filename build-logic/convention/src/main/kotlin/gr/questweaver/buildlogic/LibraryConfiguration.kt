@@ -16,17 +16,11 @@ internal const val APP_NAME_PLACEHOLDER = "appName"
 internal fun Project.configureMultiplatformAndroidLibrary(kmpExtension: KotlinMultiplatformExtension) =
     kmpExtension.apply {
         androidLibrary {
-            val moduleName = path
-                .split(":")
-                .drop(1)
-                .joinToString(".")
+            namespace = getNamespace()
 
-            namespace =
-                if (moduleName.isNotEmpty()) {
-                    "gr.questweaver.app.$moduleName"
-                } else {
-                    "gr.questweaver.app"
-                }
+            androidResources {
+                enable = true
+            }
 
             compileSdk {
                 version = release(COMPILE_SDK)

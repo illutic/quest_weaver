@@ -1,5 +1,5 @@
 [versions]
-compose-multiplatform = "1.9.3"
+compose-multiplatform = "1.10.0-rc02"
 
 # Google
 android-firebaseBom = "34.7.0"
@@ -9,17 +9,15 @@ playServicesNearby = "19.3.0"
 android-agp = "8.13.2"
 android-coreKtx = "1.17.0"
 android-activityCompose = "1.12.2"
-android-composeBom = "2025.12.01"
 android-appcompat = "1.7.1"
-android-composeAnimation = "1.10.0"
 android-splashScreen = "1.2.0"
 android-coil = "2.7.0"
 androidx-room = "2.8.4"
 androidx-sqlite = "2.6.2"
-androidx-viewmodel = "2.10.0"
-nav3Core = "1.0.0"
-lifecycleViewmodelNav3 = "2.10.0"
-material3AdaptiveNav3 = "1.3.0-alpha05"
+viewmodel = "2.10.0-alpha07"
+nav3Core = "1.0.0-alpha06"
+material3AdaptiveNav3 = "1.3.0-alpha02"
+material3 = "1.10.0-alpha05"
 
 # Kotlin
 kotlin = "2.3.0"
@@ -46,24 +44,12 @@ google-playServicesNearby = { group = "com.google.android.gms", name = "play-ser
 # AndroidX
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "android-coreKtx" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "android-activityCompose" }
-androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "android-composeBom" }
-androidx-compose-animation = { group = "androidx.compose.animation", name = "animation", version.ref = "android-composeAnimation" }
-androidx-ui = { group = "androidx.compose.ui", name = "ui" }
-androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
-androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
-androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "android-appcompat" }
-androidx-navigation-runtime = { group = "androidx.navigation3", name = "navigation3-runtime", version.ref = "nav3Core" }
-androidx-navigation-ui = { group = "androidx.navigation3", name = "navigation3-ui", version.ref = "nav3Core" }
 androidx-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "android-splashScreen" }
 androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "androidx-sqlite" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "androidx-room" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "androidx-room" }
-androidx-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel", version.ref = "androidx-viewmodel" }
-androidx-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-viewmodel" }
-androidx-lifecycle-viewmodel-navigation = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "lifecycleViewmodelNav3" }
-androidx-material3-adaptive-navigation3 = { group = "androidx.compose.material3.adaptive", name = "adaptive-navigation3", version.ref = "material3AdaptiveNav3" }
 
 # Kotlin
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
@@ -83,6 +69,20 @@ koin-android = { module = "io.insert-koin:koin-android" }
 
 # Logging
 napier = { module = "io.github.aakira:napier", version.ref = "napier" }
+
+# Compose
+compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "compose-multiplatform" }
+compose-ui-tooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "compose-multiplatform" }
+compose-ui-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "compose-multiplatform" }
+compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose-multiplatform" }
+compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "compose-multiplatform" }
+compose-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "material3" }
+compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "compose-multiplatform" }
+compose-navigation3-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "nav3Core" }
+compose-material3-adaptive = { group = "org.jetbrains.compose.material3.adaptive", name = "adaptive-navigation3", version.ref = "material3AdaptiveNav3" }
+compose-viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "viewmodel" }
+compose-lifecycle-viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel", version.ref = "viewmodel" }
+compose-viewmodel-nav3 = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "viewmodel" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "android-agp" }

@@ -19,7 +19,7 @@ kotlin {
             export(projects.feature.onboarding)
             export(projects.feature.user.data)
             export(projects.feature.user.domain)
-            export(libs.androidx.lifecycle.viewmodel)
+            export(libs.compose.lifecycle.viewmodel)
         }
     }
 

@@ -5,10 +5,9 @@ plugins {
 
 kotlin {
     sourceSets {
-        androidMain.dependencies {
-            api(libs.androidx.navigation.runtime)
-            api(libs.androidx.navigation.ui)
-            api(libs.androidx.material3.adaptive.navigation3)
+        commonMain.dependencies {
+            api(libs.compose.navigation3.ui)
+            api(libs.compose.material3.adaptive)
         }
     }
 }
