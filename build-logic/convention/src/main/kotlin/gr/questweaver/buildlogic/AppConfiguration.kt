@@ -9,7 +9,7 @@ internal fun Project.configureAndroidApp(applicationExtension: ApplicationExtens
         buildFeatures {
             compose = true
         }
-        
+
         compileOptions {
             sourceCompatibility = JAVA_VERSION
             targetCompatibility = JAVA_VERSION

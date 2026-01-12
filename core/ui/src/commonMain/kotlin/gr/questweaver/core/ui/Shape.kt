@@ -1,14 +1,23 @@
 package gr.questweaver.core.ui
 
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Shapes
-import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 
-val AppShapes =
-    Shapes(
-        extraSmall = RoundedCornerShape(2.dp),
-        small = RoundedCornerShape(4.dp),
-        medium = RoundedCornerShape(8.dp),
-        large = RoundedCornerShape(16.dp),
-        extraLarge = RoundedCornerShape(32.dp),
-    )
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+val AppShapes
+    @Composable
+    @ReadOnlyComposable
+    get() =
+        Shapes(
+            extraSmall = RoundedCornerShape(sizes.eleven),
+            small = RoundedCornerShape(sizes.ten),
+            medium = RoundedCornerShape(sizes.eight),
+            large = RoundedCornerShape(sizes.four),
+            largeIncreased = RoundedCornerShape(sizes.three),
+            extraLarge = RoundedCornerShape(sizes.two),
+            extraLargeIncreased = RoundedCornerShape(sizes.one),
+            extraExtraLarge = RoundedCornerShape(sizes.zero),
+        )

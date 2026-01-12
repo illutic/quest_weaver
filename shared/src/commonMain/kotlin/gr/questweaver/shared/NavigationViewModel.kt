@@ -45,7 +45,7 @@ class NavigationViewModel(
         if (isRegistered) {
             TODO()
         } else {
-            navigateTo(OnboardingRoute)
+            navigateTo(OnboardingRoute.Welcome)
         }
         setLoading(false)
     }

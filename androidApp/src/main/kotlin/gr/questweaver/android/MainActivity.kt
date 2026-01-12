@@ -3,6 +3,7 @@ package gr.questweaver.android
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -22,10 +23,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
 
-        splashScreen.setKeepOnScreenCondition {
-            viewModel.navigationState.value.isLoading
-        }
+        splashScreen.setKeepOnScreenCondition { viewModel.navigationState.value.isLoading }
 
         setContent {
             val navigationState by viewModel.navigationState.collectAsStateWithLifecycle()
@@ -34,7 +34,8 @@ class MainActivity : ComponentActivity() {
             QuestWeaverTheme {
                 MainNavigation(
                     navigationState = navigationState,
-                    onBack = { viewModel.navigateBack() }
+                    onBack = { viewModel.navigateBack() },
+                    onNavigate = { viewModel.navigateTo(it) }
                 )
             }
         }
