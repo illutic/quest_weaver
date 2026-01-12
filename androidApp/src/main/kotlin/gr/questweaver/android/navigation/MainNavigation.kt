@@ -16,10 +16,7 @@ fun MainNavigation(
         onBack = onBack,
         entryProvider = { key ->
             when (key) {
-                is OnboardingRoute -> NavEntry(key) {
-                    OnboardingRoute()
-                }
-
+                is OnboardingRoute -> NavEntry(key) { OnboardingRoute(key) }
                 else -> error("Unknown route: $key")
             }
         }
