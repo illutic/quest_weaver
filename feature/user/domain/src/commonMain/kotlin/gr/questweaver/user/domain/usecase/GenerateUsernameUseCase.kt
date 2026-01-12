@@ -1,0 +1,76 @@
+package gr.questweaver.user.domain.usecase
+
+class GenerateUsernameUseCase {
+
+    operator fun invoke(): String {
+        return "${adjectives.random()} ${nouns.random()}"
+    }
+
+    private val adjectives =
+        listOf(
+            "Swift",
+            "Brave",
+            "Arcane",
+            "Shadow",
+            "Silent",
+            "Crimson",
+            "Azure",
+            "Golden",
+            "Silver",
+            "Crystal",
+            "Storm",
+            "Thunder",
+            "Iron",
+            "Steel",
+            "Obsidian",
+            "Emerald",
+            "Sapphire",
+            "Ruby",
+            "Diamond",
+            "Astral",
+            "Celestial",
+            "Void",
+            "Ethereal",
+            "Mystic",
+            "Ancient",
+            "Forgotten",
+            "Hidden",
+            "Lost",
+            "Wandering",
+            "Eternal"
+        )
+
+    private val nouns =
+        listOf(
+            "Blade",
+            "Weaver",
+            "Mage",
+            "Rogue",
+            "Knight",
+            "Walker",
+            "Hunter",
+            "Seeker",
+            "Guardian",
+            "Sentinel",
+            "Warden",
+            "Striker",
+            "Breaker",
+            "Shaper",
+            "Caller",
+            "Whisper",
+            "Singer",
+            "Dancer",
+            "Dreamer",
+            "Voyager",
+            "Traveler",
+            "Nomad",
+            "Pilgrim",
+            "Oracle",
+            "Prophet",
+            "Seer",
+            "Sage",
+            "Scholar",
+            "Scribe",
+            "Bard"
+        )
+}

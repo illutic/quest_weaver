@@ -44,18 +44,21 @@ import gr.questweaver.feature.onboarding.onboarding_registration_title
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun RegistrationScreen(onRegisterClick: (String) -> Unit) {
-    var name by remember { mutableStateOf("") }
+fun RegistrationScreen(
+    name: String,
+    onNameChange: (String) -> Unit,
+    onRandomNameClick: () -> Unit,
+    onRegisterClick: (String) -> Unit
+) {
     var visible by remember { mutableStateOf(false) }
-    val randomNames = listOf("Aelthric", "Borg", "Caelum", "Drakon", "Elara", "Fenrir")
 
     LaunchedEffect(Unit) { visible = true }
 
     RegistrationContent(
         name = name,
-        onNameChange = { name = it },
+        onNameChange = onNameChange,
         onRegisterClick = onRegisterClick,
-        onRandomNameClick = { name = randomNames.random() },
+        onRandomNameClick = onRandomNameClick,
         visible = visible
     )
 }

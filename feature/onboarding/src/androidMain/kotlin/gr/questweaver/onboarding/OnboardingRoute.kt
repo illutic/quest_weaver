@@ -65,10 +65,13 @@ fun OnboardingRoute(
 
                             is OnboardingRoute.Registration ->
                                 RegistrationScreen(
+                                    name = state.name,
+                                    onNameChange = viewModel::onNameChange,
                                     onRegisterClick = { name ->
                                         viewModel.registerUser(name)
                                         viewModel.navigateTo(OnboardingRoute.Tutorial)
-                                    }
+                                    },
+                                    onRandomNameClick = viewModel::generateRandomName
                                 )
 
                             is OnboardingRoute.Tutorial ->
