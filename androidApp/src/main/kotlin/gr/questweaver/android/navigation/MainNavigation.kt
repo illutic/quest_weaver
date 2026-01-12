@@ -18,8 +18,8 @@ fun MainNavigation(
         onBack = onBack,
         entryProvider = { key ->
             when (key) {
-                is OnboardingRoute ->
-                    NavEntry(key) { OnboardingRoute(route = key, onNavigate = onNavigate) }
+                is OnboardingRoute.Graph ->
+                    NavEntry(key) { OnboardingRoute(onNavigate = onNavigate) }
 
                 else -> error("Unknown route: $key")
             }

@@ -17,4 +17,9 @@ sealed interface OnboardingRoute : Route {
         override val path: String = "onboarding/tutorial"
         override val id: String = "onboarding_tutorial"
     }
+
+    object Graph : OnboardingRoute {
+        override val path: String = "onboarding/graph"
+        override val id: String = "onboarding_graph"
+    }
 }

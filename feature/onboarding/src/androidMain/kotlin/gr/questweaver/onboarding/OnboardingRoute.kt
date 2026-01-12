@@ -12,6 +12,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation3.runtime.NavEntry
+import androidx.navigation3.ui.NavDisplay
 import gr.questweaver.navigation.Route
 import gr.questweaver.onboarding.screens.RegistrationScreen
 import gr.questweaver.onboarding.screens.TutorialScreen
@@ -19,18 +21,20 @@ import gr.questweaver.onboarding.screens.WelcomeScreen
 
 @Composable
 fun OnboardingRoute(
-    route: OnboardingRoute,
     onNavigate: (Route) -> Unit,
 ) {
     val viewModel = viewModel { OnboardingViewModel() }
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    val currentRoute = state.backStack.last()
 
     val progress by
     animateFloatAsState(
         targetValue =
-            when (route) {
+            when (currentRoute) {
                 OnboardingRoute.Welcome -> 0.33f
                 OnboardingRoute.Registration -> 0.66f
                 OnboardingRoute.Tutorial -> 1.0f
+                else -> 0f
             },
         label = "onboarding_progress"
     )
@@ -44,24 +48,43 @@ fun OnboardingRoute(
         }
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
-            when (route) {
-                is OnboardingRoute.Welcome ->
-                    WelcomeScreen(
-                        onStartClick = {
-                            onNavigate(OnboardingRoute.Registration)
-                        }
-                    )
+            NavDisplay(
+                backStack = state.backStack,
+                onBack = { viewModel.navigateBack() },
+                entryProvider = { route ->
+                    NavEntry(route) {
+                        when (route) {
+                            is OnboardingRoute.Welcome ->
+                                WelcomeScreen(
+                                    onStartClick = {
+                                        viewModel.navigateTo(
+                                            OnboardingRoute.Registration
+                                        )
+                                    }
+                                )
 
-                is OnboardingRoute.Registration ->
-                    RegistrationScreen(
-                        onRegisterClick = { name ->
-                            viewModel.registerUser(name)
-                            onNavigate(OnboardingRoute.Tutorial)
-                        }
-                    )
+                            is OnboardingRoute.Registration ->
+                                RegistrationScreen(
+                                    onRegisterClick = { name ->
+                                        viewModel.registerUser(name)
+                                        viewModel.navigateTo(OnboardingRoute.Tutorial)
+                                    }
+                                )
 
-                is OnboardingRoute.Tutorial -> TutorialScreen(onCompleteClick = {})
-            }
+                            is OnboardingRoute.Tutorial ->
+                                TutorialScreen(
+                                    onCompleteClick = {
+                                        onNavigate(
+                                            OnboardingRoute.Graph
+                                        ) // Exit onboarding
+                                    }
+                                )
+
+                            else -> error("Unknown route: $route")
+                        }
+                    }
+                }
+            )
         }
     }
 }

@@ -2,6 +2,7 @@ package gr.questweaver.onboarding
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import gr.questweaver.navigation.Route
 import gr.questweaver.user.domain.usecase.IsUserRegisteredUseCase
 import gr.questweaver.user.domain.usecase.SetUserUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,6 +31,20 @@ class OnboardingViewModel : ViewModel(), KoinComponent {
             val isRegistered = isUserRegisteredUseCase().getOrElse { false }
             _state.update { it.copy(isRegistered = isRegistered) }
         }
+
+    fun navigateTo(route: Route) {
+        _state.update { it.copy(backStack = it.backStack + route) }
+    }
+
+    fun navigateBack() {
+        _state.update {
+            if (it.backStack.size > 1) {
+                it.copy(backStack = it.backStack.dropLast(1))
+            } else {
+                it
+            }
+        }
+    }
 
     init {
         loadOnboardingState()
