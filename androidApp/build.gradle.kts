@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.questweaver.app)
     alias(libs.plugins.kotlinAndroid)
+    alias(libs.plugins.questweaver.compose.multiplatform)
 }
 
 dependencies {

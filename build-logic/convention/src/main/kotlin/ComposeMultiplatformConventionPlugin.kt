@@ -11,16 +11,6 @@ import org.jetbrains.kotlin.compose.compiler.gradle.ComposeCompilerGradlePluginE
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 class ComposeMultiplatformConventionPlugin : Plugin<Project> {
-    private fun ensureKotlinMultiplatformPluginIsApplied(project: Project) =
-        project.extensions.findByType(KotlinMultiplatformExtension::class.java) ?: error(
-            "Kotlin Multiplatform plugin is not applied\n" +
-                    "\nMake sure the order of the plugins is correct:\n\n" +
-                    "plugins {\n" +
-                    "\talias(libs.plugins.kotlin.multiplatform)\n" +
-                    "\talias(libs.plugins.compose.multiplatform)\n" +
-                    "}\n\n",
-        )
-
     override fun apply(target: Project) =
         with(target) {
             with(pluginManager) {
@@ -28,9 +18,6 @@ class ComposeMultiplatformConventionPlugin : Plugin<Project> {
                 apply("org.jetbrains.kotlin.plugin.compose")
             }
 
-            extensions.getByType(ComposeExtension::class.java).dependencies
-
-            ensureKotlinMultiplatformPluginIsApplied(this)
             extensions.configure<ComposeCompilerGradlePluginExtension>(::configureCompose)
             extensions.configure<ComposeExtension> {
                 extensions.configure<ResourcesExtension> {
@@ -39,28 +26,62 @@ class ComposeMultiplatformConventionPlugin : Plugin<Project> {
                     generateResClass = always
                 }
             }
-            extensions.configure<KotlinMultiplatformExtension> {
-                sourceSets.apply {
-                    androidMain {
-                        dependencies {
-                            implementation(libs.getLibrary("compose-ui-tooling").get())
-                        }
-                    }
-                    commonMain {
-                        dependencies {
-                            implementation(libs.getLibrary("compose-ui").get())
-                            implementation(libs.getLibrary("compose-ui-preview").get())
-                            implementation(libs.getLibrary("compose-runtime").get())
-                            implementation(libs.getLibrary("compose-foundation").get())
-                            implementation(libs.getLibrary("compose-material3").get())
-                            implementation(libs.getLibrary("compose-components-resources").get())
-                            implementation(libs.getLibrary("compose-material3-adaptive").get())
-                            implementation(libs.getLibrary("compose-viewmodel").get())
-                            implementation(libs.getLibrary("compose-lifecycle-viewmodel").get())
-                            implementation(libs.getLibrary("compose-viewmodel-nav3").get())
-                        }
+
+            val kmpExtension = extensions.findByType(KotlinMultiplatformExtension::class.java)
+            if (kmpExtension != null) {
+                configureKotlinMultiplatformCompose(kmpExtension)
+            } else {
+                configureAndroidCompose()
+            }
+        }
+
+    private fun Project.configureKotlinMultiplatformCompose(
+        extension: KotlinMultiplatformExtension
+    ) {
+        extension.apply {
+            sourceSets.apply {
+                androidMain {
+                    dependencies { implementation(libs.getLibrary("compose-ui-tooling").get()) }
+                }
+                commonMain {
+                    dependencies {
+                        implementation(libs.getLibrary("compose-ui").get())
+                        implementation(libs.getLibrary("compose-ui-preview").get())
+                        implementation(libs.getLibrary("compose-runtime").get())
+                        implementation(libs.getLibrary("compose-foundation").get())
+                        implementation(libs.getLibrary("compose-material3").get())
+                        implementation(libs.getLibrary("compose-components-resources").get())
+                        implementation(libs.getLibrary("compose-material3-adaptive").get())
+                        implementation(libs.getLibrary("compose-viewmodel").get())
+                        implementation(libs.getLibrary("compose-lifecycle-viewmodel").get())
+                        implementation(libs.getLibrary("compose-viewmodel-nav3").get())
                     }
                 }
             }
         }
+    }
+
+    private fun Project.configureAndroidCompose() {
+        // Determine if it's an Android project (Application or Library)
+        val isAndroid = extensions.findByName("android") != null
+        if (isAndroid) {
+            dependencies.apply {
+                val implementation = "implementation"
+                val debugImplementation = "debugImplementation"
+
+                add(implementation, libs.getLibrary("compose-ui").get())
+                add(implementation, libs.getLibrary("compose-ui-preview").get())
+                add(implementation, libs.getLibrary("compose-runtime").get())
+                add(implementation, libs.getLibrary("compose-foundation").get())
+                add(implementation, libs.getLibrary("compose-material3").get())
+                add(implementation, libs.getLibrary("compose-components-resources").get())
+                add(implementation, libs.getLibrary("compose-material3-adaptive").get())
+                add(implementation, libs.getLibrary("compose-viewmodel").get())
+                add(implementation, libs.getLibrary("compose-lifecycle-viewmodel").get())
+                add(implementation, libs.getLibrary("compose-viewmodel-nav3").get())
+
+                add(debugImplementation, libs.getLibrary("compose-ui-tooling").get())
+            }
+        }
+    }
 }
