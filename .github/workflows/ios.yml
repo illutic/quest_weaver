@@ -7,7 +7,7 @@ on:
   pull_request:
 
 jobs:
-  build-ios:
+  lint-ios:
     runs-on: macos-latest
     permissions:
       contents: write
@@ -33,5 +33,3 @@ jobs:
             git commit -m "style: swiftlint auto-fix"
             git push
           fi
-
-      - name: Build iOS App
