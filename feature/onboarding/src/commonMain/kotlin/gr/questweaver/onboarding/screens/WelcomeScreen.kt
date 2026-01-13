@@ -32,26 +32,33 @@ import androidx.compose.ui.unit.dp
 import gr.questweaver.core.components.Button
 import gr.questweaver.core.components.ButtonType
 import gr.questweaver.core.ui.sizes
-import gr.questweaver.feature.onboarding.Res
-import gr.questweaver.feature.onboarding.ic_logo_android
-import gr.questweaver.feature.onboarding.onboarding_welcome_button
-import gr.questweaver.feature.onboarding.onboarding_welcome_subtitle
-import gr.questweaver.feature.onboarding.onboarding_welcome_title
+import gr.questweaver.onboarding.OnboardingDrawables
+import gr.questweaver.onboarding.OnboardingStrings
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun WelcomeScreen(onStartClick: () -> Unit) {
+fun WelcomeScreen(
+    strings: OnboardingStrings,
+    drawables: OnboardingDrawables,
+    onStartClick: () -> Unit
+) {
     var visible by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) { visible = true }
 
-    WelcomeContent(visible = visible, onStartClick = onStartClick)
+    WelcomeContent(
+        strings = strings,
+        drawables = drawables,
+        visible = visible,
+        onStartClick = onStartClick
+    )
 }
 
 @Composable
 private fun WelcomeContent(
+    strings: OnboardingStrings,
+    drawables: OnboardingDrawables,
     visible: Boolean,
     onStartClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -63,38 +70,37 @@ private fun WelcomeContent(
         ) {
             Spacer(modifier = Modifier.weight(1f))
 
-            WelcomeLogo(visible = visible)
+            WelcomeLogo(drawables = drawables, visible = visible)
 
             Spacer(modifier = Modifier.height(sizes.zero))
 
-            WelcomeHeader(visible = visible)
+            WelcomeHeader(strings = strings, visible = visible)
 
             Spacer(modifier = Modifier.weight(1f))
 
-            WelcomeActions(visible = visible, onStartClick = onStartClick)
+            WelcomeActions(strings = strings, visible = visible, onStartClick = onStartClick)
         }
     }
 }
 
 @Composable
-private fun WelcomeLogo(visible: Boolean) {
+private fun WelcomeLogo(drawables: OnboardingDrawables, visible: Boolean) {
     AnimatedVisibility(visible = visible, enter = logoEnterAnimation()) {
-        // Placeholder for d20 icon
         Icon(
-            painter = painterResource(Res.drawable.ic_logo_android),
-            contentDescription = null,
-            modifier = Modifier.size(WelcomeScreenDefaults.ICON_SIZE),
+            painter = painterResource(drawables.logo),
+            contentDescription = drawables.logoName,
             tint = Color.Unspecified,
+            modifier = Modifier.size(WelcomeScreenDefaults.ICON_SIZE)
         )
     }
 }
 
 @Composable
-private fun WelcomeHeader(visible: Boolean) {
+private fun WelcomeHeader(strings: OnboardingStrings, visible: Boolean) {
     AnimatedVisibility(visible = visible, enter = textEnterAnimation()) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
-                text = stringResource(Res.string.onboarding_welcome_title),
+                text = strings.welcomeTitle,
                 style = MaterialTheme.typography.headlineSmall,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSurface
@@ -103,7 +109,7 @@ private fun WelcomeHeader(visible: Boolean) {
             Spacer(modifier = Modifier.height(sizes.eight))
 
             Text(
-                text = stringResource(Res.string.onboarding_welcome_subtitle),
+                text = strings.welcomeSubtitle,
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -113,13 +119,13 @@ private fun WelcomeHeader(visible: Boolean) {
 }
 
 @Composable
-private fun WelcomeActions(visible: Boolean, onStartClick: () -> Unit) {
+private fun WelcomeActions(strings: OnboardingStrings, visible: Boolean, onStartClick: () -> Unit) {
     AnimatedVisibility(visible = visible, enter = buttonEnterAnimation()) {
         Button(
             onClick = onStartClick,
             buttonType = ButtonType.Primary,
             modifier = Modifier.fillMaxWidth().padding(bottom = sizes.four)
-        ) { Text(stringResource(Res.string.onboarding_welcome_button)) }
+        ) { Text(strings.welcomeButton) }
     }
 }
 

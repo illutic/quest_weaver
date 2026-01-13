@@ -62,20 +62,19 @@ func getPathBinding(
     ) -> Binding<[AnyRoute]> {
     return Binding<[AnyRoute]>(
         get: {
-            var completeStack = backStack
-            if let current = currentRoute {
-                completeStack.append(current)
-            }
-            if completeStack.count <= 1 {
+            // backStack from VM already includes currentRoute
+            if (backStack.count <= 1) {
                 return []
             } else {
-                let dropped = Array(completeStack.dropFirst())
+                let dropped = Array(backStack.dropFirst())
                 return toAnyRouteArray(from: dropped)
             }
         },
         set: { newPath in
-            let currentCount = backStack.count + (currentRoute != nil ? 1 : 0)
-            if newPath.count < (currentCount - 1) {
+            // Expected count is total stack size.
+            // newPath.count is (stack size - 1) because root is implicit.
+            // If newPath.count < (backStack.count - 1), user popped something.
+            if newPath.count < (backStack.count - 1) {
                 onBack()
             }
         }

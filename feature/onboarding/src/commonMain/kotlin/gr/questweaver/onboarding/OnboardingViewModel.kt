@@ -2,6 +2,8 @@ package gr.questweaver.onboarding
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import gr.questweaver.navigation.Route
 import gr.questweaver.user.domain.usecase.GenerateUsernameUseCase
 import gr.questweaver.user.domain.usecase.IsUserRegisteredUseCase
@@ -23,15 +25,23 @@ class OnboardingViewModel : ViewModel(), KoinComponent {
 
     fun registerUser(name: String) =
         viewModelScope.launch {
-            setUserUseCase(name).onSuccess {
-                _state.update { state -> state.copy(isRegistered = true) }
-            }
+            setUserUseCase(name)
+                .onSuccess { _state.update { state -> state.copy(isRegistered = true) } }
+                .onFailure { error ->
+                    _state.update { state ->
+                        state.copy(error = error.message ?: state.strings.errorUnknown)
+                    }
+                }
         }
 
     private fun loadOnboardingState() =
         viewModelScope.launch {
+            val strings = OnboardingStrings.load()
+            val drawables = OnboardingDrawables.load()
             val isRegistered = isUserRegisteredUseCase().getOrElse { false }
-            _state.update { it.copy(isRegistered = isRegistered) }
+            _state.update {
+                it.copy(isRegistered = isRegistered, strings = strings, drawables = drawables)
+            }
         }
 
     fun navigateTo(route: Route) {
@@ -56,7 +66,15 @@ class OnboardingViewModel : ViewModel(), KoinComponent {
         _state.update { it.copy(name = generateUsernameUseCase()) }
     }
 
+    fun clearError() {
+        _state.update { it.copy(error = null) }
+    }
+
     init {
         loadOnboardingState()
+    }
+
+    companion object {
+        fun createFactory() = viewModelFactory { initializer { OnboardingViewModel() } }
     }
 }

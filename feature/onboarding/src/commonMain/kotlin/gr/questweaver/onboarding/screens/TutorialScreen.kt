@@ -43,29 +43,20 @@ import androidx.compose.ui.unit.dp
 import gr.questweaver.core.components.Button
 import gr.questweaver.core.components.ButtonType
 import gr.questweaver.core.ui.sizes
-import gr.questweaver.feature.onboarding.Res
-import gr.questweaver.feature.onboarding.onboarding_tutorial_button
-import gr.questweaver.feature.onboarding.onboarding_tutorial_item_1
-import gr.questweaver.feature.onboarding.onboarding_tutorial_item_3
-import gr.questweaver.feature.onboarding.onboarding_tutorial_item_4
-import gr.questweaver.feature.onboarding.onboarding_tutorial_policy_part_1
-import gr.questweaver.feature.onboarding.onboarding_tutorial_policy_part_2
-import gr.questweaver.feature.onboarding.onboarding_tutorial_privacy_policy
-import gr.questweaver.feature.onboarding.onboarding_tutorial_terms_of_service
-import gr.questweaver.feature.onboarding.onboarding_tutorial_title
-import org.jetbrains.compose.resources.stringResource
+import gr.questweaver.onboarding.OnboardingStrings
 
 @Composable
-fun TutorialScreen(onCompleteClick: () -> Unit) {
+fun TutorialScreen(strings: OnboardingStrings, onCompleteClick: () -> Unit) {
     var visible by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) { visible = true }
 
-    TutorialContent(visible = visible, onCompleteClick = onCompleteClick)
+    TutorialContent(strings = strings, visible = visible, onCompleteClick = onCompleteClick)
 }
 
 @Composable
 private fun TutorialContent(
+    strings: OnboardingStrings,
     visible: Boolean,
     onCompleteClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -76,23 +67,23 @@ private fun TutorialContent(
     ) {
         Spacer(modifier = Modifier.weight(1f))
 
-        TutorialTitle(visible = visible)
+        TutorialTitle(strings = strings, visible = visible)
 
         Spacer(modifier = Modifier.height(sizes.eight))
 
-        TutorialList(visible = visible)
+        TutorialList(strings = strings, visible = visible)
 
         Spacer(modifier = Modifier.weight(1f))
 
-        TutorialActions(visible = visible, onCompleteClick = onCompleteClick)
+        TutorialActions(strings = strings, visible = visible, onCompleteClick = onCompleteClick)
     }
 }
 
 @Composable
-private fun TutorialTitle(visible: Boolean) {
+private fun TutorialTitle(strings: OnboardingStrings, visible: Boolean) {
     AnimatedVisibility(visible = visible, enter = titleEnterAnimation()) {
         Text(
-            text = stringResource(Res.string.onboarding_tutorial_title),
+            text = strings.tutorialTitle,
             style = MaterialTheme.typography.headlineMedium,
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.onSurface
@@ -101,13 +92,13 @@ private fun TutorialTitle(visible: Boolean) {
 }
 
 @Composable
-private fun TutorialList(visible: Boolean) {
+private fun TutorialList(strings: OnboardingStrings, visible: Boolean) {
     Column(verticalArrangement = Arrangement.spacedBy(sizes.four)) {
         TutorialItem(
             visible = visible,
             delay = TutorialScreenDefaults.ANIMATION_DELAY_ITEM_1,
             icon = Icons.Default.Info,
-            text = stringResource(Res.string.onboarding_tutorial_item_1)
+            text = strings.tutorialItem1
         )
 
         TutorialItem(
@@ -118,11 +109,7 @@ private fun TutorialList(visible: Boolean) {
                 Text(
                     text =
                         buildAnnotatedString {
-                            append(
-                                stringResource(
-                                    Res.string.onboarding_tutorial_policy_part_1
-                                )
-                            )
+                            append(strings.tutorialPolicyPart1)
                             withStyle(
                                 style =
                                     SpanStyle(
@@ -131,19 +118,8 @@ private fun TutorialList(visible: Boolean) {
                                             MaterialTheme.colorScheme
                                                 .onSurfaceVariant
                                     )
-                            ) {
-                                append(
-                                    stringResource(
-                                        Res.string
-                                            .onboarding_tutorial_privacy_policy
-                                    )
-                                )
-                            }
-                            append(
-                                stringResource(
-                                    Res.string.onboarding_tutorial_policy_part_2
-                                )
-                            )
+                            ) { append(strings.tutorialPrivacyPolicy) }
+                            append(strings.tutorialPolicyPart2)
                             withStyle(
                                 style =
                                     SpanStyle(
@@ -152,14 +128,7 @@ private fun TutorialList(visible: Boolean) {
                                             MaterialTheme.colorScheme
                                                 .onSurfaceVariant
                                     )
-                            ) {
-                                append(
-                                    stringResource(
-                                        Res.string
-                                            .onboarding_tutorial_terms_of_service
-                                    )
-                                )
-                            }
+                            ) { append(strings.tutorialTermsOfService) }
                         },
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -171,26 +140,30 @@ private fun TutorialList(visible: Boolean) {
             visible = visible,
             delay = TutorialScreenDefaults.ANIMATION_DELAY_ITEM_3,
             icon = Icons.Default.Star,
-            text = stringResource(Res.string.onboarding_tutorial_item_3)
+            text = strings.tutorialItem3
         )
 
         TutorialItem(
             visible = visible,
             delay = TutorialScreenDefaults.ANIMATION_DELAY_ITEM_4,
             icon = Icons.Default.Star,
-            text = stringResource(Res.string.onboarding_tutorial_item_4)
+            text = strings.tutorialItem4
         )
     }
 }
 
 @Composable
-private fun TutorialActions(visible: Boolean, onCompleteClick: () -> Unit) {
+private fun TutorialActions(
+    strings: OnboardingStrings,
+    visible: Boolean,
+    onCompleteClick: () -> Unit
+) {
     AnimatedVisibility(visible = visible, enter = buttonEnterAnimation()) {
         Button(
             onClick = onCompleteClick,
             buttonType = ButtonType.Primary,
             modifier = Modifier.fillMaxWidth().padding(bottom = sizes.four)
-        ) { Text(stringResource(Res.string.onboarding_tutorial_button)) }
+        ) { Text(strings.tutorialButton) }
     }
 }
 
@@ -200,7 +173,7 @@ private fun TutorialItem(
     delay: Int,
     icon: ImageVector,
     text: String? = null,
-    content: @Composable (() -> Unit)? = null
+    content: @Composable (() -> Unit)? = null // null default is fine
 ) {
     AnimatedVisibility(visible = visible, enter = itemEnterAnimation(delay)) {
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top) {

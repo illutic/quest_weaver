@@ -13,29 +13,23 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class NavigationViewModel(
-    private val isUserRegisteredUseCase: IsUserRegisteredUseCase
-) : ViewModel() {
+class NavigationViewModel(private val isUserRegisteredUseCase: IsUserRegisteredUseCase) :
+    ViewModel() {
     private val _navigationState = MutableStateFlow(NavigationState())
     val navigationState = _navigationState.asStateFlow()
 
     fun navigateTo(route: Route) {
         _navigationState.update {
             val newBackStack = it.backStack + route
-            NavigationState(
-                backStack = newBackStack,
-                currentRoute = route
-            )
+            NavigationState(backStack = newBackStack, currentRoute = route)
         }
     }
 
     fun navigateBack() {
         _navigationState.update {
+            if (it.backStack.size <= 1) return@update it
             val newBackStack = it.backStack.dropLast(1)
-            NavigationState(
-                backStack = newBackStack,
-                currentRoute = newBackStack.last()
-            )
+            NavigationState(backStack = newBackStack, currentRoute = newBackStack.last())
         }
     }
 
@@ -43,7 +37,7 @@ class NavigationViewModel(
         setLoading(true)
         val isRegistered = isUserRegisteredUseCase().getOrElse { false }
         if (isRegistered) {
-            TODO()
+            navigateTo(OnboardingRoute.Graph)
         } else {
             navigateTo(OnboardingRoute.Graph)
         }
@@ -51,21 +45,15 @@ class NavigationViewModel(
     }
 
     private fun setLoading(isLoading: Boolean) {
-        _navigationState.update {
-            it.copy(isLoading = isLoading)
-        }
+        _navigationState.update { it.copy(isLoading = isLoading) }
     }
 
     init {
-        viewModelScope.launch {
-            load()
-        }
+        viewModelScope.launch { load() }
     }
 
     companion object {
-        fun createFactory(
-            isUserRegisteredUseCase: IsUserRegisteredUseCase
-        ) = viewModelFactory {
+        fun createFactory(isUserRegisteredUseCase: IsUserRegisteredUseCase) = viewModelFactory {
             initializer { NavigationViewModel(isUserRegisteredUseCase) }
         }
     }

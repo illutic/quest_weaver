@@ -56,29 +56,48 @@ fun OnboardingRoute(
                         when (route) {
                             is OnboardingRoute.Welcome ->
                                 WelcomeScreen(
+                                    strings = state.strings,
+                                    drawables = state.drawables,
                                     onStartClick = {
-                                        viewModel.navigateTo(
-                                            OnboardingRoute.Registration
-                                        )
+                                        viewModel
+                                            .navigateTo(
+                                                OnboardingRoute
+                                                    .Registration
+                                            )
                                     }
                                 )
 
                             is OnboardingRoute.Registration ->
                                 RegistrationScreen(
+                                    strings = state.strings,
                                     name = state.name,
-                                    onNameChange = viewModel::onNameChange,
+                                    onNameChange =
+                                        viewModel::onNameChange,
                                     onRegisterClick = { name ->
-                                        viewModel.registerUser(name)
-                                        viewModel.navigateTo(OnboardingRoute.Tutorial)
+                                        viewModel
+                                            .registerUser(
+                                                name
+                                            )
+                                        viewModel
+                                            .navigateTo(
+                                                OnboardingRoute
+                                                    .Tutorial
+                                            )
                                     },
-                                    onRandomNameClick = viewModel::generateRandomName
+                                    onRandomNameClick =
+                                        viewModel::generateRandomName,
+                                    error = state.error,
+                                    onErrorDismiss =
+                                        viewModel::clearError
                                 )
 
                             is OnboardingRoute.Tutorial ->
                                 TutorialScreen(
+                                    strings = state.strings,
                                     onCompleteClick = {
                                         onNavigate(
-                                            OnboardingRoute.Graph
+                                            OnboardingRoute
+                                                .Graph
                                         ) // Exit onboarding
                                     }
                                 )

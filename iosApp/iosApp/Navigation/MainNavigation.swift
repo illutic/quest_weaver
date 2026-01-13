@@ -12,7 +12,7 @@ import Shared
 struct MainNavigation: View {
     @StateObject private var viewModelStoreOwner = IosViewModelStoreOwner()
     @State private var errorMessage: String? = nil
-    @State private var state: NavigationState? = nil
+    @State private var state: NavigationState = NavigationState(backStack: [], currentRoute: nil, isLoading: false)
 
     var body: some View {
         let viewModel: NavigationViewModel = viewModelStoreOwner.viewModel(
@@ -20,40 +20,70 @@ struct MainNavigation: View {
         )
 
         ZStack {
-            if let currentRoute = state?.currentRoute {
-                RouteView(route: currentRoute)
-            }
+            MainNavigationContent(
+                state: state,
+                onBack: { viewModel.navigateBack() },
+                onNavigate: { viewModel.navigateTo(route: $0) }
+            )
+                .environmentObject(viewModelStoreOwner)
 
-            if state?.isLoading ?? false {
-                Color.black.opacity(0.3).ignoresSafeArea()
+            if state.isLoading {
                 ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle())
+                    .scaleEffect(1.5)
             }
         }
         .task {
             viewModel.navigationState.subscribe(
                 scope: viewModel.viewModelScope,
-                onError: { error in self.errorMessage = error.description() },
-                onNext: { state in self.state = state }
+                onError: { _ in },
+                onNext: { state in self.state = state ?? NavigationState(backStack: [], currentRoute: nil, isLoading: false) }
             )
         }
     }
 }
 
+private struct MainNavigationContent: View {
+    let state: NavigationState
+    let onBack: () -> Void
+    let onNavigate: (Route) -> Void
+
+    var body: some View {
+        let pathBinding = getPathBinding(
+            backStack: state.backStack,
+            currentRoute: state.currentRoute,
+            onBack: onBack
+        )
+
+        NavigationStack(path: pathBinding) {
+            if let root = state.backStack.first {
+                RouteView(route: root, onNavigate: onNavigate)
+                    .navigationDestination(for: AnyRoute.self) { anyRoute in
+                        RouteView(route: anyRoute.base, onNavigate: onNavigate)
+                    }
+            } else {
+                Color.clear
+            }
+        }
+    }
+}
+
 struct RouteView: View {
-    let route: Route?
+    let route: Route
+    let onNavigate: (Route) -> Void
 
     var body: some View {
         switch route {
-        case is OnboardingRoute:
-            OnboardingView()
+        case is OnboardingRouteGraph:
+            OnboardingView(onNavigateGlobal: onNavigate)
         default:
-            Text("Unknown Route")
+            EmptyView()
         }
     }
 }
 
 struct MainNavigation_Previews: PreviewProvider {
     static var previews: some View {
-        RouteView(route: nil)
+        MainNavigation()
     }
 }

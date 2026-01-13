@@ -18,4 +18,5 @@
     <string name="onboarding_tutorial_item_3">The app makes use of AI generated content.</string>
     <string name="onboarding_tutorial_item_4">The app uses AI. Please note that AI models may output incorrect and inappropriate responses.</string>
     <string name="onboarding_tutorial_button">I understand</string>
+    <string name="onboarding_registration_error_unknown">Something went wrong. Please try again.</string>
 </resources>

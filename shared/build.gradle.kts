@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.questweaver.kotlin.multiplatform)
+    alias(libs.plugins.questweaver.compose.multiplatform)
 }
 
 kotlin {
@@ -19,7 +20,7 @@ kotlin {
             export(projects.feature.onboarding)
             export(projects.feature.user.data)
             export(projects.feature.user.domain)
-            export(libs.compose.lifecycle.viewmodel)
+            export(libs.androidx.lifecycle.viewmodel)
         }
     }
 
@@ -32,6 +33,9 @@ kotlin {
             api(projects.feature.onboarding)
             api(projects.feature.user.data)
             api(projects.feature.user.domain)
+        }
+        iosMain.dependencies {
+            api(libs.androidx.lifecycle.viewmodel)
         }
     }
 }

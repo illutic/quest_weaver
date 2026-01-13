@@ -5,6 +5,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,6 +19,9 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,37 +38,50 @@ import gr.questweaver.core.components.ButtonType
 import gr.questweaver.core.components.Message
 import gr.questweaver.core.components.TextField
 import gr.questweaver.core.ui.sizes
-import gr.questweaver.feature.onboarding.Res
-import gr.questweaver.feature.onboarding.onboarding_registration_create_button
-import gr.questweaver.feature.onboarding.onboarding_registration_info_text
-import gr.questweaver.feature.onboarding.onboarding_registration_input_placeholder
-import gr.questweaver.feature.onboarding.onboarding_registration_random_button
-import gr.questweaver.feature.onboarding.onboarding_registration_subtitle
-import gr.questweaver.feature.onboarding.onboarding_registration_title
-import org.jetbrains.compose.resources.stringResource
+import gr.questweaver.onboarding.OnboardingStrings
 
 @Composable
 fun RegistrationScreen(
+    strings: OnboardingStrings,
     name: String,
     onNameChange: (String) -> Unit,
     onRandomNameClick: () -> Unit,
-    onRegisterClick: (String) -> Unit
+    onRegisterClick: (String) -> Unit,
+    error: String? = null,
+    onErrorDismiss: () -> Unit = {}
 ) {
     var visible by remember { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) { visible = true }
 
-    RegistrationContent(
-        name = name,
-        onNameChange = onNameChange,
-        onRegisterClick = onRegisterClick,
-        onRandomNameClick = onRandomNameClick,
-        visible = visible
+    LaunchedEffect(error) {
+        if (error != null) {
+            snackbarHostState.showSnackbar(error)
+            onErrorDismiss()
+        }
+    }
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        content = { padding ->
+            Box(modifier = Modifier.padding(padding)) {
+                RegistrationContent(
+                    strings = strings,
+                    name = name,
+                    onNameChange = onNameChange,
+                    onRegisterClick = onRegisterClick,
+                    onRandomNameClick = onRandomNameClick,
+                    visible = visible
+                )
+            }
+        }
     )
 }
 
 @Composable
 private fun RegistrationContent(
+    strings: OnboardingStrings,
     name: String,
     onNameChange: (String) -> Unit,
     onRegisterClick: (String) -> Unit,
@@ -74,23 +91,28 @@ private fun RegistrationContent(
 ) {
     Column(
         modifier =
-            modifier
-                .fillMaxSize()
+            modifier.fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = sizes.one),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.weight(1f))
 
-        RegistrationTitle(visible = visible)
+        RegistrationTitle(strings = strings, visible = visible)
 
         Spacer(modifier = Modifier.height(sizes.zero))
 
-        RegistrationForm(visible = visible, name = name, onNameChange = onNameChange)
+        RegistrationForm(
+            strings = strings,
+            visible = visible,
+            name = name,
+            onNameChange = onNameChange
+        )
 
         Spacer(modifier = Modifier.weight(1f))
 
         RegistrationActions(
+            strings = strings,
             visible = visible,
             name = name,
             onRegisterClick = onRegisterClick,
@@ -100,11 +122,11 @@ private fun RegistrationContent(
 }
 
 @Composable
-private fun RegistrationTitle(visible: Boolean) {
+private fun RegistrationTitle(strings: OnboardingStrings, visible: Boolean) {
     AnimatedVisibility(visible = visible, enter = titleEnterAnimation()) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
-                text = stringResource(Res.string.onboarding_registration_title),
+                text = strings.registrationTitle,
                 style = MaterialTheme.typography.headlineMedium,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSurface
@@ -113,7 +135,7 @@ private fun RegistrationTitle(visible: Boolean) {
             Spacer(modifier = Modifier.height(sizes.eight))
 
             Text(
-                text = stringResource(Res.string.onboarding_registration_subtitle),
+                text = strings.registrationSubtitle,
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -123,15 +145,18 @@ private fun RegistrationTitle(visible: Boolean) {
 }
 
 @Composable
-private fun RegistrationForm(visible: Boolean, name: String, onNameChange: (String) -> Unit) {
+private fun RegistrationForm(
+    strings: OnboardingStrings,
+    visible: Boolean,
+    name: String,
+    onNameChange: (String) -> Unit
+) {
     AnimatedVisibility(visible = visible, enter = inputEnterAnimation()) {
         Column {
             TextField(
                 value = name,
                 onValueChange = onNameChange,
-                placeholder = {
-                    Text(stringResource(Res.string.onboarding_registration_input_placeholder))
-                },
+                placeholder = { Text(strings.registrationInputPlaceholder) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 trailingIcon = {
@@ -142,7 +167,7 @@ private fun RegistrationForm(visible: Boolean, name: String, onNameChange: (Stri
             Spacer(modifier = Modifier.height(sizes.four))
 
             Message(
-                text = stringResource(Res.string.onboarding_registration_info_text),
+                text = strings.registrationInfoText,
                 icon = rememberVectorPainter(Icons.Outlined.Info),
                 modifier = Modifier.fillMaxWidth()
             )
@@ -152,6 +177,7 @@ private fun RegistrationForm(visible: Boolean, name: String, onNameChange: (Stri
 
 @Composable
 private fun RegistrationActions(
+    strings: OnboardingStrings,
     visible: Boolean,
     name: String,
     onRegisterClick: (String) -> Unit,
@@ -164,7 +190,7 @@ private fun RegistrationActions(
                 buttonType = ButtonType.Primary,
                 enabled = name.isNotBlank(),
                 modifier = Modifier.fillMaxWidth()
-            ) { Text(stringResource(Res.string.onboarding_registration_create_button)) }
+            ) { Text(strings.registrationCreateButton) }
 
             Spacer(modifier = Modifier.height(sizes.four))
 
@@ -172,7 +198,7 @@ private fun RegistrationActions(
                 onClick = onRandomNameClick,
                 buttonType = ButtonType.Outlined,
                 modifier = Modifier.fillMaxWidth().padding(bottom = sizes.four)
-            ) { Text(stringResource(Res.string.onboarding_registration_random_button)) }
+            ) { Text(strings.registrationRandomButton) }
         }
     }
 }

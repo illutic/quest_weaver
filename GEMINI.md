@@ -54,6 +54,8 @@ The project follows a **Clean Architecture** approach with **MVVM** (Model-View-
     * Implements `KoinComponent` for dependency injection.
     * Exposes `StateFlow<T>` for UI state.
     * Manages navigation actions.
+  * **Must** provide a `createFactory()` method in its `companion object` to allow instantiation
+    from the iOS App.
 * **State**: Defined as a `data class` or `sealed interface`.
 * **Route**:
     * Defined in a separate file (e.g., `OnboardingRoute.kt`).
@@ -113,6 +115,8 @@ The project follows a **Clean Architecture** approach with **MVVM** (Model-View-
     * SwiftUI views should observe `ObservableObject` ViewModels (often the Shared KMP ViewModel
       wrapped or used directly if KMP–Swift interop allows).
     * Use `@StateObject` for ownership and `@ObservedObject` for dependency injection.
+  * StateFlows exposed by the ViewModel should be consumed using the `subscribe` utility to ensure
+    proper updates.
 
 ### 2. Styling & Design
 
@@ -129,3 +133,9 @@ The project follows a **Clean Architecture** approach with **MVVM** (Model-View-
 * **SwiftLint**: All Swift code must adhere to [SwiftLint](https://github.com/realm/SwiftLint)
   rules.
 * **Format**: Run `swiftformat .` before committing if configured.
+
+### 5. Interoperability
+
+* **Sealed Classes/Interfaces**: Kotlin `object`s inside sealed classes/interfaces are mapped to
+  `SealedInterfaceSubClass.shared` in Swift (e.g., `OnboardingRoute.Welcome` in Kotlin becomes
+  `OnboardingRouteWelcome.shared` in Swift).
