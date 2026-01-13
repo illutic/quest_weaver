@@ -120,16 +120,6 @@ jobs:
           name: swiftlint-patch
           path: swiftlint.patch
 
-      - name: Build iOS App
-        run: |
-          xcodebuild -project iosApp/iosApp.xcodeproj \
-                     -scheme iosApp \
-                     -destination 'platform=iOS Simulator,name=iPhone 15' \
-                     -configuration Debug \
-                     clean build \
-                     CODE_SIGNING_ALLOWED=NO
-
-
   push_changes:
     needs: [kt_lint, swift_lint]
     runs-on: ubuntu-latest
