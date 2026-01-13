@@ -1,4 +1,4 @@
-name: Static Analysis
+name: Lint Checks
 
 on:
   pull_request:
@@ -6,8 +6,6 @@ on:
 jobs:
   kt_lint:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - name: Get base depth
         id: base-depth
@@ -19,7 +17,6 @@ jobs:
           else
               BASE_DEPTH="1"
           fi
-
           echo "base-depth=$BASE_DEPTH" >> $GITHUB_OUTPUT
         env:
           NUMBER_OF_COMMITS: ${{ github.event.pull_request.commits || 1 }}
@@ -80,51 +77,103 @@ jobs:
           KTLINT_EXECUTABLE_PATH: ${{ github.workspace }}/lint/ktlint/ktlint
           COMPOSE_RULESET_JAR_PATH: ${{ github.workspace }}/lint/ktlint-rules/compose-ruleset.jar
 
+      - name: Generate Patch
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git diff > ktlint.patch
+          else
+            touch ktlint.patch
+          fi
+
+      - name: Upload Patch
+        uses: actions/upload-artifact@v4
+        with:
+          name: ktlint-patch
+          path: ktlint.patch
+
+  swift_lint:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup project environment
+        uses: ./.github/actions/setup
+
+      - name: Install SwiftLint
+        run: brew install swiftlint
+
+      - name: Run SwiftLint with Auto-Fix
+        run: swiftlint --fix iosApp --config iosApp/.swiftlint.yml
+
+      - name: Generate Patch
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git diff > swiftlint.patch
+          else
+            touch swiftlint.patch
+          fi
+
+      - name: Upload Patch
+        uses: actions/upload-artifact@v4
+        with:
+          name: swiftlint-patch
+          path: swiftlint.patch
+
+      - name: Build iOS App
+        run: |
+          xcodebuild -project iosApp/iosApp.xcodeproj \
+                     -scheme iosApp \
+                     -destination 'platform=iOS Simulator,name=iPhone 15' \
+                     -configuration Debug \
+                     clean build \
+                     CODE_SIGNING_ALLOWED=NO
+
+
+  push_changes:
+    needs: [kt_lint, swift_lint]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
+      - name: Download KtLint Patch
+        uses: actions/download-artifact@v4
+        with:
+          name: ktlint-patch
+          path: .
+
+      - name: Download SwiftLint Patch
+        uses: actions/download-artifact@v4
+        with:
+          name: swiftlint-patch
+          path: .
+
+      - name: Apply Patches
+        run: |
+          if [ -s ktlint.patch ]; then
+             echo "Applying KtLint patch..."
+             git apply ktlint.patch
+          fi
+          
+          if [ -s swiftlint.patch ]; then
+             echo "Applying SwiftLint patch..."
+             git apply swiftlint.patch
+          fi
+
       - name: Commit and Push Fixes
         run: |
           if [ -n "$(git status --porcelain)" ]; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add .
-            git commit -m "style: ktlint auto-fix"
+            git commit -m "style: auto-fix lint issues"
             git push
-          fi
-
-      - name: Run Kt Lint
-        id: run_kt_lint
-        continue-on-error: true
-        run: |
-          CHANGED_FILES="$(echo '${{ steps.changed_files.outputs.files_list }}' | jq -r 'join(" ")')"
-          if [ -z "$CHANGED_FILES" ]; then
-              echo "No changed files to lint."
-              exit 0
-          fi
-          
-          "${KTLINT_EXECUTABLE_PATH}" \
-              --ruleset="${COMPOSE_RULESET_JAR_PATH}" \
-              $CHANGED_FILES \
-              --reporter=json?group_by_file,output="$REPORTER_OUTPUT_FILE"
-        env:
-          KTLINT_EXECUTABLE_PATH: ${{ github.workspace }}/lint/ktlint/ktlint
-          COMPOSE_RULESET_JAR_PATH: ${{ github.workspace }}/lint/ktlint-rules/compose-ruleset.jar
-          REPORTER_OUTPUT_FILE: ${{ github.workspace }}/lint/ktlint-report.json
-
-      - name: Kt Lint Report Summary
-        run: |
-          source "scripts/report_kt_lint.sh"
-          echo "$(convert_json_to_markdown $KT_LINT_REPORT)" >> $GITHUB_STEP_SUMMARY
-        env:
-          KT_LINT_REPORT: ${{ github.workspace }}/lint/ktlint-report.json
-
-      - name: Annotate PR with Kt Lint Issues
-        run: |
-          source "scripts/report_kt_lint.sh"
-          echo "Annotating PR with Kt Lint issues..."
-          if [ -s $KT_LINT_REPORT ]; then
-              echo "Issues found, annotating..."
-              annotate_kt_lint "$KT_LINT_REPORT"
           else
-              echo "No issues found."
+            echo "No changes to push."
           fi
-        env:
-          KT_LINT_REPORT: ${{ github.workspace }}/lint/ktlint-report.json
