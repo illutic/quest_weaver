@@ -1,0 +1,32 @@
+name: Build iOS App
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build-ios:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup project environment
+        uses: ./.github/actions/setup
+
+      - name: Install SwiftLint
+        run: brew install swiftlint
+
+      - name: Run SwiftLint
+        run: swiftlint lint iosApp --config iosApp/.swiftlint.yml
+
+      - name: Build iOS App
+        run: |
+          xcodebuild -project iosApp/iosApp.xcodeproj \
+                     -scheme iosApp \
+                     -destination 'platform=iOS Simulator,name=iPhone 15' \
+                     -configuration Debug \
+                     clean build \
+                     CODE_SIGNING_ALLOWED=NO
