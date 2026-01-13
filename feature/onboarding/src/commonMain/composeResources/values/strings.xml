@@ -1,0 +1,22 @@
+<resources>
+    <string name="onboarding_welcome_title">Welcome to QuestWeaver</string>
+    <string name="onboarding_welcome_subtitle">The ultimate companion to a DnD game</string>
+    <string name="onboarding_welcome_button">Get Started</string>
+    <string name="onboarding_welcome_progress">Step 1 of 3</string>
+    <string name="onboarding_registration_title">Create your character</string>
+    <string name="onboarding_registration_subtitle">Choose a name for your adventurer</string>
+    <string name="onboarding_registration_input_placeholder">Enter character name</string>
+    <string name="onboarding_registration_info_text">Your character name will be visible to other players in your party and can be changed later in settings.</string>
+    <string name="onboarding_registration_create_button">Create User</string>
+    <string name="onboarding_registration_random_button">Generate random name</string>
+    <string name="onboarding_tutorial_title">Keep in mind</string>
+    <string name="onboarding_tutorial_item_1">You will be interacting with other players. Let’s keep things civil.</string>
+    <string name="onboarding_tutorial_policy_part_1">By continuing you agree to our </string>
+    <string name="onboarding_tutorial_privacy_policy">privacy policy</string>
+    <string name="onboarding_tutorial_policy_part_2"> and </string>
+    <string name="onboarding_tutorial_terms_of_service">terms of service</string>
+    <string name="onboarding_tutorial_item_3">The app makes use of AI generated content.</string>
+    <string name="onboarding_tutorial_item_4">The app uses AI. Please note that AI models may output incorrect and inappropriate responses.</string>
+    <string name="onboarding_tutorial_button">I understand</string>
+    <string name="onboarding_registration_error_unknown">Something went wrong. Please try again.</string>
+</resources>

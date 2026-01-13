@@ -1,11 +1,11 @@
 plugins {
     alias(libs.plugins.questweaver.app)
     alias(libs.plugins.kotlinAndroid)
+    alias(libs.plugins.questweaver.compose.multiplatform)
 }
 
 dependencies {
-    implementation(projects.core.ui)
-    implementation(projects.core.common)
-    implementation(projects.core.database)
-    implementation(projects.feature.onboarding)
+    implementation(projects.shared)
+    implementation(libs.koin.android)
+    implementation(libs.androidx.splashscreen)
 }

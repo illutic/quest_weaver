@@ -6,11 +6,12 @@ import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
-internal actual val appDatabaseModule: Module = module {
-    single<AppDatabase> {
-        getRoomDatabase(
-            builder = getDatabaseBuilder(androidApplication()),
-            coroutineDispatcher = get(named<QuestWeaverDispatchers.IO>())
-        )
+actual val databaseModule: Module =
+    module {
+        single<AppDatabase> {
+            getRoomDatabase(
+                builder = getDatabaseBuilder(androidApplication()),
+                coroutineDispatcher = get(named(QuestWeaverDispatchers.Io)),
+            )
+        }
     }
-}

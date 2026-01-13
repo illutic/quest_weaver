@@ -1,4 +1,3 @@
-
 plugins {
     `kotlin-dsl`
 }
@@ -12,7 +11,10 @@ dependencies {
     compileOnly(libs.plugins.kotlinMultiplatform.toDep())
     compileOnly(libs.plugins.kotlinSerialization.toDep())
     compileOnly(libs.plugins.composeCompiler.toDep())
-    implementation(libs.plugins.androidx.room.toDep())
+    implementation(
+        libs.plugins.androidx.room
+            .toDep(),
+    )
     implementation(libs.plugins.ksp.toDep())
 }
 
