@@ -1,0 +1,171 @@
+name: Lint Checks
+
+on:
+  pull_request:
+
+jobs:
+  kt_lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get base depth
+        id: base-depth
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+              BASE_DEPTH="$(expr $NUMBER_OF_COMMITS + 1)"
+          elif [ "$GITHUB_EVENT_NAME" = "push" ]; then
+              BASE_DEPTH="2"
+          else
+              BASE_DEPTH="1"
+          fi
+          echo "base-depth=$BASE_DEPTH" >> $GITHUB_OUTPUT
+        env:
+          NUMBER_OF_COMMITS: ${{ github.event.pull_request.commits || 1 }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: ${{ steps.base-depth.outputs.base-depth }}
+
+      - name: Get changed files
+        id: changed_files
+        run: |
+          source "scripts/get_changed_files.sh"
+          FILES_LIST=$(get_changed_files $NUMBER_OF_COMMITS)
+          echo "files_list=$FILES_LIST" >> $GITHUB_OUTPUT
+        env:
+          NUMBER_OF_COMMITS: ${{ github.event.pull_request.commits || 1 }}
+
+      - name: Restore KtLint Cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ./lint
+          key: kt-lint
+
+      - name: Fetch Kt Lint
+        id: fetch_kt_lint
+        run: |
+          source "scripts/kt_lint.sh"
+          get_kt_lint "$KTLINT_DIR"
+        env:
+          KTLINT_DIR: ${{ github.workspace }}/lint/ktlint
+
+      - name: Fetch Kt Lint Rules
+        id: fetch_kt_lint_rules
+        run: |
+          source "scripts/kt_lint.sh"
+          get_compose_ruleset "$KTLINT_RULES_DIR"
+        env:
+          KTLINT_RULES_DIR: ${{ github.workspace }}/lint/ktlint-rules
+
+      - name: Format with Kt Lint
+        id: format_kt_lint
+        continue-on-error: true
+        run: |
+          CHANGED_FILES="$(echo '${{ steps.changed_files.outputs.files_list }}' | jq -r 'join(" ")')"
+          if [ -z "$CHANGED_FILES" ]; then
+              echo "No changed files to format."
+              exit 0
+          fi
+          
+          "${KTLINT_EXECUTABLE_PATH}" \
+              --ruleset="${COMPOSE_RULESET_JAR_PATH}" \
+              -F \
+              $CHANGED_FILES
+        env:
+          KTLINT_EXECUTABLE_PATH: ${{ github.workspace }}/lint/ktlint/ktlint
+          COMPOSE_RULESET_JAR_PATH: ${{ github.workspace }}/lint/ktlint-rules/compose-ruleset.jar
+
+      - name: Generate Patch
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git diff > ktlint.patch
+          else
+            touch ktlint.patch
+          fi
+
+      - name: Upload Patch
+        uses: actions/upload-artifact@v4
+        with:
+          name: ktlint-patch
+          path: ktlint.patch
+
+  swift_lint:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup project environment
+        uses: ./.github/actions/setup
+
+      - name: Install SwiftLint
+        run: brew install swiftlint
+
+      - name: Run SwiftLint with Auto-Fix
+        run: swiftlint --fix iosApp --config iosApp/.swiftlint.yml
+
+      - name: Generate Patch
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git diff > swiftlint.patch
+          else
+            touch swiftlint.patch
+          fi
+
+      - name: Upload Patch
+        uses: actions/upload-artifact@v4
+        with:
+          name: swiftlint-patch
+          path: swiftlint.patch
+
+  push_changes:
+    needs: [kt_lint, swift_lint]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
+      - name: Download KtLint Patch
+        uses: actions/download-artifact@v4
+        with:
+          name: ktlint-patch
+          path: .
+
+      - name: Download SwiftLint Patch
+        uses: actions/download-artifact@v4
+        with:
+          name: swiftlint-patch
+          path: .
+
+      - name: Apply Patches
+        run: |
+          if [ -s ktlint.patch ]; then
+             echo "Applying KtLint patch..."
+             git apply ktlint.patch
+          fi
+          rm -f ktlint.patch
+          
+          if [ -s swiftlint.patch ]; then
+             echo "Applying SwiftLint patch..."
+             git apply swiftlint.patch
+          fi
+          rm -f swiftlint.patch
+
+      - name: Commit and Push Fixes
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add .
+            git commit -m "style: auto-fix lint issues"
+            git push
+          else
+            echo "No changes to push."
+          fi
