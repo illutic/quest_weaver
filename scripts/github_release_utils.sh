@@ -69,6 +69,7 @@ function get_download_url() {
 function upload_file() {
   local repo_name="$1"
   local release_id="$2"
+  local token="$3"
   local file_path="$4"
   local file_name
 
@@ -78,6 +79,7 @@ function upload_file() {
     -X POST \
     -H "Accept: application/vnd.github+json" \
     -H "X-GitHub-Api-Version: 2022-11-28" \
+    -H "Authorization: Bearer $token" \
     -H "Content-Type: application/octet-stream" \
     "https://uploads.github.com/repos/$repo_name/releases/$release_id/assets?name=$file_name" \
     --data-binary "@$file_path"
@@ -93,6 +95,7 @@ function upload_file() {
 function upload_release_assets() {
   local repo_name="$1"
   local release_id="$2"
+  local token="$3"
   local files
 
   files=$(find . -type f \( -name "*.aab" -o -name "*.apk" -o -name "*.zip" \) -not -path "*/intermediates/*" -not -path "*/kotlin-multiplatform-resources/*" -not -path "*/.gradle/*")
@@ -105,6 +108,6 @@ function upload_release_assets() {
   echo "Found files to upload: $files"
 
   for file_path in $files; do
-      upload_file "$repo_name" "$release_id" "$file_path"
+      upload_file "$repo_name" "$release_id" "$token" "$file_path"
   done
 }
