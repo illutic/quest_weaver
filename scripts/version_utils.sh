@@ -9,20 +9,14 @@ function sanitize_version_name() {
     return 1
   fi
 
-  # Remove any non-numeric and non-dot characters and make sure the version follows the format X.Y.Z
-  if [[ -z "$version_name" ]]; then
-    echo "❌ Error: Version name must contain at least one numeric character." >&2
-    return 1
-  fi
-
-  IFS='.' read -r x y z <<< "$version_name"
-  x=${x:-0}
-  y=${y:-0}
-  z=${z:-0}
-  sanitized_version="$x.$y.$z"
+  # Strip path prefixes (everything up to the final slash)
+  sanitized_version="${version_name##*/}"
+  
+  # Strip leading 'v' or 'V'
+  sanitized_version="${sanitized_version#[vV]}"
 
   if [[ -z "$sanitized_version" ]]; then
-    echo "❌ Error: Version name must contain at least one numeric character." >&2
+    echo "❌ Error: Version name is empty after sanitization." >&2
     return 1
   fi
 

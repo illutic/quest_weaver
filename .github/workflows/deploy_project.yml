@@ -88,8 +88,6 @@ jobs:
         run: |
           cd build/ios/Build/Products/Release-iphonesimulator
           zip -r "QuestWeaver-${{ steps.version_name.outputs.version_name }}-ios-simulator.zip" QuestWeaver.app
-          # Move zip to root so the upload script can find it easily if needed, 
-          # though the script finds recursively.
           mv "QuestWeaver-${{ steps.version_name.outputs.version_name }}-ios-simulator.zip" ../../../../../../
 
       - name: Upload Assets to release
