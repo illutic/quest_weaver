@@ -8,7 +8,7 @@ data class OnboardingState(
     val name: String = "",
     val strings: OnboardingStrings = OnboardingStrings.Empty,
     val drawables: OnboardingDrawables = OnboardingDrawables.Empty,
-    val error: String? = null
+    val error: String? = null,
 )
 
 val Empty: OnboardingState = OnboardingState()

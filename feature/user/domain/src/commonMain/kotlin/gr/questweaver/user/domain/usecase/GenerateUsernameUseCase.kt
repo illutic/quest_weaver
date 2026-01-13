@@ -1,10 +1,7 @@
 package gr.questweaver.user.domain.usecase
 
 class GenerateUsernameUseCase {
-
-    operator fun invoke(): String {
-        return "${adjectives.random()} ${nouns.random()}"
-    }
+    operator fun invoke(): String = "${adjectives.random()} ${nouns.random()}"
 
     private val adjectives =
         listOf(
@@ -37,7 +34,7 @@ class GenerateUsernameUseCase {
             "Hidden",
             "Lost",
             "Wandering",
-            "Eternal"
+            "Eternal",
         )
 
     private val nouns =
@@ -71,6 +68,6 @@ class GenerateUsernameUseCase {
             "Sage",
             "Scholar",
             "Scribe",
-            "Bard"
+            "Bard",
         )
 }

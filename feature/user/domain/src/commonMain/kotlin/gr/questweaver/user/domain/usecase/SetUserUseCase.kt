@@ -10,22 +10,24 @@ import kotlin.uuid.Uuid
 
 class SetUserUseCase(
     private val userRepository: UserRepository,
-    private val dispatcher: CoroutineDispatcher
+    private val dispatcher: CoroutineDispatcher,
 ) {
     @OptIn(ExperimentalUuidApi::class)
     private fun generateUserId(): String = Uuid.random().toString()
 
-    suspend operator fun invoke(name: String): Result<User> = withContext(dispatcher) {
-        runCatching {
-            val name = name.trim().takeIf { it.isNotBlank() } ?: throw InvalidUserNameException()
-            val existingUser = userRepository.getUser().getOrNull()
-            val userToSet = existingUser?.copy(name = name)
-                ?: User(
-                    id = generateUserId(),
-                    name = name
-                )
+    suspend operator fun invoke(name: String): Result<User> =
+        withContext(dispatcher) {
+            runCatching {
+                val name = name.trim().takeIf { it.isNotBlank() } ?: throw InvalidUserNameException()
+                val existingUser = userRepository.getUser().getOrNull()
+                val userToSet =
+                    existingUser?.copy(name = name)
+                        ?: User(
+                            id = generateUserId(),
+                            name = name,
+                        )
 
-            userRepository.setUser(userToSet).getOrThrow()
+                userRepository.setUser(userToSet).getOrThrow()
+            }
         }
-    }
 }

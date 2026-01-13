@@ -30,7 +30,7 @@ struct AnyRoute: Hashable {
         }
     }
 
-    static func ==(lhs: AnyRoute, rhs: AnyRoute) -> Bool {
+    static func == (lhs: AnyRoute, rhs: AnyRoute) -> Bool {
         // Prefer identity by equating type and, if possible, Equatable
         let lType = String(describing: type(of: lhs.base))
         let rType = String(describing: type(of: rhs.base))
@@ -63,7 +63,7 @@ func getPathBinding(
     return Binding<[AnyRoute]>(
         get: {
             // backStack from VM already includes currentRoute
-            if (backStack.count <= 1) {
+            if backStack.count <= 1 {
                 return []
             } else {
                 let dropped = Array(backStack.dropFirst())

@@ -20,24 +20,22 @@ import gr.questweaver.onboarding.screens.TutorialScreen
 import gr.questweaver.onboarding.screens.WelcomeScreen
 
 @Composable
-fun OnboardingRoute(
-    onNavigate: (Route) -> Unit,
-) {
+fun OnboardingRoute(onNavigate: (Route) -> Unit) {
     val viewModel = viewModel { OnboardingViewModel() }
     val state by viewModel.state.collectAsStateWithLifecycle()
     val currentRoute = state.backStack.last()
 
     val progress by
-    animateFloatAsState(
-        targetValue =
-            when (currentRoute) {
-                OnboardingRoute.Welcome -> 0.33f
-                OnboardingRoute.Registration -> 0.66f
-                OnboardingRoute.Tutorial -> 1.0f
-                else -> 0f
-            },
-        label = "onboarding_progress"
-    )
+        animateFloatAsState(
+            targetValue =
+                when (currentRoute) {
+                    OnboardingRoute.Welcome -> 0.33f
+                    OnboardingRoute.Registration -> 0.66f
+                    OnboardingRoute.Tutorial -> 1.0f
+                    else -> 0f
+                },
+            label = "onboarding_progress",
+        )
 
     Scaffold(
         topBar = {
@@ -45,7 +43,7 @@ fun OnboardingRoute(
                 progress = { progress },
                 modifier = Modifier.fillMaxWidth().safeDrawingPadding(),
             )
-        }
+        },
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
             NavDisplay(
@@ -54,7 +52,7 @@ fun OnboardingRoute(
                 entryProvider = { route ->
                     NavEntry(route) {
                         when (route) {
-                            is OnboardingRoute.Welcome ->
+                            is OnboardingRoute.Welcome -> {
                                 WelcomeScreen(
                                     strings = state.strings,
                                     drawables = state.drawables,
@@ -62,12 +60,13 @@ fun OnboardingRoute(
                                         viewModel
                                             .navigateTo(
                                                 OnboardingRoute
-                                                    .Registration
+                                                    .Registration,
                                             )
-                                    }
+                                    },
                                 )
+                            }
 
-                            is OnboardingRoute.Registration ->
+                            is OnboardingRoute.Registration -> {
                                 RegistrationScreen(
                                     strings = state.strings,
                                     name = state.name,
@@ -76,36 +75,40 @@ fun OnboardingRoute(
                                     onRegisterClick = { name ->
                                         viewModel
                                             .registerUser(
-                                                name
+                                                name,
                                             )
                                         viewModel
                                             .navigateTo(
                                                 OnboardingRoute
-                                                    .Tutorial
+                                                    .Tutorial,
                                             )
                                     },
                                     onRandomNameClick =
                                         viewModel::generateRandomName,
                                     error = state.error,
                                     onErrorDismiss =
-                                        viewModel::clearError
+                                        viewModel::clearError,
                                 )
+                            }
 
-                            is OnboardingRoute.Tutorial ->
+                            is OnboardingRoute.Tutorial -> {
                                 TutorialScreen(
                                     strings = state.strings,
                                     onCompleteClick = {
                                         onNavigate(
                                             OnboardingRoute
-                                                .Graph
+                                                .Graph,
                                         ) // Exit onboarding
-                                    }
+                                    },
                                 )
+                            }
 
-                            else -> error("Unknown route: $route")
+                            else -> {
+                                error("Unknown route: $route")
+                            }
                         }
                     }
-                }
+                },
             )
         }
     }

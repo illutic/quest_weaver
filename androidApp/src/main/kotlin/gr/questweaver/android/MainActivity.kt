@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
                 MainNavigation(
                     navigationState = navigationState,
                     onBack = { viewModel.navigateBack() },
-                    onNavigate = { viewModel.navigateTo(it) }
+                    onNavigate = { viewModel.navigateTo(it) },
                 )
             }
         }

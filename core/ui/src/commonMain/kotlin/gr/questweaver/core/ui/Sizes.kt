@@ -21,22 +21,24 @@ data class Sizes(
     val eleven: Dp,
 )
 
-val defaultSizes = Sizes(
-    zero = 34.dp,
-    one = 22.dp,
-    two = 20.dp,
-    three = 18.dp,
-    four = 16.dp,
-    five = 14.dp,
-    six = 12.dp,
-    seven = 10.dp,
-    eight = 8.dp,
-    nine = 6.dp,
-    ten = 4.dp,
-    eleven = 2.dp,
-)
+val defaultSizes =
+    Sizes(
+        zero = 34.dp,
+        one = 22.dp,
+        two = 20.dp,
+        three = 18.dp,
+        four = 16.dp,
+        five = 14.dp,
+        six = 12.dp,
+        seven = 10.dp,
+        eight = 8.dp,
+        nine = 6.dp,
+        ten = 4.dp,
+        eleven = 2.dp,
+    )
 
 val LocalSizes = staticCompositionLocalOf { defaultSizes }
 
 val sizes: Sizes
-    @Composable @ReadOnlyComposable get() = LocalSizes.current
+    @Composable @ReadOnlyComposable
+    get() = LocalSizes.current

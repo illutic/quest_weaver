@@ -48,7 +48,7 @@ fun RegistrationScreen(
     onRandomNameClick: () -> Unit,
     onRegisterClick: (String) -> Unit,
     error: String? = null,
-    onErrorDismiss: () -> Unit = {}
+    onErrorDismiss: () -> Unit = {},
 ) {
     var visible by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
@@ -72,10 +72,10 @@ fun RegistrationScreen(
                     onNameChange = onNameChange,
                     onRegisterClick = onRegisterClick,
                     onRandomNameClick = onRandomNameClick,
-                    visible = visible
+                    visible = visible,
                 )
             }
-        }
+        },
     )
 }
 
@@ -87,14 +87,15 @@ private fun RegistrationContent(
     onRegisterClick: (String) -> Unit,
     onRandomNameClick: () -> Unit,
     visible: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier =
-            modifier.fillMaxSize()
+            modifier
+                .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = sizes.one),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.weight(1f))
 
@@ -106,7 +107,7 @@ private fun RegistrationContent(
             strings = strings,
             visible = visible,
             name = name,
-            onNameChange = onNameChange
+            onNameChange = onNameChange,
         )
 
         Spacer(modifier = Modifier.weight(1f))
@@ -116,20 +117,23 @@ private fun RegistrationContent(
             visible = visible,
             name = name,
             onRegisterClick = onRegisterClick,
-            onRandomNameClick = onRandomNameClick
+            onRandomNameClick = onRandomNameClick,
         )
     }
 }
 
 @Composable
-private fun RegistrationTitle(strings: OnboardingStrings, visible: Boolean) {
+private fun RegistrationTitle(
+    strings: OnboardingStrings,
+    visible: Boolean,
+) {
     AnimatedVisibility(visible = visible, enter = titleEnterAnimation()) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
                 text = strings.registrationTitle,
                 style = MaterialTheme.typography.headlineMedium,
                 textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurface,
             )
 
             Spacer(modifier = Modifier.height(sizes.eight))
@@ -138,7 +142,7 @@ private fun RegistrationTitle(strings: OnboardingStrings, visible: Boolean) {
                 text = strings.registrationSubtitle,
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
     }
@@ -149,7 +153,7 @@ private fun RegistrationForm(
     strings: OnboardingStrings,
     visible: Boolean,
     name: String,
-    onNameChange: (String) -> Unit
+    onNameChange: (String) -> Unit,
 ) {
     AnimatedVisibility(visible = visible, enter = inputEnterAnimation()) {
         Column {
@@ -161,7 +165,7 @@ private fun RegistrationForm(
                 singleLine = true,
                 trailingIcon = {
                     Icon(imageVector = Icons.Default.Person, contentDescription = null)
-                }
+                },
             )
 
             Spacer(modifier = Modifier.height(sizes.four))
@@ -169,7 +173,7 @@ private fun RegistrationForm(
             Message(
                 text = strings.registrationInfoText,
                 icon = rememberVectorPainter(Icons.Outlined.Info),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
         }
     }
@@ -181,7 +185,7 @@ private fun RegistrationActions(
     visible: Boolean,
     name: String,
     onRegisterClick: (String) -> Unit,
-    onRandomNameClick: () -> Unit
+    onRandomNameClick: () -> Unit,
 ) {
     AnimatedVisibility(visible = visible, enter = buttonEnterAnimation()) {
         Column {
@@ -189,7 +193,7 @@ private fun RegistrationActions(
                 onClick = { onRegisterClick(name) },
                 buttonType = ButtonType.Primary,
                 enabled = name.isNotBlank(),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             ) { Text(strings.registrationCreateButton) }
 
             Spacer(modifier = Modifier.height(sizes.four))
@@ -197,7 +201,7 @@ private fun RegistrationActions(
             Button(
                 onClick = onRandomNameClick,
                 buttonType = ButtonType.Outlined,
-                modifier = Modifier.fillMaxWidth().padding(bottom = sizes.four)
+                modifier = Modifier.fillMaxWidth().padding(bottom = sizes.four),
             ) { Text(strings.registrationRandomButton) }
         }
     }
@@ -208,53 +212,53 @@ private fun titleEnterAnimation() =
         animationSpec =
             tween(
                 RegistrationScreenDefaults.ANIMATION_DURATION,
-                delayMillis = RegistrationScreenDefaults.ANIMATION_DELAY_SHORT
-            )
+                delayMillis = RegistrationScreenDefaults.ANIMATION_DELAY_SHORT,
+            ),
     ) +
-            expandVertically(
-                animationSpec =
-                    tween(
-                        RegistrationScreenDefaults.ANIMATION_DURATION,
-                        delayMillis =
-                            RegistrationScreenDefaults.ANIMATION_DELAY_SHORT
-                    )
-            )
+        expandVertically(
+            animationSpec =
+                tween(
+                    RegistrationScreenDefaults.ANIMATION_DURATION,
+                    delayMillis =
+                        RegistrationScreenDefaults.ANIMATION_DELAY_SHORT,
+                ),
+        )
 
 private fun inputEnterAnimation() =
     fadeIn(
         animationSpec =
             tween(
                 RegistrationScreenDefaults.ANIMATION_DURATION,
-                delayMillis = RegistrationScreenDefaults.ANIMATION_DELAY_MEDIUM
-            )
+                delayMillis = RegistrationScreenDefaults.ANIMATION_DELAY_MEDIUM,
+            ),
     ) +
-            slideInVertically(
-                initialOffsetY = { it / 2 },
-                animationSpec =
-                    tween(
-                        RegistrationScreenDefaults.ANIMATION_DURATION,
-                        delayMillis =
-                            RegistrationScreenDefaults.ANIMATION_DELAY_MEDIUM
-                    )
-            )
+        slideInVertically(
+            initialOffsetY = { it / 2 },
+            animationSpec =
+                tween(
+                    RegistrationScreenDefaults.ANIMATION_DURATION,
+                    delayMillis =
+                        RegistrationScreenDefaults.ANIMATION_DELAY_MEDIUM,
+                ),
+        )
 
 private fun buttonEnterAnimation() =
     fadeIn(
         animationSpec =
             tween(
                 RegistrationScreenDefaults.ANIMATION_DURATION,
-                delayMillis = RegistrationScreenDefaults.ANIMATION_DELAY_LONG
-            )
+                delayMillis = RegistrationScreenDefaults.ANIMATION_DELAY_LONG,
+            ),
     ) +
-            slideInVertically(
-                initialOffsetY = { it },
-                animationSpec =
-                    tween(
-                        RegistrationScreenDefaults.ANIMATION_DURATION,
-                        delayMillis =
-                            RegistrationScreenDefaults.ANIMATION_DELAY_LONG
-                    )
-            )
+        slideInVertically(
+            initialOffsetY = { it },
+            animationSpec =
+                tween(
+                    RegistrationScreenDefaults.ANIMATION_DURATION,
+                    delayMillis =
+                        RegistrationScreenDefaults.ANIMATION_DELAY_LONG,
+                ),
+        )
 
 private object RegistrationScreenDefaults {
     const val ANIMATION_DURATION = 800

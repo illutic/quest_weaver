@@ -46,7 +46,10 @@ import gr.questweaver.core.ui.sizes
 import gr.questweaver.onboarding.OnboardingStrings
 
 @Composable
-fun TutorialScreen(strings: OnboardingStrings, onCompleteClick: () -> Unit) {
+fun TutorialScreen(
+    strings: OnboardingStrings,
+    onCompleteClick: () -> Unit,
+) {
     var visible by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) { visible = true }
@@ -59,11 +62,11 @@ private fun TutorialContent(
     strings: OnboardingStrings,
     visible: Boolean,
     onCompleteClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier.fillMaxSize().padding(horizontal = sizes.one),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.weight(1f))
 
@@ -80,25 +83,31 @@ private fun TutorialContent(
 }
 
 @Composable
-private fun TutorialTitle(strings: OnboardingStrings, visible: Boolean) {
+private fun TutorialTitle(
+    strings: OnboardingStrings,
+    visible: Boolean,
+) {
     AnimatedVisibility(visible = visible, enter = titleEnterAnimation()) {
         Text(
             text = strings.tutorialTitle,
             style = MaterialTheme.typography.headlineMedium,
             textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onSurface
+            color = MaterialTheme.colorScheme.onSurface,
         )
     }
 }
 
 @Composable
-private fun TutorialList(strings: OnboardingStrings, visible: Boolean) {
+private fun TutorialList(
+    strings: OnboardingStrings,
+    visible: Boolean,
+) {
     Column(verticalArrangement = Arrangement.spacedBy(sizes.four)) {
         TutorialItem(
             visible = visible,
             delay = TutorialScreenDefaults.ANIMATION_DELAY_ITEM_1,
             icon = Icons.Default.Info,
-            text = strings.tutorialItem1
+            text = strings.tutorialItem1,
         )
 
         TutorialItem(
@@ -116,8 +125,8 @@ private fun TutorialList(strings: OnboardingStrings, visible: Boolean) {
                                         fontWeight = FontWeight.Bold,
                                         color =
                                             MaterialTheme.colorScheme
-                                                .onSurfaceVariant
-                                    )
+                                                .onSurfaceVariant,
+                                    ),
                             ) { append(strings.tutorialPrivacyPolicy) }
                             append(strings.tutorialPolicyPart2)
                             withStyle(
@@ -126,28 +135,28 @@ private fun TutorialList(strings: OnboardingStrings, visible: Boolean) {
                                         fontWeight = FontWeight.Bold,
                                         color =
                                             MaterialTheme.colorScheme
-                                                .onSurfaceVariant
-                                    )
+                                                .onSurfaceVariant,
+                                    ),
                             ) { append(strings.tutorialTermsOfService) }
                         },
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
-            }
+            },
         )
 
         TutorialItem(
             visible = visible,
             delay = TutorialScreenDefaults.ANIMATION_DELAY_ITEM_3,
             icon = Icons.Default.Star,
-            text = strings.tutorialItem3
+            text = strings.tutorialItem3,
         )
 
         TutorialItem(
             visible = visible,
             delay = TutorialScreenDefaults.ANIMATION_DELAY_ITEM_4,
             icon = Icons.Default.Star,
-            text = strings.tutorialItem4
+            text = strings.tutorialItem4,
         )
     }
 }
@@ -156,13 +165,13 @@ private fun TutorialList(strings: OnboardingStrings, visible: Boolean) {
 private fun TutorialActions(
     strings: OnboardingStrings,
     visible: Boolean,
-    onCompleteClick: () -> Unit
+    onCompleteClick: () -> Unit,
 ) {
     AnimatedVisibility(visible = visible, enter = buttonEnterAnimation()) {
         Button(
             onClick = onCompleteClick,
             buttonType = ButtonType.Primary,
-            modifier = Modifier.fillMaxWidth().padding(bottom = sizes.four)
+            modifier = Modifier.fillMaxWidth().padding(bottom = sizes.four),
         ) { Text(strings.tutorialButton) }
     }
 }
@@ -173,22 +182,23 @@ private fun TutorialItem(
     delay: Int,
     icon: ImageVector,
     text: String? = null,
-    content: @Composable (() -> Unit)? = null // null default is fine
+    content: @Composable (() -> Unit)? = null, // null default is fine
 ) {
     AnimatedVisibility(visible = visible, enter = itemEnterAnimation(delay)) {
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top) {
             Box(
                 modifier =
-                    Modifier.size(24.dp)
+                    Modifier
+                        .size(24.dp)
                         .clip(CircleShape)
                         .background(MaterialTheme.colorScheme.primary)
-                        .padding(4.dp)
+                        .padding(4.dp),
             ) {
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 )
             }
             Spacer(modifier = Modifier.width(sizes.four))
@@ -198,7 +208,7 @@ private fun TutorialItem(
                 Text(
                     text = text ?: "",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }
@@ -207,38 +217,38 @@ private fun TutorialItem(
 
 private fun titleEnterAnimation() =
     fadeIn(animationSpec = tween(TutorialScreenDefaults.ANIMATION_DURATION)) +
-            expandVertically(animationSpec = tween(TutorialScreenDefaults.ANIMATION_DURATION))
+        expandVertically(animationSpec = tween(TutorialScreenDefaults.ANIMATION_DURATION))
 
 private fun itemEnterAnimation(delay: Int) =
     fadeIn(
         animationSpec =
-            tween(TutorialScreenDefaults.ANIMATION_DURATION, delayMillis = delay)
+            tween(TutorialScreenDefaults.ANIMATION_DURATION, delayMillis = delay),
     ) +
-            slideInVertically(
-                initialOffsetY = { it / 2 },
-                animationSpec =
-                    tween(
-                        TutorialScreenDefaults.ANIMATION_DURATION,
-                        delayMillis = delay
-                    )
-            )
+        slideInVertically(
+            initialOffsetY = { it / 2 },
+            animationSpec =
+                tween(
+                    TutorialScreenDefaults.ANIMATION_DURATION,
+                    delayMillis = delay,
+                ),
+        )
 
 private fun buttonEnterAnimation() =
     fadeIn(
         animationSpec =
             tween(
                 TutorialScreenDefaults.ANIMATION_DURATION,
-                delayMillis = TutorialScreenDefaults.ANIMATION_DELAY_BUTTON
-            )
+                delayMillis = TutorialScreenDefaults.ANIMATION_DELAY_BUTTON,
+            ),
     ) +
-            slideInVertically(
-                initialOffsetY = { it },
-                animationSpec =
-                    tween(
-                        TutorialScreenDefaults.ANIMATION_DURATION,
-                        delayMillis = TutorialScreenDefaults.ANIMATION_DELAY_BUTTON
-                    )
-            )
+        slideInVertically(
+            initialOffsetY = { it },
+            animationSpec =
+                tween(
+                    TutorialScreenDefaults.ANIMATION_DURATION,
+                    delayMillis = TutorialScreenDefaults.ANIMATION_DELAY_BUTTON,
+                ),
+        )
 
 private object TutorialScreenDefaults {
     const val ANIMATION_DURATION = 800

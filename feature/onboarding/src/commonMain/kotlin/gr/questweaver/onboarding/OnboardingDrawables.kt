@@ -2,14 +2,16 @@ package gr.questweaver.onboarding
 
 import org.jetbrains.compose.resources.DrawableResource
 
-data class OnboardingDrawables(val logo: DrawableResource, val logoName: String) {
+data class OnboardingDrawables(
+    val logo: DrawableResource,
+    val logoName: String,
+) {
     companion object {
         val Empty by lazy {
             OnboardingDrawables(logo = onboardingLogo, logoName = onboardingLogoName)
         }
 
-        fun load(): OnboardingDrawables =
-            OnboardingDrawables(logo = onboardingLogo, logoName = onboardingLogoName)
+        fun load(): OnboardingDrawables = OnboardingDrawables(logo = onboardingLogo, logoName = onboardingLogoName)
     }
 }
 

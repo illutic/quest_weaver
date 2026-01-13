@@ -6,7 +6,7 @@ import gr.questweaver.user.domain.User
 import gr.questweaver.user.domain.UserRepository
 
 internal class UserRepositoryImpl(
-    private val userDataSource: UserDataSource
+    private val userDataSource: UserDataSource,
 ) : UserRepository {
     private var cachedUser: User? = null
 
@@ -24,7 +24,7 @@ internal class UserRepositoryImpl(
             },
             onFailure = { error ->
                 Result.failure(error)
-            }
+            },
         )
     }
 
@@ -39,7 +39,7 @@ internal class UserRepositoryImpl(
             },
             onFailure = { error ->
                 Result.failure(error)
-            }
+            },
         )
     }
 }

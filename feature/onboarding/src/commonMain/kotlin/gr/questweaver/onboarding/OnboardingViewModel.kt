@@ -15,7 +15,9 @@ import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class OnboardingViewModel : ViewModel(), KoinComponent {
+class OnboardingViewModel :
+    ViewModel(),
+    KoinComponent {
     private val isUserRegisteredUseCase: IsUserRegisteredUseCase by inject()
     private val setUserUseCase: SetUserUseCase by inject()
     private val generateUsernameUseCase: GenerateUsernameUseCase by inject()

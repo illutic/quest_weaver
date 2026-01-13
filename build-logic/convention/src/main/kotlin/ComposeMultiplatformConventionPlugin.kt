@@ -35,9 +35,7 @@ class ComposeMultiplatformConventionPlugin : Plugin<Project> {
             }
         }
 
-    private fun Project.configureKotlinMultiplatformCompose(
-        extension: KotlinMultiplatformExtension
-    ) {
+    private fun Project.configureKotlinMultiplatformCompose(extension: KotlinMultiplatformExtension) {
         extension.apply {
             sourceSets.apply {
                 androidMain {

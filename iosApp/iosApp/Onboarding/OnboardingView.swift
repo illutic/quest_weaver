@@ -49,7 +49,6 @@ private struct OnboardingContent: View {
             onBack: onBack
         )
 
-
         NavigationStack(path: pathBinding) {
             if let root = state.backStack.first {
                 OnboardingDestinationView(

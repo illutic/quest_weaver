@@ -21,33 +21,42 @@ fun Button(
     buttonType: ButtonType,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    content: @Composable RowScope.() -> Unit
+    content: @Composable RowScope.() -> Unit,
 ) {
-    val buttonShapes = ButtonDefaults.shapes(
-        shape = MaterialTheme.shapes.large, pressedShape = MaterialTheme.shapes.largeIncreased
-    )
-    val colors = when (buttonType) {
-        ButtonType.Primary -> ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary,
-            disabledContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
-            disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+    val buttonShapes =
+        ButtonDefaults.shapes(
+            shape = MaterialTheme.shapes.large,
+            pressedShape = MaterialTheme.shapes.largeIncreased,
         )
+    val colors =
+        when (buttonType) {
+            ButtonType.Primary -> {
+                ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                    disabledContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
+                    disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+                )
+            }
 
-        ButtonType.Secondary -> ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.secondary,
-            contentColor = MaterialTheme.colorScheme.onSecondary,
-            disabledContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
-            disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-        )
+            ButtonType.Secondary -> {
+                ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.secondary,
+                    contentColor = MaterialTheme.colorScheme.onSecondary,
+                    disabledContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
+                    disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+                )
+            }
 
-        ButtonType.Outlined -> ButtonDefaults.outlinedButtonColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-            contentColor = MaterialTheme.colorScheme.primary,
-            disabledContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
-            disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-        )
-    }
+            ButtonType.Outlined -> {
+                ButtonDefaults.outlinedButtonColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    contentColor = MaterialTheme.colorScheme.primary,
+                    disabledContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
+                    disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+                )
+            }
+        }
 
     when (buttonType) {
         ButtonType.Outlined -> {
@@ -57,7 +66,7 @@ fun Button(
                 shapes = buttonShapes,
                 colors = colors,
                 enabled = enabled,
-                content = content
+                content = content,
             )
         }
 
@@ -68,7 +77,7 @@ fun Button(
                 shapes = buttonShapes,
                 colors = colors,
                 enabled = enabled,
-                content = content
+                content = content,
             )
         }
     }
@@ -81,34 +90,42 @@ fun IconButton(
     buttonType: ButtonType,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
-    val buttonShapes = IconButtonDefaults.shapes(
-        shape = MaterialTheme.shapes.extraLarge,
-        pressedShape = MaterialTheme.shapes.extraLargeIncreased
-    )
-    val colors = when (buttonType) {
-        ButtonType.Primary -> IconButtonDefaults.iconButtonColors(
-            containerColor = Color.Unspecified,
-            contentColor = MaterialTheme.colorScheme.onSurface,
-            disabledContainerColor = Color.Unspecified,
-            disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+    val buttonShapes =
+        IconButtonDefaults.shapes(
+            shape = MaterialTheme.shapes.extraLarge,
+            pressedShape = MaterialTheme.shapes.extraLargeIncreased,
         )
+    val colors =
+        when (buttonType) {
+            ButtonType.Primary -> {
+                IconButtonDefaults.iconButtonColors(
+                    containerColor = Color.Unspecified,
+                    contentColor = MaterialTheme.colorScheme.onSurface,
+                    disabledContainerColor = Color.Unspecified,
+                    disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+                )
+            }
 
-        ButtonType.Secondary -> IconButtonDefaults.iconButtonColors(
-            containerColor = Color.Unspecified,
-            contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            disabledContainerColor = Color.Unspecified,
-            disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-        )
+            ButtonType.Secondary -> {
+                IconButtonDefaults.iconButtonColors(
+                    containerColor = Color.Unspecified,
+                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    disabledContainerColor = Color.Unspecified,
+                    disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+                )
+            }
 
-        ButtonType.Outlined -> IconButtonDefaults.iconButtonColors(
-            containerColor = Color.Unspecified,
-            contentColor = MaterialTheme.colorScheme.primary,
-            disabledContainerColor = Color.Unspecified,
-            disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-        )
-    }
+            ButtonType.Outlined -> {
+                IconButtonDefaults.iconButtonColors(
+                    containerColor = Color.Unspecified,
+                    contentColor = MaterialTheme.colorScheme.primary,
+                    disabledContainerColor = Color.Unspecified,
+                    disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+                )
+            }
+        }
 
     when (buttonType) {
         ButtonType.Outlined -> {
@@ -118,7 +135,7 @@ fun IconButton(
                 shapes = buttonShapes,
                 colors = colors,
                 enabled = enabled,
-                content = content
+                content = content,
             )
         }
 
@@ -129,7 +146,7 @@ fun IconButton(
                 shapes = buttonShapes,
                 colors = colors,
                 enabled = enabled,
-                content = content
+                content = content,
             )
         }
     }
@@ -142,27 +159,36 @@ fun TextButton(
     buttonType: ButtonType,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    content: @Composable RowScope.() -> Unit
+    content: @Composable RowScope.() -> Unit,
 ) {
-    val buttonShapes = ButtonDefaults.shapes(
-        shape = MaterialTheme.shapes.large, pressedShape = MaterialTheme.shapes.largeIncreased
-    )
-    val colors = when (buttonType) {
-        ButtonType.Primary -> ButtonDefaults.textButtonColors(
-            contentColor = MaterialTheme.colorScheme.primary,
-            disabledContentColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.38f)
+    val buttonShapes =
+        ButtonDefaults.shapes(
+            shape = MaterialTheme.shapes.large,
+            pressedShape = MaterialTheme.shapes.largeIncreased,
         )
+    val colors =
+        when (buttonType) {
+            ButtonType.Primary -> {
+                ButtonDefaults.textButtonColors(
+                    contentColor = MaterialTheme.colorScheme.primary,
+                    disabledContentColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.38f),
+                )
+            }
 
-        ButtonType.Secondary -> ButtonDefaults.textButtonColors(
-            contentColor = MaterialTheme.colorScheme.secondary,
-            disabledContentColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.38f)
-        )
+            ButtonType.Secondary -> {
+                ButtonDefaults.textButtonColors(
+                    contentColor = MaterialTheme.colorScheme.secondary,
+                    disabledContentColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.38f),
+                )
+            }
 
-        ButtonType.Outlined -> ButtonDefaults.textButtonColors(
-            contentColor = MaterialTheme.colorScheme.onSurface,
-            disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-        )
-    }
+            ButtonType.Outlined -> {
+                ButtonDefaults.textButtonColors(
+                    contentColor = MaterialTheme.colorScheme.onSurface,
+                    disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+                )
+            }
+        }
 
     TextButton(
         onClick = onClick,
@@ -171,6 +197,6 @@ fun TextButton(
         colors = colors,
         border = if (buttonType == ButtonType.Outlined) ButtonDefaults.outlinedButtonBorder(enabled) else null,
         enabled = enabled,
-        content = content
+        content = content,
     )
 }

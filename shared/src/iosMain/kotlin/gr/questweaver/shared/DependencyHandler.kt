@@ -15,17 +15,23 @@ fun Koin.get(objCClass: ObjCClass): Any {
 }
 
 @OptIn(BetaInteropApi::class)
-fun Koin.get(objCClass: ObjCClass, qualifier: Qualifier?, parameter: Any): Any {
+fun Koin.get(
+    objCClass: ObjCClass,
+    qualifier: Qualifier?,
+    parameter: Any,
+): Any {
     val kClazz = getOriginalKotlinClass(objCClass)!!
     return get(kClazz, qualifier) { parametersOf(parameter) }
 }
 
 object DependencyHandler {
     lateinit var koin: Koin
+
     fun initKoin() {
-        val instance = startKoin {
-            modules(appModules())
-        }
+        val instance =
+            startKoin {
+                modules(appModules())
+            }
 
         koin = instance.koin
     }

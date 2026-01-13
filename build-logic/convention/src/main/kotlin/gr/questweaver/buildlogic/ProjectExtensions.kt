@@ -17,10 +17,11 @@ fun getEnvOrWarn(name: String): String? =
     }
 
 fun Project.getNamespace(): String {
-    val moduleName = path
-        .split(":")
-        .drop(1)
-        .joinToString(".")
+    val moduleName =
+        path
+            .split(":")
+            .drop(1)
+            .joinToString(".")
 
     return if (moduleName.isNotEmpty()) {
         "gr.questweaver.$moduleName"

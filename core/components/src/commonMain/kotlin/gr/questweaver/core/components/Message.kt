@@ -30,34 +30,35 @@ fun Message(
     icon: Painter? = null,
     closeButton: Painter? = null,
     title: String? = null,
-    onDismiss: (() -> Unit)? = null
+    onDismiss: (() -> Unit)? = null,
 ) {
     Box(
         modifier =
-            modifier.background(
-                MaterialTheme.colorScheme.surfaceContainerLowest,
-                RoundedCornerShape(16.dp)
-            )
-                .padding(16.dp)
+            modifier
+                .background(
+                    MaterialTheme.colorScheme.surfaceContainerLowest,
+                    RoundedCornerShape(16.dp),
+                ).padding(16.dp),
     ) {
         Row(
             verticalAlignment =
                 if (title != null) Alignment.Top else Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         ) {
             icon?.let {
                 Box(
                     modifier =
-                        Modifier.size(24.dp)
+                        Modifier
+                            .size(24.dp)
                             .clip(CircleShape)
                             .background(MaterialTheme.colorScheme.primary),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     Icon(
                         painter = icon,
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.onPrimary,
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.size(16.dp),
                     )
                 }
             }
@@ -71,13 +72,13 @@ fun Message(
                         text = title,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = MaterialTheme.colorScheme.onSurface,
                     )
                 }
                 Text(
                     text = text,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
 
@@ -88,7 +89,7 @@ fun Message(
                     painter = closeButton,
                     contentDescription = "Close",
                     tint = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.clickable { onDismiss() }
+                    modifier = Modifier.clickable { onDismiss() },
                 )
             }
         }

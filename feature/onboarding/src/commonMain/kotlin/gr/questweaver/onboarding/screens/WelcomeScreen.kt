@@ -41,7 +41,7 @@ import org.jetbrains.compose.resources.painterResource
 fun WelcomeScreen(
     strings: OnboardingStrings,
     drawables: OnboardingDrawables,
-    onStartClick: () -> Unit
+    onStartClick: () -> Unit,
 ) {
     var visible by remember { mutableStateOf(false) }
 
@@ -51,7 +51,7 @@ fun WelcomeScreen(
         strings = strings,
         drawables = drawables,
         visible = visible,
-        onStartClick = onStartClick
+        onStartClick = onStartClick,
     )
 }
 
@@ -61,12 +61,12 @@ private fun WelcomeContent(
     drawables: OnboardingDrawables,
     visible: Boolean,
     onStartClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(horizontal = sizes.one)
+            modifier = Modifier.padding(horizontal = sizes.one),
         ) {
             Spacer(modifier = Modifier.weight(1f))
 
@@ -84,26 +84,32 @@ private fun WelcomeContent(
 }
 
 @Composable
-private fun WelcomeLogo(drawables: OnboardingDrawables, visible: Boolean) {
+private fun WelcomeLogo(
+    drawables: OnboardingDrawables,
+    visible: Boolean,
+) {
     AnimatedVisibility(visible = visible, enter = logoEnterAnimation()) {
         Icon(
             painter = painterResource(drawables.logo),
             contentDescription = drawables.logoName,
             tint = Color.Unspecified,
-            modifier = Modifier.size(WelcomeScreenDefaults.ICON_SIZE)
+            modifier = Modifier.size(WelcomeScreenDefaults.ICON_SIZE),
         )
     }
 }
 
 @Composable
-private fun WelcomeHeader(strings: OnboardingStrings, visible: Boolean) {
+private fun WelcomeHeader(
+    strings: OnboardingStrings,
+    visible: Boolean,
+) {
     AnimatedVisibility(visible = visible, enter = textEnterAnimation()) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
                 text = strings.welcomeTitle,
                 style = MaterialTheme.typography.headlineSmall,
                 textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurface,
             )
 
             Spacer(modifier = Modifier.height(sizes.eight))
@@ -112,62 +118,66 @@ private fun WelcomeHeader(strings: OnboardingStrings, visible: Boolean) {
                 text = strings.welcomeSubtitle,
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
     }
 }
 
 @Composable
-private fun WelcomeActions(strings: OnboardingStrings, visible: Boolean, onStartClick: () -> Unit) {
+private fun WelcomeActions(
+    strings: OnboardingStrings,
+    visible: Boolean,
+    onStartClick: () -> Unit,
+) {
     AnimatedVisibility(visible = visible, enter = buttonEnterAnimation()) {
         Button(
             onClick = onStartClick,
             buttonType = ButtonType.Primary,
-            modifier = Modifier.fillMaxWidth().padding(bottom = sizes.four)
+            modifier = Modifier.fillMaxWidth().padding(bottom = sizes.four),
         ) { Text(strings.welcomeButton) }
     }
 }
 
 private fun logoEnterAnimation() =
     fadeIn(animationSpec = tween(WelcomeScreenDefaults.ANIMATION_DURATION)) +
-            scaleIn(
-                initialScale = WelcomeScreenDefaults.INITIAL_SCALE,
-                animationSpec = tween(WelcomeScreenDefaults.ANIMATION_DURATION)
-            )
+        scaleIn(
+            initialScale = WelcomeScreenDefaults.INITIAL_SCALE,
+            animationSpec = tween(WelcomeScreenDefaults.ANIMATION_DURATION),
+        )
 
 private fun textEnterAnimation() =
     fadeIn(
         animationSpec =
             tween(
                 WelcomeScreenDefaults.ANIMATION_DURATION,
-                delayMillis = WelcomeScreenDefaults.ANIMATION_DELAY_SHORT
-            )
+                delayMillis = WelcomeScreenDefaults.ANIMATION_DELAY_SHORT,
+            ),
     ) +
-            expandVertically(
-                animationSpec =
-                    tween(
-                        WelcomeScreenDefaults.ANIMATION_DURATION,
-                        delayMillis = WelcomeScreenDefaults.ANIMATION_DELAY_SHORT
-                    )
-            )
+        expandVertically(
+            animationSpec =
+                tween(
+                    WelcomeScreenDefaults.ANIMATION_DURATION,
+                    delayMillis = WelcomeScreenDefaults.ANIMATION_DELAY_SHORT,
+                ),
+        )
 
 private fun buttonEnterAnimation() =
     fadeIn(
         animationSpec =
             tween(
                 WelcomeScreenDefaults.ANIMATION_DURATION,
-                delayMillis = WelcomeScreenDefaults.ANIMATION_DELAY_LONG
-            )
+                delayMillis = WelcomeScreenDefaults.ANIMATION_DELAY_LONG,
+            ),
     ) +
-            slideInVertically(
-                initialOffsetY = { it },
-                animationSpec =
-                    tween(
-                        WelcomeScreenDefaults.ANIMATION_DURATION,
-                        delayMillis = WelcomeScreenDefaults.ANIMATION_DELAY_LONG
-                    )
-            )
+        slideInVertically(
+            initialOffsetY = { it },
+            animationSpec =
+                tween(
+                    WelcomeScreenDefaults.ANIMATION_DURATION,
+                    delayMillis = WelcomeScreenDefaults.ANIMATION_DELAY_LONG,
+                ),
+        )
 
 private object WelcomeScreenDefaults {
     val ICON_SIZE = 120.dp

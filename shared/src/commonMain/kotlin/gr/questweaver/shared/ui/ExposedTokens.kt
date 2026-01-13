@@ -15,7 +15,9 @@ object SharedTokens {
     val darkColorScheme: SharedColorScheme = SharedColorScheme(appDarkColorScheme)
 }
 
-class SharedColorScheme(materialColorScheme: ColorScheme) {
+class SharedColorScheme(
+    materialColorScheme: ColorScheme,
+) {
     val primary = materialColorScheme.primary
     val onPrimary = materialColorScheme.onPrimary
     val primaryContainer = materialColorScheme.primaryContainer
@@ -43,4 +45,3 @@ class SharedColorScheme(materialColorScheme: ColorScheme) {
     val inverseSurface = materialColorScheme.inverseSurface
     val inversePrimary = materialColorScheme.inversePrimary
 }
-

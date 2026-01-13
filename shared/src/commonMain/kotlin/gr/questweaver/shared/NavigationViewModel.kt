@@ -13,8 +13,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class NavigationViewModel(private val isUserRegisteredUseCase: IsUserRegisteredUseCase) :
-    ViewModel() {
+class NavigationViewModel(
+    private val isUserRegisteredUseCase: IsUserRegisteredUseCase,
+) : ViewModel() {
     private val _navigationState = MutableStateFlow(NavigationState())
     val navigationState = _navigationState.asStateFlow()
 
@@ -53,8 +54,9 @@ class NavigationViewModel(private val isUserRegisteredUseCase: IsUserRegisteredU
     }
 
     companion object {
-        fun createFactory(isUserRegisteredUseCase: IsUserRegisteredUseCase) = viewModelFactory {
-            initializer { NavigationViewModel(isUserRegisteredUseCase) }
-        }
+        fun createFactory(isUserRegisteredUseCase: IsUserRegisteredUseCase) =
+            viewModelFactory {
+                initializer { NavigationViewModel(isUserRegisteredUseCase) }
+            }
     }
 }

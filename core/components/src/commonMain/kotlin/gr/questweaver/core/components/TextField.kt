@@ -41,8 +41,8 @@ fun TextField(
             errorBorderColor = MaterialTheme.colorScheme.error,
             cursorColor = MaterialTheme.colorScheme.primary,
             focusedTextColor = MaterialTheme.colorScheme.onSurface,
-            unfocusedTextColor = MaterialTheme.colorScheme.onSurface
-        )
+            unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+        ),
 ) {
     OutlinedTextField(
         value = value,
@@ -61,6 +61,6 @@ fun TextField(
         minLines = minLines,
         interactionSource = interactionSource,
         shape = shape,
-        colors = colors
+        colors = colors,
     )
 }

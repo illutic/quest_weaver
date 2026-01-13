@@ -42,10 +42,11 @@ data class OnboardingStrings(
     val tutorialPrivacyPolicy: String = "",
     val tutorialPolicyPart2: String = "",
     val tutorialTermsOfService: String = "",
-    val errorUnknown: String = ""
+    val errorUnknown: String = "",
 ) {
     companion object {
         val Empty = OnboardingStrings()
+
         suspend fun load(): OnboardingStrings =
             OnboardingStrings(
                 welcomeTitle = getString(Res.string.onboarding_welcome_title),
