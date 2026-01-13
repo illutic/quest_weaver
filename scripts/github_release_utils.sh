@@ -95,7 +95,7 @@ function upload_release_assets() {
   local release_id="$2"
   local files
 
-  files=$(find . -type f \( -name "*.aab" -o -name "*.apk" -o -name "*.zip" \))
+  files=$(find . -type f \( -name "*.aab" -o -name "*.apk" -o -name "*.zip" \) -not -path "*/intermediates/*" -not -path "*/kotlin-multiplatform-resources/*" -not -path "*/.gradle/*")
 
   if [ -z "$files" ]; then
       echo "❌ ERROR: No files found to upload. Exiting." >&2
