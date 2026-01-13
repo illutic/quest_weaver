@@ -41,7 +41,7 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: ./lint
-          key: kt-lint
+          key: kt-lint-${{ hashFiles('scripts/kt_lint.sh') }}
 
       - name: Fetch Kt Lint
         id: fetch_kt_lint
@@ -84,6 +84,13 @@ jobs:
           else
             touch ktlint.patch
           fi
+
+      - name: Upload KtLint Cache
+        uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: ./lint
+          key: kt-lint-${{ hashFiles('scripts/kt_lint.sh') }}
 
       - name: Upload Patch
         uses: actions/upload-artifact@v4

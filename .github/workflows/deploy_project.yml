@@ -73,6 +73,25 @@ jobs:
           VERSION_CODE: ${{ vars.VERSION_CODE }}
           VERSION_NAME: ${{ steps.version_name.outputs.version_name }}
 
+      - name: Build iOS App for Simulator
+        # Building for iphoneos simulator. CODE_SIGNING_REQUIRED=NO allows building without certs.
+        run: |
+          xcodebuild -project iosApp/iosApp.xcodeproj \
+            -scheme iosApp \
+            -configuration Release \
+            -sdk iphonesimulator \
+            -derivedDataPath build/ios \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Zip iOS App
+        run: |
+          cd build/ios/Build/Products/Release-iphonesimulator
+          zip -r "QuestWeaver-${{ steps.version_name.outputs.version_name }}-ios-simulator.zip" QuestWeaver.app
+          # Move zip to root so the upload script can find it easily if needed, 
+          # though the script finds recursively.
+          mv "QuestWeaver-${{ steps.version_name.outputs.version_name }}-ios-simulator.zip" ../../../../../../
+
       - name: Upload Assets to release
         run: |
           source scripts/github_release_utils.sh
