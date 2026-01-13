@@ -150,11 +150,13 @@ jobs:
              echo "Applying KtLint patch..."
              git apply ktlint.patch
           fi
+          rm -f ktlint.patch
           
           if [ -s swiftlint.patch ]; then
              echo "Applying SwiftLint patch..."
              git apply swiftlint.patch
           fi
+          rm -f swiftlint.patch
 
       - name: Commit and Push Fixes
         run: |
