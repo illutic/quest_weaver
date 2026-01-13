@@ -9,6 +9,8 @@ on:
 jobs:
   build-ios:
     runs-on: macos-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -19,5 +21,17 @@ jobs:
       - name: Install SwiftLint
         run: brew install swiftlint
 
-      - name: Run SwiftLint
-        run: swiftlint lint iosApp --config iosApp/.swiftlint.yml
+      - name: Run SwiftLint with Auto-Fix
+        run: swiftlint --fix iosApp --config iosApp/.swiftlint.yml
+
+      - name: Commit and Push Fixes
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add .
+            git commit -m "style: swiftlint auto-fix"
+            git push
+          fi
+
+      - name: Build iOS App

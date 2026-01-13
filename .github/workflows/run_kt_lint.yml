@@ -6,6 +6,8 @@ on:
 jobs:
   kt_lint:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Get base depth
         id: base-depth
@@ -59,6 +61,34 @@ jobs:
           get_compose_ruleset "$KTLINT_RULES_DIR"
         env:
           KTLINT_RULES_DIR: ${{ github.workspace }}/lint/ktlint-rules
+
+      - name: Format with Kt Lint
+        id: format_kt_lint
+        continue-on-error: true
+        run: |
+          CHANGED_FILES="$(echo '${{ steps.changed_files.outputs.files_list }}' | jq -r 'join(" ")')"
+          if [ -z "$CHANGED_FILES" ]; then
+              echo "No changed files to format."
+              exit 0
+          fi
+          
+          "${KTLINT_EXECUTABLE_PATH}" \
+              --ruleset="${COMPOSE_RULESET_JAR_PATH}" \
+              -F \
+              $CHANGED_FILES
+        env:
+          KTLINT_EXECUTABLE_PATH: ${{ github.workspace }}/lint/ktlint/ktlint
+          COMPOSE_RULESET_JAR_PATH: ${{ github.workspace }}/lint/ktlint-rules/compose-ruleset.jar
+
+      - name: Commit and Push Fixes
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add .
+            git commit -m "style: ktlint auto-fix"
+            git push
+          fi
 
       - name: Run Kt Lint
         id: run_kt_lint
