@@ -8,9 +8,6 @@
 import SwiftUI
 import Shared
 
-import SwiftUI
-import Shared
-
 struct WelcomeView: View {
     let strings: OnboardingStrings
     let drawables: OnboardingDrawables

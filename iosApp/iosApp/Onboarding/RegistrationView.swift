@@ -8,9 +8,6 @@
 import SwiftUI
 import Shared
 
-import SwiftUI
-import Shared
-
 struct RegistrationView: View {
     let strings: OnboardingStrings
     let name: String

@@ -8,9 +8,6 @@
 import SwiftUI
 import Shared
 
-import SwiftUI
-import Shared
-
 struct TutorialView: View {
     let strings: OnboardingStrings
     let onCompleteClick: () -> Void
