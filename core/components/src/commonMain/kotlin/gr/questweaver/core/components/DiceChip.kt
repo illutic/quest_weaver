@@ -23,15 +23,22 @@ fun DiceChip(
     isSelected: Boolean = false,
 ) {
     val backgroundColor =
-        if (isSelected) MaterialTheme.colorScheme.primary
-        else MaterialTheme.colorScheme.surfaceVariant
+        if (isSelected) {
+            MaterialTheme.colorScheme.primary
+        } else {
+            MaterialTheme.colorScheme.surfaceVariant
+        }
     val contentColor =
-        if (isSelected) MaterialTheme.colorScheme.onPrimary
-        else MaterialTheme.colorScheme.onSurfaceVariant
+        if (isSelected) {
+            MaterialTheme.colorScheme.onPrimary
+        } else {
+            MaterialTheme.colorScheme.onSurfaceVariant
+        }
 
     Box(
         modifier =
-            modifier.clip(CutCornerShape(8.dp))
+            modifier
+                .clip(CutCornerShape(8.dp))
                 .background(backgroundColor)
                 .clickable { onClick() }
                 .padding(horizontal = 12.dp, vertical = 6.dp),
@@ -48,6 +55,6 @@ fun DiceChip(
 
 @Preview
 @Composable
-fun PreviewDiceChip() {
+private fun PreviewDiceChip() {
     DiceChip(label = "d20", onClick = {}, isSelected = true)
 }

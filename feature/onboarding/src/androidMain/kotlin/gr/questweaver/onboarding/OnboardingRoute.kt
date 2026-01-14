@@ -26,16 +26,16 @@ fun OnboardingRoute(onNavigate: (Route) -> Unit) {
     val currentRoute = state.backStack.last()
 
     val progress by
-    animateFloatAsState(
-        targetValue =
-            when (currentRoute) {
-                OnboardingRoute.Welcome -> 0.33f
-                OnboardingRoute.Registration -> 0.66f
-                OnboardingRoute.Tutorial -> 1.0f
-                else -> 0f
-            },
-        label = "onboarding_progress",
-    )
+        animateFloatAsState(
+            targetValue =
+                when (currentRoute) {
+                    OnboardingRoute.Welcome -> 0.33f
+                    OnboardingRoute.Registration -> 0.66f
+                    OnboardingRoute.Tutorial -> 1.0f
+                    else -> 0f
+                },
+            label = "onboarding_progress",
+        )
 
     Scaffold(
         topBar = {

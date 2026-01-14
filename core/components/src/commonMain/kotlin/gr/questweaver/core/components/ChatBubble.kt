@@ -54,7 +54,8 @@ fun ChatBubble(
     ) {
         Column(
             modifier =
-                Modifier.fillMaxWidth(0.5f)
+                Modifier
+                    .fillMaxWidth(0.5f)
                     .clip(
                         CutCornerShape(
                             topStart = 16.dp,
@@ -62,8 +63,7 @@ fun ChatBubble(
                             bottomStart = if (isMe) 16.dp else 4.dp,
                             bottomEnd = if (isMe) 4.dp else 16.dp,
                         ),
-                    )
-                    .background(containerColor)
+                    ).background(containerColor)
                     .padding(12.dp),
         ) {
             if (!isMe) {

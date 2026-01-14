@@ -24,7 +24,8 @@ fun StatIndicator(
 ) {
     Box(
         modifier =
-            modifier.size(64.dp)
+            modifier
+                .size(64.dp)
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.surfaceContainerHighest)
                 .border(2.dp, MaterialTheme.colorScheme.outline, CircleShape),
@@ -48,6 +49,6 @@ fun StatIndicator(
 
 @Preview
 @Composable
-fun PreviewStatIndicator() {
+private fun PreviewStatIndicator() {
     StatIndicator(label = "STR", value = "18")
 }

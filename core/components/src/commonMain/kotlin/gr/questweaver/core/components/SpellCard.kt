@@ -46,7 +46,7 @@ fun SpellCard(
         border =
             androidx.compose.foundation.BorderStroke(
                 1.dp,
-                MaterialTheme.colorScheme.secondary
+                MaterialTheme.colorScheme.secondary,
             ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
@@ -70,8 +70,11 @@ fun SpellCard(
                 }
                 Icon(
                     imageVector =
-                        if (expanded) Icons.Filled.KeyboardArrowUp
-                        else Icons.Filled.KeyboardArrowDown,
+                        if (expanded) {
+                            Icons.Filled.KeyboardArrowUp
+                        } else {
+                            Icons.Filled.KeyboardArrowDown
+                        },
                     contentDescription = if (expanded) "Collapse" else "Expand",
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -106,14 +109,14 @@ fun SpellCard(
 
 @Preview
 @Composable
-fun PreviewSpellCard() {
+private fun PreviewSpellCard() {
     Column(modifier = Modifier.padding(16.dp)) {
         SpellCard(
             name = "Fireball",
             level = "Level 3 Evocation",
             description =
                 "A bright streak flashes from your pointing finger to a point you choose... " +
-                        "Each creature in a 20-foot-radius sphere centered on that point must make a Dexterity saving throw.",
+                    "Each creature in a 20-foot-radius sphere centered on that point must make a Dexterity saving throw.",
             onCast = {},
         )
     }

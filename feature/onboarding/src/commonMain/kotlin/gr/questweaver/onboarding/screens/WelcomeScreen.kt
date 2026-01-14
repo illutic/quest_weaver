@@ -147,10 +147,10 @@ private fun WelcomeActions(
 
 private fun logoEnterAnimation() =
     fadeIn(animationSpec = tween(WelcomeScreenDefaults.ANIMATION_DURATION)) +
-            scaleIn(
-                initialScale = WelcomeScreenDefaults.INITIAL_SCALE,
-                animationSpec = tween(WelcomeScreenDefaults.ANIMATION_DURATION),
-            )
+        scaleIn(
+            initialScale = WelcomeScreenDefaults.INITIAL_SCALE,
+            animationSpec = tween(WelcomeScreenDefaults.ANIMATION_DURATION),
+        )
 
 private fun textEnterAnimation() =
     fadeIn(
@@ -160,13 +160,13 @@ private fun textEnterAnimation() =
                 delayMillis = WelcomeScreenDefaults.ANIMATION_DELAY_SHORT,
             ),
     ) +
-            expandVertically(
-                animationSpec =
-                    tween(
-                        WelcomeScreenDefaults.ANIMATION_DURATION,
-                        delayMillis = WelcomeScreenDefaults.ANIMATION_DELAY_SHORT,
-                    ),
-            )
+        expandVertically(
+            animationSpec =
+                tween(
+                    WelcomeScreenDefaults.ANIMATION_DURATION,
+                    delayMillis = WelcomeScreenDefaults.ANIMATION_DELAY_SHORT,
+                ),
+        )
 
 private fun buttonEnterAnimation() =
     fadeIn(
@@ -176,14 +176,14 @@ private fun buttonEnterAnimation() =
                 delayMillis = WelcomeScreenDefaults.ANIMATION_DELAY_LONG,
             ),
     ) +
-            slideInVertically(
-                initialOffsetY = { it },
-                animationSpec =
-                    tween(
-                        WelcomeScreenDefaults.ANIMATION_DURATION,
-                        delayMillis = WelcomeScreenDefaults.ANIMATION_DELAY_LONG,
-                    ),
-            )
+        slideInVertically(
+            initialOffsetY = { it },
+            animationSpec =
+                tween(
+                    WelcomeScreenDefaults.ANIMATION_DURATION,
+                    delayMillis = WelcomeScreenDefaults.ANIMATION_DELAY_LONG,
+                ),
+        )
 
 private object WelcomeScreenDefaults {
     val ICON_SIZE = 120.dp

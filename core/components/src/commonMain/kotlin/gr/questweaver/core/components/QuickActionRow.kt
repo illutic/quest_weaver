@@ -42,7 +42,7 @@ fun QuickActionRow(
 
 @Preview
 @Composable
-fun PreviewQuickActionRow() {
+private fun PreviewQuickActionRow() {
     QuickActionRow(
         actions =
             listOf(
