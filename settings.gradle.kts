@@ -19,5 +19,6 @@ rootProject.name = "QuestWeaver"
 include(":androidApp")
 include(":shared")
 include(":feature:onboarding")
+include(":feature:home")
 include(":feature:user:data", ":feature:user:domain")
 include(":core:common", ":core:navigation", ":core:components", ":core:ui", ":core:database")

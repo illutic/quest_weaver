@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import gr.questweaver.home.HomeRoute
 import gr.questweaver.navigation.NavigationState
 import gr.questweaver.navigation.Route
 import gr.questweaver.onboarding.OnboardingRoute
@@ -38,7 +39,7 @@ class NavigationViewModel(
         setLoading(true)
         val isRegistered = isUserRegisteredUseCase().getOrElse { false }
         if (isRegistered) {
-            navigateTo(OnboardingRoute.Graph)
+            navigateTo(HomeRoute.Graph)
         } else {
             navigateTo(OnboardingRoute.Graph)
         }

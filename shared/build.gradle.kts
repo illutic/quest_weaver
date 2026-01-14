@@ -18,6 +18,7 @@ kotlin {
             export(projects.core.database)
             export(projects.core.navigation)
             export(projects.feature.onboarding)
+            export(projects.feature.home)
             export(projects.feature.user.data)
             export(projects.feature.user.domain)
             export(libs.androidx.lifecycle.viewmodel)
@@ -31,6 +32,7 @@ kotlin {
             api(projects.core.database)
             api(projects.core.navigation)
             api(projects.feature.onboarding)
+            api(projects.feature.home)
             api(projects.feature.user.data)
             api(projects.feature.user.domain)
         }

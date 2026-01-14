@@ -76,6 +76,8 @@ struct RouteView: View {
         switch route {
         case is OnboardingRouteGraph:
             OnboardingView(onNavigateGlobal: onNavigate)
+        case is HomeRouteGraph:
+            HomeView(onNavigateGlobal: onNavigate)
         default:
             EmptyView()
         }
