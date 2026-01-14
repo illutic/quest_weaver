@@ -82,6 +82,12 @@ The project follows a **Clean Architecture** approach with **MVVM** (Model-View-
 * **Navigation**: Custom Route-based navigation system.
     * Navigation commands (e.g., `navigateTo`, `navigateBack`) are handled in the ViewModel and
       observed by the UI/Navigation host.
+* **Connectivity**: Google's Nearby Connections API.
+    * Used to create a local squad for:
+        * Connecting to other nearby devices.
+        * Sharing media.
+        * Realtime chat.
+        * Collaborative whiteboard/map drawing.
 
 ## Development Guidelines
 
