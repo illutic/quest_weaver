@@ -54,6 +54,7 @@ class ComposeMultiplatformConventionPlugin : Plugin<Project> {
                         implementation(libs.getLibrary("compose-viewmodel").get())
                         implementation(libs.getLibrary("compose-lifecycle-viewmodel").get())
                         implementation(libs.getLibrary("compose-viewmodel-nav3").get())
+                        implementation(libs.getLibrary("kotlinx-collections-immutable").get())
                     }
                 }
             }

@@ -1,0 +1,17 @@
+<resources>
+    <string name="home_welcome_title">Welcome back, Adventurer!</string>
+    <string name="home_welcome_subtitle">Continue your epic journey!</string>
+    <string name="home_recent_games_title">Recent games</string>
+    <string name="home_recent_games_view_all">View all</string>
+    <string name="home_recent_games_empty">Your recent games will appear here.</string>
+    <string name="home_quick_actions_title">Quick Actions</string>
+    <string name="home_create_game_button">Create Game</string>
+    <string name="home_join_game_button">Join Game</string>
+    <string name="home_resources_title">Tools &amp; Useful resources</string>
+    <string name="home_resources_view_all">View all</string>
+    <string name="home_ai_assistant_title">AI Assistant</string>
+    <string name="home_ai_assistant_description">Generate content for your game.</string>
+    <string name="home_game_live">Live</string>
+    <string name="home_game_offline">Offline</string>
+    <string name="home_game_players">%s players</string>
+</resources>
