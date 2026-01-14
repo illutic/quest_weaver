@@ -26,6 +26,22 @@ struct Theme {
             })
         }
 
+        static var secondary: SwiftUI.Color {
+            Color(UIColor { trait in
+                return trait.userInterfaceStyle == .dark ?
+                    SharedTokens.shared.darkColorScheme.secondary.toUIColor() :
+                    SharedTokens.shared.lightColorScheme.secondary.toUIColor()
+            })
+        }
+
+        static var onSecondary: SwiftUI.Color {
+            Color(UIColor { trait in
+                return trait.userInterfaceStyle == .dark ?
+                    SharedTokens.shared.darkColorScheme.onSecondary.toUIColor() :
+                    SharedTokens.shared.lightColorScheme.onSecondary.toUIColor()
+            })
+        }
+
         static var background: SwiftUI.Color {
             Color(UIColor { trait in
                 return trait.userInterfaceStyle == .dark ?

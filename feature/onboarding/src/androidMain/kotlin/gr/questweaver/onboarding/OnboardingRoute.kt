@@ -26,16 +26,16 @@ fun OnboardingRoute(onNavigate: (Route) -> Unit) {
     val currentRoute = state.backStack.last()
 
     val progress by
-        animateFloatAsState(
-            targetValue =
-                when (currentRoute) {
-                    OnboardingRoute.Welcome -> 0.33f
-                    OnboardingRoute.Registration -> 0.66f
-                    OnboardingRoute.Tutorial -> 1.0f
-                    else -> 0f
-                },
-            label = "onboarding_progress",
-        )
+    animateFloatAsState(
+        targetValue =
+            when (currentRoute) {
+                OnboardingRoute.Welcome -> 0.33f
+                OnboardingRoute.Registration -> 0.66f
+                OnboardingRoute.Tutorial -> 1.0f
+                else -> 0f
+            },
+        label = "onboarding_progress",
+    )
 
     Scaffold(
         topBar = {
@@ -57,11 +57,9 @@ fun OnboardingRoute(onNavigate: (Route) -> Unit) {
                                     strings = state.strings,
                                     drawables = state.drawables,
                                     onStartClick = {
-                                        viewModel
-                                            .navigateTo(
-                                                OnboardingRoute
-                                                    .Registration,
-                                            )
+                                        viewModel.navigateTo(
+                                            OnboardingRoute.Registration,
+                                        )
                                     },
                                 )
                             }
@@ -70,24 +68,18 @@ fun OnboardingRoute(onNavigate: (Route) -> Unit) {
                                 RegistrationScreen(
                                     strings = state.strings,
                                     name = state.name,
-                                    onNameChange =
-                                        viewModel::onNameChange,
+                                    onNameChange = viewModel::onNameChange,
                                     onRegisterClick = { name ->
-                                        viewModel
-                                            .registerUser(
-                                                name,
-                                            )
-                                        viewModel
-                                            .navigateTo(
-                                                OnboardingRoute
-                                                    .Tutorial,
-                                            )
+                                        viewModel.registerUser(
+                                            name,
+                                        )
+                                        viewModel.navigateTo(
+                                            OnboardingRoute.Tutorial,
+                                        )
                                     },
-                                    onRandomNameClick =
-                                        viewModel::generateRandomName,
+                                    onRandomNameClick = viewModel::generateRandomName,
                                     error = state.error,
-                                    onErrorDismiss =
-                                        viewModel::clearError,
+                                    onErrorDismiss = viewModel::clearError,
                                 )
                             }
 
@@ -96,8 +88,7 @@ fun OnboardingRoute(onNavigate: (Route) -> Unit) {
                                     strings = state.strings,
                                     onCompleteClick = {
                                         onNavigate(
-                                            OnboardingRoute
-                                                .Graph,
+                                            OnboardingRoute.Graph,
                                         ) // Exit onboarding
                                     },
                                 )
