@@ -40,7 +40,9 @@ The project follows a **Clean Architecture** approach with **MVVM** (Model-View-
 #### UI Layer
 
 * **Screens**: Composable functions located in `screens/` package.
-* **Structure**: Follow the **Screen > Content > Component** pattern.
+* **Structure**: Follow the **Route > Screen > Content > Component** pattern.
+    * `UiRoute` (e.g., `FeatureUiRoute`): Initializes the ViewModel and handles other high-level
+      setup.
     * `Screen`: Collects state from ViewModel and handles navigation side effects.
     * `Content`: Stateless composable that accepts state and event callbacks.
     * `Component`: Reusable UI elements.
@@ -96,6 +98,11 @@ The project follows a **Clean Architecture** approach with **MVVM** (Model-View-
     * Kotlin code must adhere to [Detekt](https://detekt.dev/) rules.
     * Jetpack Compose code must adhere
       to [Detekt Jetpack Compose](https://github.com/mrmans0n/compose-rules) rules.
+8. **Version Control**:
+    * **Atomic Commits**: Bundle each "logical" change into a separate commit to maintain a clean
+      history.
+    * **Branching**: If you are on the `main` branch, always create a new branch and check out to
+      that branch to work on a feature.
 
 ## Jetpack Compose Structure
 

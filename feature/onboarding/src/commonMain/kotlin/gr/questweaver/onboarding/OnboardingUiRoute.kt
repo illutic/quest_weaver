@@ -20,7 +20,7 @@ import gr.questweaver.onboarding.screens.TutorialScreen
 import gr.questweaver.onboarding.screens.WelcomeScreen
 
 @Composable
-fun OnboardingRoute(onNavigate: (Route) -> Unit) {
+fun OnboardingUiRoute(onNavigate: (Route) -> Unit) {
     val viewModel = viewModel { OnboardingViewModel() }
     val state by viewModel.state.collectAsStateWithLifecycle()
     val currentRoute = state.backStack.last()

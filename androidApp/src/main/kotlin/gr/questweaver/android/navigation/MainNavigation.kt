@@ -6,6 +6,7 @@ import androidx.navigation3.ui.NavDisplay
 import gr.questweaver.navigation.NavigationState
 import gr.questweaver.navigation.Route
 import gr.questweaver.onboarding.OnboardingRoute
+import gr.questweaver.onboarding.OnboardingUiRoute
 
 @Composable
 fun MainNavigation(
@@ -19,7 +20,7 @@ fun MainNavigation(
         entryProvider = { key ->
             when (key) {
                 is OnboardingRoute.Graph -> {
-                    NavEntry(key) { OnboardingRoute(onNavigate = onNavigate) }
+                    NavEntry(key) { OnboardingUiRoute(onNavigate = onNavigate) }
                 }
 
                 else -> {
