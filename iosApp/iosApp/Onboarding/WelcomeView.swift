@@ -75,10 +75,11 @@ struct WelcomeView: View {
                     .cornerRadius(Theme.Dimens.spacing2)
             }
             .padding(.horizontal, Theme.Dimens.spacing4)
-            .padding(.bottom, Theme.Dimens.spacing4)
+            .padding(.bottom, Theme.Dimens.spacing2)
             .opacity(isVisible ? 1.0 : 0.0)
             .offset(y: isVisible ? 0 : 40)
             .animation(.easeOut(duration: 0.6).delay(0.6), value: isVisible)
+
         }
         .background(Theme.Colors.background.ignoresSafeArea())
         .navigationBarHidden(true)

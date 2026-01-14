@@ -49,6 +49,7 @@ class ComposeMultiplatformConventionPlugin : Plugin<Project> {
                         implementation(libs.getLibrary("compose-foundation").get())
                         implementation(libs.getLibrary("compose-material3").get())
                         implementation(libs.getLibrary("compose-components-resources").get())
+                        implementation(libs.getLibrary("compose-material-icons-extended").get())
                         implementation(libs.getLibrary("compose-material3-adaptive").get())
                         implementation(libs.getLibrary("compose-viewmodel").get())
                         implementation(libs.getLibrary("compose-lifecycle-viewmodel").get())

@@ -46,6 +46,7 @@ The project follows a **Clean Architecture** approach with **MVVM** (Model-View-
     * `Component`: Reusable UI elements.
 * **Design System**:
     * Always use components and tokens from the `core.ui` Design System.
+  * Refer to [DESIGN_SPEC.md](DESIGN_SPEC.md) for detailed design specifications.
     * If a reusable component is missing, create it in `core.components` (if generic) or within the
       feature's `components` package (if feature-specific) before using it.
 * **Animations**: Use animations to make the app feel alive and responsive.

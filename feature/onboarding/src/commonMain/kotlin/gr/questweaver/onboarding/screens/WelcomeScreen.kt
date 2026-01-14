@@ -78,7 +78,11 @@ private fun WelcomeContent(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            WelcomeActions(strings = strings, visible = visible, onStartClick = onStartClick)
+            WelcomeActions(
+                strings = strings,
+                visible = visible,
+                onStartClick = onStartClick,
+            )
         }
     }
 }
@@ -131,11 +135,13 @@ private fun WelcomeActions(
     onStartClick: () -> Unit,
 ) {
     AnimatedVisibility(visible = visible, enter = buttonEnterAnimation()) {
-        Button(
-            onClick = onStartClick,
-            buttonType = ButtonType.Primary,
-            modifier = Modifier.fillMaxWidth().padding(bottom = sizes.four),
-        ) { Text(strings.welcomeButton) }
+        Column {
+            Button(
+                onClick = onStartClick,
+                buttonType = ButtonType.Primary,
+                modifier = Modifier.fillMaxWidth().padding(bottom = sizes.two),
+            ) { Text(strings.welcomeButton) }
+        }
     }
 }
 
