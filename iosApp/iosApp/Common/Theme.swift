@@ -78,6 +78,24 @@ struct Theme {
     struct Layout {
         static let maxContentWidth: CGFloat = 600
     }
+
+    struct Typography {
+        static var displayLarge: Font {
+            SharedTokens.shared.typography.displayLarge.toFont()
+        }
+        static var headlineMedium: Font {
+            SharedTokens.shared.typography.headlineMedium.toFont()
+        }
+        static var titleMedium: Font {
+            SharedTokens.shared.typography.titleMedium.toFont()
+        }
+        static var bodyLarge: Font {
+            SharedTokens.shared.typography.bodyLarge.toFont()
+        }
+        static var labelMedium: Font {
+            SharedTokens.shared.typography.labelMedium.toFont()
+        }
+    }
 }
 
 struct AdaptiveLayout: ViewModifier {

@@ -59,10 +59,8 @@ Model-View-ViewModel).
 * **ViewModel**:
     * Extends `ViewModel`.
     * Implements `KoinComponent` for dependency injection.
-  * Exposes `StateFlow<State>` for UI state.
-  * Exposes `onEvent(event: Event)` for processing user actions.
-  * **No Helper Methods**: ViewModels should NOT expose data lookup helpers (e.g.,
-    `getResource(id)`). All data must flow through state.
+    * Exposes `StateFlow<State>` for UI state.
+    * Exposes `onEvent(event: Event)` for processing user actions.
     * **Must** provide a `createFactory()` method in its `companion object` to allow instantiation
       from the iOS App.
 * **State**: Defined as a `data class`.

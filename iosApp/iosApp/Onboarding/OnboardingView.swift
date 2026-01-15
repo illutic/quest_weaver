@@ -45,7 +45,6 @@ private struct OnboardingContent: View {
     var body: some View {
         let pathBinding = getPathBinding(
             backStack: state.backStack,
-            currentRoute: state.backStack.last,
             onBack: onBack
         )
 

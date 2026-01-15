@@ -1,15 +1,28 @@
 package gr.questweaver.home
 
 import gr.questweaver.navigation.Route
+import gr.questweaver.navigation.SheetRoute
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+
+data class SheetUiState(
+    val backStack: List<SheetRoute> = emptyList(),
+) {
+    val title =
+        when (val route = backStack.lastOrNull()) {
+            is HomeRoute.ResourceDetails -> route.title
+            else -> ""
+        }
+}
 
 data class HomeState(
     val isLoading: Boolean = false,
     val strings: HomeStrings = HomeStrings.Default,
     val recentGames: ImmutableList<GameSession> = persistentListOf(),
     val resources: ImmutableList<Resource> = persistentListOf(),
-    val backStack: List<Route> = listOf(HomeRoute.Home)
+    val selectedResource: Resource? = null,
+    val backStack: List<Route> = listOf(HomeRoute.Home),
+    val sheet: SheetUiState = SheetUiState()
 ) {
     val currentRoute: Route
         get() = backStack.lastOrNull() ?: HomeRoute.Home
@@ -33,7 +46,8 @@ data class Resource(
     val id: String,
     val title: String,
     val description: String,
-    val type: ResourceType
+    val type: ResourceType,
+    val imageUrl: String? = null
 )
 
 enum class ResourceType {

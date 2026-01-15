@@ -6,6 +6,11 @@ struct HomeDashboardView: View {
     let state: HomeState
     let viewModel: HomeViewModel
 
+    // Navigation Callbacks
+    let onRecentGamesViewAllClick: () -> Void
+    let onResourceClick: (String) -> Void
+    let onResourcesViewAllClick: () -> Void
+
     // Animation States
     @State private var isWelcomeVisible = false
     @State private var isRecentGamesVisible = false
@@ -22,16 +27,16 @@ struct HomeDashboardView: View {
                 RecentGamesSection(
                     strings: strings,
                     games: state.recentGames,
-                    onGameClick: { viewModel.onGameClick(gameId: $0) },
-                    onViewAllClick: { viewModel.onRecentGamesViewAllClick() }
+                    onGameClick: { viewModel.onEvent(event: HomeEventOnGameClick(gameId: $0)) },
+                    onViewAllClick: { onRecentGamesViewAllClick() }
                 )
                     .opacity(isRecentGamesVisible ? 1 : 0)
                     .offset(y: isRecentGamesVisible ? 0 : 20)
 
                 QuickActionsSection(
                     strings: strings,
-                    onCreateGameClick: { viewModel.onCreateGameClick() },
-                    onJoinGameClick: { viewModel.onJoinGameClick() }
+                    onCreateGameClick: { viewModel.onEvent(event: HomeEventOnCreateGameClick.shared) },
+                    onJoinGameClick: { viewModel.onEvent(event: HomeEventOnJoinGameClick.shared) }
                 )
                     .opacity(isQuickActionsVisible ? 1 : 0)
                     .offset(y: isQuickActionsVisible ? 0 : 20)
@@ -39,9 +44,9 @@ struct HomeDashboardView: View {
                 ResourcesSection(
                     strings: strings,
                     resources: state.resources,
-                    onAiAssistantClick: { viewModel.onAiAssistantClick() },
-                    onResourceClick: { viewModel.onResourceClick(resourceId: $0) },
-                    onViewAllClick: { viewModel.onResourcesViewAllClick() }
+                    onAiAssistantClick: { viewModel.onEvent(event: HomeEventOnAiAssistantClick.shared) },
+                    onResourceClick: { onResourceClick($0) },
+                    onViewAllClick: { onResourcesViewAllClick() }
                 )
                     .opacity(isResourcesVisible ? 1 : 0)
                     .offset(y: isResourcesVisible ? 0 : 20)

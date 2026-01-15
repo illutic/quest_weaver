@@ -13,7 +13,43 @@ object SharedTokens {
     val sizes = defaultSizes
     val lightColorScheme: SharedColorScheme = SharedColorScheme(appLightColorScheme)
     val darkColorScheme: SharedColorScheme = SharedColorScheme(appDarkColorScheme)
+    val typography: SharedTypography = SharedTypography(gr.questweaver.core.ui.AppTypography)
 }
+
+class SharedTypography(typography: androidx.compose.material3.Typography) {
+    val displayLarge =
+        SharedTextStyle(
+            fontSize = typography.displayLarge.fontSize.value,
+            fontWeight = typography.displayLarge.fontWeight?.weight ?: 400,
+            fontFamily = "Serif" // Hand-mapped from Type.kt
+        )
+    val headlineMedium =
+        SharedTextStyle(
+            fontSize = typography.headlineMedium.fontSize.value,
+            fontWeight = typography.headlineMedium.fontWeight?.weight ?: 400,
+            fontFamily = "Serif"
+        )
+    val titleMedium =
+        SharedTextStyle(
+            fontSize = typography.titleMedium.fontSize.value,
+            fontWeight = typography.titleMedium.fontWeight?.weight ?: 400,
+            fontFamily = "SansSerif"
+        )
+    val bodyLarge =
+        SharedTextStyle(
+            fontSize = typography.bodyLarge.fontSize.value,
+            fontWeight = typography.bodyLarge.fontWeight?.weight ?: 400,
+            fontFamily = "SansSerif"
+        )
+    val labelMedium =
+        SharedTextStyle(
+            fontSize = typography.labelMedium.fontSize.value,
+            fontWeight = typography.labelMedium.fontWeight?.weight ?: 400,
+            fontFamily = "SansSerif"
+        )
+}
+
+data class SharedTextStyle(val fontSize: Float, val fontWeight: Int, val fontFamily: String)
 
 class SharedColorScheme(
     materialColorScheme: ColorScheme,

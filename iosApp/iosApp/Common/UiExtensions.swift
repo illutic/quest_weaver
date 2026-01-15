@@ -4,6 +4,7 @@
 //
 //  Created by Quest Weaver.
 //
+
 import SwiftUI
 import UIKit
 import Shared
@@ -31,5 +32,29 @@ extension UInt64 {
 extension Float {
     func toCGFloat() -> CGFloat {
         return CGFloat(IosUiHelper.shared.getDpValue(dp: self))
+    }
+}
+
+extension SharedTextStyle {
+    func toFont() -> Font {
+        let size = self.fontSize.toCGFloat()
+
+        let weight: Font.Weight
+        switch self.fontWeight {
+        case 400: weight = .regular
+        case 500: weight = .medium
+        case 600: weight = .semibold
+        case 700: weight = .bold
+        default: weight = .regular
+        }
+
+        let design: Font.Design
+        switch self.fontFamily {
+        case "Serif": design = .serif
+        case "SansSerif": design = .default
+        default: design = .default
+        }
+
+        return Font.system(size: size, weight: weight, design: design)
     }
 }

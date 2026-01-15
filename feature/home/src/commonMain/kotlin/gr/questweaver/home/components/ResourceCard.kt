@@ -51,12 +51,23 @@ fun ResourceCard(resource: Resource, onClick: () -> Unit, modifier: Modifier = M
                         ),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    imageVector = Icons.Default.Image,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-                    modifier = Modifier.fillMaxWidth(0.2f).aspectRatio(1f)
-                )
+                // TODO: specific image loading when library is available
+                if (resource.imageUrl != null) {
+                    // Placeholder for AsyncImage
+                    Icon(
+                        imageVector = Icons.Default.Image,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
+                        modifier = Modifier.fillMaxWidth(0.2f).aspectRatio(1f)
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Default.Image,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                        modifier = Modifier.fillMaxWidth(0.2f).aspectRatio(1f)
+                    )
+                }
             }
 
             Column(modifier = Modifier.padding(sizes.four)) {

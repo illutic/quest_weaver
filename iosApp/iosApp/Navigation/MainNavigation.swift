@@ -51,7 +51,6 @@ private struct MainNavigationContent: View {
     var body: some View {
         let pathBinding = getPathBinding(
             backStack: state.backStack,
-            currentRoute: state.currentRoute,
             onBack: onBack
         )
 
@@ -77,7 +76,7 @@ struct RouteView: View {
         case is OnboardingRouteGraph:
             OnboardingView(onNavigateGlobal: onNavigate)
         case is HomeRouteGraph:
-            HomeView(onNavigateGlobal: onNavigate)
+            HomeView()
         default:
             EmptyView()
         }

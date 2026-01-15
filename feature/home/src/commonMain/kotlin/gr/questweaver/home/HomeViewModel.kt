@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import gr.questweaver.navigation.Route
+import gr.questweaver.navigation.SheetRoute
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,12 +15,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 
-sealed interface HomeSideEffect {
-    data class ShowToast(val message: String) : HomeSideEffect
-}
-
-class HomeViewModel(private val navigateToCallback: ((Route) -> Unit)? = null) :
-    ViewModel(), KoinComponent {
+class HomeViewModel : ViewModel(), KoinComponent {
 
     private val _state = MutableStateFlow(HomeState())
     val state: StateFlow<HomeState> = _state.asStateFlow()
@@ -60,13 +56,15 @@ class HomeViewModel(private val navigateToCallback: ((Route) -> Unit)? = null) :
                                 "1",
                                 "Player's Handbook",
                                 "Essential rules for D&D 5e",
-                                ResourceType.Rulebook
+                                ResourceType.Rulebook,
+                                "https://example.com/phb.jpg"
                             ),
                             Resource(
                                 "2",
                                 "Character Sheet",
                                 "Standard character sheet",
-                                ResourceType.CharacterSheet
+                                ResourceType.CharacterSheet,
+                                "https://example.com/charsheet.jpg"
                             )
                         )
                 )
@@ -74,29 +72,44 @@ class HomeViewModel(private val navigateToCallback: ((Route) -> Unit)? = null) :
         }
     }
 
-    fun handleNavigation(route: Route) {
-        navigateToCallback?.invoke(route)
+    fun onEvent(event: HomeEvent) {
+        when (event) {
+            is HomeEvent.OnJoinGameClick -> emitToast("Join Game Clicked!")
+            is HomeEvent.OnCreateGameClick -> emitToast("Create Game Clicked!")
+            is HomeEvent.OnGameClick -> emitToast("Game ${event.gameId} Clicked!")
+            is HomeEvent.OnRecentGamesViewAllClick -> navigateTo(HomeRoute.RecentGames)
+            is HomeEvent.OnAiAssistantClick -> emitToast("AI Assistant Clicked!")
+            is HomeEvent.OnResourceClick -> {
+                val resource = state.value.resources.find { it.id == event.resourceId }
+                if (resource != null) {
+                    _state.update { it.copy(selectedResource = resource) }
+                    val title = resource.title
+                    navigateTo(HomeRoute.ResourceDetails(event.resourceId, title))
+                }
+            }
+
+            is HomeEvent.OnResourcesViewAllClick -> navigateTo(HomeRoute.ResourcesList)
+            is HomeEvent.OnBackClick -> navigateBack()
+            is HomeEvent.OnDismissSheet -> dismissSheet()
+        }
     }
 
-    fun onJoinGameClick() {
-        emitToast("Join Game Clicked!")
-    }
-
-    fun onCreateGameClick() {
-        emitToast("Create Game Clicked!")
-    }
-
-    fun onGameClick(gameId: String) {
-        emitToast("Game $gameId Clicked!")
-    }
-
-    fun navigateTo(route: Route) {
-        _state.update { it.copy(backStack = it.backStack + route) }
-    }
-
-    fun navigateBack() {
+    private fun navigateTo(route: Route) {
         _state.update {
-            if (it.backStack.size > 1) {
+            if (route is SheetRoute) {
+                it.copy(sheet = it.sheet.copy(backStack = it.sheet.backStack + route))
+            } else {
+                it.copy(backStack = it.backStack + route)
+            }
+        }
+    }
+
+    private fun navigateBack() {
+        _state.update {
+            if (it.sheet.backStack.isNotEmpty()) {
+                val newSheetStack = it.sheet.backStack.dropLast(1)
+                it.copy(sheet = it.sheet.copy(backStack = newSheetStack))
+            } else if (it.backStack.size > 1) {
                 it.copy(backStack = it.backStack.dropLast(1))
             } else {
                 it
@@ -104,20 +117,8 @@ class HomeViewModel(private val navigateToCallback: ((Route) -> Unit)? = null) :
         }
     }
 
-    fun onRecentGamesViewAllClick() {
-        navigateTo(HomeRoute.RecentGames)
-    }
-
-    fun onAiAssistantClick() {
-        emitToast("AI Assistant Clicked!")
-    }
-
-    fun onResourceClick(resourceId: String) {
-        emitToast("Resource $resourceId Clicked!")
-    }
-
-    fun onResourcesViewAllClick() {
-        navigateTo(HomeRoute.ResourcesList)
+    private fun dismissSheet() {
+        _state.update { it.copy(sheet = it.sheet.copy(backStack = emptyList())) }
     }
 
     private fun emitToast(message: String) {
