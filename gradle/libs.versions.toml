@@ -11,7 +11,7 @@ android-coreKtx = "1.17.0"
 android-activityCompose = "1.12.2"
 android-appcompat = "1.7.1"
 android-splashScreen = "1.2.0"
-android-coil = "2.7.0"
+android-coil = "3.0.4"
 androidx-room = "2.8.4"
 androidx-sqlite = "2.6.2"
 viewmodel = "2.10.0-alpha07"
@@ -34,8 +34,8 @@ napier = "2.7.1"
 kotlinxCollectionsImmutable = "0.4.0"
 
 [libraries]
-coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "android-coil" }
-coil = { group = "io.coil-kt", name = "coil", version.ref = "android-coil" }
+coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "android-coil" }
+coil-network-ktor = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "android-coil" }
 
 # Google
 firebaseBom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "android-firebaseBom" }

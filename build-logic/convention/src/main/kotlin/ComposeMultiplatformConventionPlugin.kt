@@ -35,7 +35,9 @@ class ComposeMultiplatformConventionPlugin : Plugin<Project> {
             }
         }
 
-    private fun Project.configureKotlinMultiplatformCompose(extension: KotlinMultiplatformExtension) {
+    private fun Project.configureKotlinMultiplatformCompose(
+        extension: KotlinMultiplatformExtension
+    ) {
         extension.apply {
             sourceSets.apply {
                 androidMain {
@@ -55,6 +57,8 @@ class ComposeMultiplatformConventionPlugin : Plugin<Project> {
                         implementation(libs.getLibrary("compose-lifecycle-viewmodel").get())
                         implementation(libs.getLibrary("compose-viewmodel-nav3").get())
                         implementation(libs.getLibrary("kotlinx-collections-immutable").get())
+                        implementation(libs.getLibrary("coil-compose").get())
+                        implementation(libs.getLibrary("coil-network-ktor").get())
                     }
                 }
             }
