@@ -45,7 +45,7 @@ data class OnboardingStrings(
     val errorUnknown: String = "",
 ) {
     companion object {
-        val Empty = OnboardingStrings()
+        val Default = OnboardingStrings()
 
         suspend fun load(): OnboardingStrings =
             OnboardingStrings(

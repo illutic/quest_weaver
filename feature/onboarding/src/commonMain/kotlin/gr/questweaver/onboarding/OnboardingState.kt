@@ -6,9 +6,11 @@ data class OnboardingState(
     val isRegistered: Boolean = false,
     val backStack: List<Route> = listOf(OnboardingRoute.Welcome),
     val name: String = "",
-    val strings: OnboardingStrings = OnboardingStrings.Empty,
-    val drawables: OnboardingDrawables = OnboardingDrawables.Empty,
+    val strings: OnboardingStrings = OnboardingStrings.Default,
+    val drawables: OnboardingDrawables = OnboardingDrawables.Default,
     val error: String? = null,
-)
-
-val Empty: OnboardingState = OnboardingState()
+) {
+    companion object {
+        val Default = OnboardingState()
+    }
+}

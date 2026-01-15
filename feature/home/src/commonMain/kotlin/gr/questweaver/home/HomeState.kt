@@ -6,7 +6,7 @@ import kotlinx.collections.immutable.persistentListOf
 
 data class HomeState(
     val isLoading: Boolean = false,
-    val strings: HomeStrings = HomeStrings.Empty,
+    val strings: HomeStrings = HomeStrings.Default,
     val recentGames: ImmutableList<GameSession> = persistentListOf(),
     val resources: ImmutableList<Resource> = persistentListOf(),
     val backStack: List<Route> = listOf(HomeRoute.Home)

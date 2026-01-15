@@ -12,7 +12,7 @@ import Shared
 struct MainNavigation: View {
     @StateObject private var viewModelStoreOwner = IosViewModelStoreOwner()
     @State private var errorMessage: String?
-    @State private var state: NavigationState = NavigationState(backStack: [], currentRoute: nil, isLoading: false)
+    @State private var state: NavigationState = NavigationState.companion.Default
 
     var body: some View {
         let viewModel: NavigationViewModel = viewModelStoreOwner.viewModel(

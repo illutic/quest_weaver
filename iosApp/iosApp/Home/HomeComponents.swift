@@ -361,23 +361,23 @@ struct StatusBadge: View {
 #Preview {
     ScrollView {
         VStack(spacing: 20) {
-            WelcomeSection(strings: HomeStrings.companion.Empty)
+            WelcomeSection(strings: HomeStrings.companion.Default)
 
             QuickActionsSection(
-                strings: HomeStrings.companion.Empty,
+                strings: HomeStrings.companion.Default,
                 onCreateGameClick: {},
                 onJoinGameClick: {}
             )
 
             RecentGamesSection(
-                strings: HomeStrings.companion.Empty,
+                strings: HomeStrings.companion.Default,
                 games: [],
                 onGameClick: { _ in },
                 onViewAllClick: {}
             )
 
             ResourcesSection(
-                strings: HomeStrings.companion.Empty,
+                strings: HomeStrings.companion.Default,
                 resources: [],
                 onAiAssistantClick: {},
                 onResourceClick: { _ in },

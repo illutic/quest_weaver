@@ -7,11 +7,12 @@ data class OnboardingDrawables(
     val logoName: String,
 ) {
     companion object {
-        val Empty by lazy {
+        val Default by lazy {
             OnboardingDrawables(logo = onboardingLogo, logoName = onboardingLogoName)
         }
 
-        fun load(): OnboardingDrawables = OnboardingDrawables(logo = onboardingLogo, logoName = onboardingLogoName)
+        fun load(): OnboardingDrawables =
+            OnboardingDrawables(logo = onboardingLogo, logoName = onboardingLogoName)
     }
 }
 

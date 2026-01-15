@@ -38,6 +38,7 @@ data class HomeStrings(
     val gamePlayers: String = ""
 ) {
     companion object {
+        val Default = HomeStrings()
         val Empty = HomeStrings()
 
         suspend fun load(): HomeStrings =
@@ -46,15 +47,13 @@ data class HomeStrings(
                 welcomeTitle = getString(Res.string.home_welcome_title),
                 welcomeSubtitle = getString(Res.string.home_welcome_subtitle),
                 recentGamesTitle = getString(Res.string.home_recent_games_title),
-                recentGamesViewAll =
-                    getString(Res.string.home_recent_games_view_all),
+                recentGamesViewAll = getString(Res.string.home_recent_games_view_all),
                 recentGamesEmpty = getString(Res.string.home_recent_games_empty),
                 quickActionsTitle = getString(Res.string.home_quick_actions_title),
                 createGameButton = getString(Res.string.home_create_game_button),
                 joinGameButton = getString(Res.string.home_join_game_button),
                 usefulResourcesTitle = getString(Res.string.home_resources_title),
-                usefulResourcesViewAll =
-                    getString(Res.string.home_resources_view_all),
+                usefulResourcesViewAll = getString(Res.string.home_resources_view_all),
                 aiAssistantTitle = getString(Res.string.home_ai_assistant_title),
                 aiAssistantDescription =
                     getString(Res.string.home_ai_assistant_description),

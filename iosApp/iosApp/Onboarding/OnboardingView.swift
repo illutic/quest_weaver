@@ -12,7 +12,7 @@ struct OnboardingView: View {
     let onNavigateGlobal: (Route) -> Void
 
     @StateObject private var viewModelStoreOwner = IosViewModelStoreOwner()
-    @State private var state: OnboardingState = OnboardingStateKt.Empty
+    @State private var state: OnboardingState = OnboardingState.companion.Default
 
     var body: some View {
         let viewModel: OnboardingViewModel = viewModelStoreOwner.viewModel(
