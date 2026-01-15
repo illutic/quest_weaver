@@ -90,8 +90,22 @@ class HomeViewModel(private val navigateToCallback: ((Route) -> Unit)? = null) :
         emitToast("Game $gameId Clicked!")
     }
 
+    fun navigateTo(route: Route) {
+        _state.update { it.copy(backStack = it.backStack + route) }
+    }
+
+    fun navigateBack() {
+        _state.update {
+            if (it.backStack.size > 1) {
+                it.copy(backStack = it.backStack.dropLast(1))
+            } else {
+                it
+            }
+        }
+    }
+
     fun onRecentGamesViewAllClick() {
-        emitToast("Recent Games View All Clicked!")
+        navigateTo(HomeRoute.RecentGames)
     }
 
     fun onAiAssistantClick() {

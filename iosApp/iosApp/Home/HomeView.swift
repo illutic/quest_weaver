@@ -12,12 +12,7 @@ struct HomeView: View {
     let onNavigateGlobal: (Route) -> Void
 
     @StateObject private var viewModelStoreOwner = IosViewModelStoreOwner()
-    @State private var state: HomeState = HomeState(
-        isLoading: false,
-        strings: HomeStrings.companion.Empty,
-        recentGames: [],
-        resources: [],
-        )
+    @State private var state: HomeState = HomeState.companion.Default
     @State private var toastMessage: String? = nil
 
     // Animation States
@@ -31,82 +26,16 @@ struct HomeView: View {
             factory: HomeViewModel.companion.createFactory()
         )
 
-        ZStack {
-            Theme.Colors.background.ignoresSafeArea()
-
-            ScrollView {
-                VStack(spacing: Theme.Dimens.spacing4) {
-                    WelcomeSection(strings: state.strings)
-                        .opacity(isWelcomeVisible ? 1 : 0)
-                        .offset(y: isWelcomeVisible ? 0 : 20)
-
-                    RecentGamesSection(
-                        strings: state.strings,
-                        games: state.recentGames,
-                        onGameClick: { viewModel.onGameClick(gameId: $0) },
-                        onViewAllClick: { viewModel.onRecentGamesViewAllClick() }
-                    )
-                        .opacity(isRecentGamesVisible ? 1 : 0)
-                        .offset(y: isRecentGamesVisible ? 0 : 20)
-
-                    QuickActionsSection(
-                        strings: state.strings,
-                        onCreateGameClick: { viewModel.onCreateGameClick() },
-                        onJoinGameClick: { viewModel.onJoinGameClick() }
-                    )
-                        .opacity(isQuickActionsVisible ? 1 : 0)
-                        .offset(y: isQuickActionsVisible ? 0 : 20)
-
-                    ResourcesSection(
-                        strings: state.strings,
-                        resources: state.resources,
-                        onAiAssistantClick: { viewModel.onAiAssistantClick() },
-                        onResourceClick: { viewModel.onResourceClick(resourceId: $0) },
-                        onViewAllClick: { viewModel.onResourcesViewAllClick() }
-                    )
-                        .opacity(isResourcesVisible ? 1 : 0)
-                        .offset(y: isResourcesVisible ? 0 : 20)
-                }
-                .padding(.vertical, Theme.Dimens.spacing4)
-                .adaptive()
-            }
-            .onAppear {
-                withAnimation(.easeOut(duration: 0.5)) {
-                    isWelcomeVisible = true
-                }
-                withAnimation(.easeOut(duration: 0.5).delay(0.1)) {
-                    isRecentGamesVisible = true
-                }
-                withAnimation(.easeOut(duration: 0.5).delay(0.2)) {
-                    isQuickActionsVisible = true
-                }
-                withAnimation(.easeOut(duration: 0.5).delay(0.3)) {
-                    isResourcesVisible = true
+        HomeContent(
+            state: state,
+            toastMessage: toastMessage,
+            viewModel: viewModel,
+            onToastDismiss: {
+                withAnimation {
+                    toastMessage = nil
                 }
             }
-
-            if let message = toastMessage {
-                VStack {
-                    Spacer()
-                    Text(message)
-                        .padding()
-                        .background(Theme.Colors.surface.opacity(0.9))
-                        .foregroundColor(Theme.Colors.onBackground)
-                        .cornerRadius(8)
-                        .shadow(radius: 4)
-                        .padding(.bottom, 50)
-                        .transition(.move(edge: .bottom).combined(with: .opacity))
-                        .onAppear {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                withAnimation {
-                                    toastMessage = nil
-                                }
-                            }
-                        }
-                }
-                .zIndex(1)
-            }
-        }
+        )
         .task {
             // Subscribe to State
             viewModel.state.subscribe(
@@ -114,7 +43,9 @@ struct HomeView: View {
                 onError: { _ in },
                 onNext: { (state: HomeState?) in
                     if let s = state {
-                        self.state = s
+                        withAnimation {
+                            self.state = s
+                        }
                     }
                 }
             )
@@ -131,6 +62,80 @@ struct HomeView: View {
                     }
                 }
             )
+        }
+    }
+}
+
+private struct HomeContent: View {
+    let state: HomeState
+    let toastMessage: String?
+    let viewModel: HomeViewModel
+    let onToastDismiss: () -> Void
+
+    var body: some View {
+        // Use shared getPathBinding helper
+        let pathBinding = getPathBinding(
+            backStack: state.backStack,
+            currentRoute: state.backStack.last,
+            onBack: { viewModel.navigateBack() }
+        )
+
+        NavigationStack(path: pathBinding) {
+            ZStack {
+                Theme.Colors.background.ignoresSafeArea()
+
+                HomeDashboardView(
+                    strings: state.strings,
+                    state: state,
+                    viewModel: viewModel
+                )
+            }
+            .navigationDestination(for: AnyRoute.self) { anyRoute in
+                HomeDestinationView(
+                    route: anyRoute.base,
+                    state: state,
+                    viewModel: viewModel
+                )
+            }
+
+            if let message = toastMessage {
+                VStack {
+                    Spacer()
+                    Text(message)
+                        .padding()
+                        .background(Theme.Colors.surface.opacity(0.9))
+                        .foregroundColor(Theme.Colors.onBackground)
+                        .cornerRadius(8)
+                        .shadow(radius: 4)
+                        .padding(.bottom, 50)
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                        .onAppear {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                onToastDismiss()
+                            }
+                        }
+                }
+                .zIndex(1)
+            }
+        }
+    }
+}
+
+private struct HomeDestinationView: View {
+    let route: Route
+    let state: HomeState
+    let viewModel: HomeViewModel
+
+    var body: some View {
+        switch route {
+        case is HomeRouteRecentGames:
+            RecentGamesView(
+                strings: state.strings,
+                games: state.recentGames,
+                onGameClick: { viewModel.onGameClick(gameId: $0) }
+            )
+        default:
+            EmptyView()
         }
     }
 }

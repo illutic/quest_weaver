@@ -167,3 +167,12 @@ The project follows a **Clean Architecture** approach with **MVVM** (Model-View-
 * **Sealed Classes/Interfaces**: Kotlin `object`s inside sealed classes/interfaces are mapped to
   `SealedInterfaceSubClass.shared` in Swift (e.g., `OnboardingRoute.Welcome` in Kotlin becomes
   `OnboardingRouteWelcome.shared` in Swift).
+* **Data Classes**: Data classes should provide a `Default` object in their `companion object` for
+  easier instantiation in Swift.
+  ```kotlin
+  data class MyDataClass(val value: String = "") {
+      companion object {
+          val Default = MyDataClass()
+      }
+  }
+  ```

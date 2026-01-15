@@ -1,5 +1,6 @@
 package gr.questweaver.home
 
+import gr.questweaver.navigation.Route
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -7,8 +8,16 @@ data class HomeState(
     val isLoading: Boolean = false,
     val strings: HomeStrings = HomeStrings.Empty,
     val recentGames: ImmutableList<GameSession> = persistentListOf(),
-    val resources: ImmutableList<Resource> = persistentListOf()
-)
+    val resources: ImmutableList<Resource> = persistentListOf(),
+    val backStack: List<Route> = listOf(HomeRoute.Home)
+) {
+    val currentRoute: Route
+        get() = backStack.lastOrNull() ?: HomeRoute.Home
+
+    companion object {
+        val Default = HomeState()
+    }
+}
 
 data class GameSession(
     val id: String,

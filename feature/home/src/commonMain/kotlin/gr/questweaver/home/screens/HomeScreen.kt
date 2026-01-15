@@ -20,52 +20,15 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import gr.questweaver.core.ui.sizes
-import gr.questweaver.home.HomeSideEffect
 import gr.questweaver.home.HomeState
-import gr.questweaver.home.HomeViewModel
 import gr.questweaver.home.components.QuickActionsSection
 import gr.questweaver.home.components.RecentGamesSection
 import gr.questweaver.home.components.ResourcesSection
 import gr.questweaver.home.components.WelcomeSection
-import gr.questweaver.navigation.Route
-
-@Composable
-fun HomeUiRoute(
-    onNavigate: (Route) -> Unit,
-    viewModel: HomeViewModel = viewModel { HomeViewModel() }
-) {
-    val state by viewModel.state.collectAsState()
-    val snackbarHostState = remember { SnackbarHostState() }
-
-    LaunchedEffect(viewModel) {
-        viewModel.sideEffects.collect { effect ->
-            when (effect) {
-                is HomeSideEffect.ShowToast -> {
-                    snackbarHostState.showSnackbar(effect.message)
-                }
-            }
-        }
-    }
-
-    HomeScreen(
-        state = state,
-        snackbarHostState = snackbarHostState,
-        onCreateGameClick = viewModel::onCreateGameClick,
-        onJoinGameClick = viewModel::onJoinGameClick,
-        onGameClick = viewModel::onGameClick,
-        onRecentGamesViewAllClick = viewModel::onRecentGamesViewAllClick,
-        onAiAssistantClick = viewModel::onAiAssistantClick,
-        onResourceClick = viewModel::onResourceClick,
-        onResourcesViewAllClick = viewModel::onResourcesViewAllClick
-    )
-}
 
 @Composable
 fun HomeScreen(
