@@ -21,4 +21,10 @@ sealed interface HomeRoute : Route {
         override val path: String = "recent_games"
         override val id: String = "recent_games"
     }
+
+    @Serializable
+    data object ResourcesList : HomeRoute {
+        override val path: String = "resources_list"
+        override val id: String = "resources_list"
+    }
 }

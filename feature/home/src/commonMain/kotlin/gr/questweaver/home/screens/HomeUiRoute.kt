@@ -77,6 +77,14 @@ fun HomeUiRoute(
                         )
                     }
 
+                    HomeRoute.ResourcesList -> {
+                        ResourcesListScreen(
+                            state = state,
+                            onResourceClick = viewModel::onResourceClick,
+                            onBackClick = { viewModel.navigateBack() }
+                        )
+                    }
+
                     else -> error("Unknown Home route: $route")
                 }
             }

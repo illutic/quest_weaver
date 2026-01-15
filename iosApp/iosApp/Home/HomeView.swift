@@ -134,6 +134,12 @@ private struct HomeDestinationView: View {
                 games: state.recentGames,
                 onGameClick: { viewModel.onGameClick(gameId: $0) }
             )
+        case is HomeRouteResourcesList:
+            ResourcesView(
+                strings: state.strings,
+                resources: state.resources,
+                onResourceClick: { viewModel.onResourceClick(resourceId: $0) }
+            )
         default:
             EmptyView()
         }

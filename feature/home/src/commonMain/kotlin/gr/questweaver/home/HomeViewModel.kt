@@ -117,7 +117,7 @@ class HomeViewModel(private val navigateToCallback: ((Route) -> Unit)? = null) :
     }
 
     fun onResourcesViewAllClick() {
-        emitToast("Resources View All Clicked!")
+        navigateTo(HomeRoute.ResourcesList)
     }
 
     private fun emitToast(message: String) {
