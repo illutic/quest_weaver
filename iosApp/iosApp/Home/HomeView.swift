@@ -20,7 +20,6 @@ struct HomeView: View {
         let viewModel: HomeViewModel = viewModelStoreOwner.viewModel(
             factory: HomeViewModel.Companion.shared.createFactory()
         )
-        // uiViewModel removed.
 
         HomeContent(
             state: state,
@@ -45,8 +44,6 @@ struct HomeView: View {
                     }
                 }
             )
-
-            // Removed uiViewModel subscription
 
             // Subscribe to Side Effects
             viewModel.sideEffects.subscribe(
@@ -187,7 +184,7 @@ struct HomeDestinationView: View {
                 }
             )
 
-        case let resourceRoute as HomeRouteResourceDetails:
+        case is HomeRouteResourceDetails:
             ResourceDetailsView(
                 resource: state.selectedResource
             )
