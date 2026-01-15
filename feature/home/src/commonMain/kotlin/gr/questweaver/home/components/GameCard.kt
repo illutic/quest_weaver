@@ -5,8 +5,9 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,15 +20,16 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Casino
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -42,25 +44,40 @@ fun GameCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Card(
-        onClick = onClick,
-        modifier = modifier.fillMaxWidth(),
-        colors =
-            CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        shape = RoundedCornerShape(sizes.four),
-        elevation = CardDefaults.cardElevation(defaultElevation = sizes.eleven),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceVariant)
+    val interactionSource = remember { MutableInteractionSource() }
+
+    Box(
+        modifier =
+            modifier.fillMaxWidth()
+                .scaleOnPress(interactionSource)
+                .glassEffect()
+                .clickable(
+                    interactionSource = interactionSource,
+                    indication = null,
+                    onClick = onClick
+                )
     ) {
         Column(modifier = Modifier.padding(sizes.four)) {
             Row(verticalAlignment = Alignment.Top) {
                 // Game Icon Placeholder
                 Box(
                     modifier =
-                        Modifier.size(48.dp) // Specific size, keep dp
+                        Modifier.size(48.dp)
                             .clip(RoundedCornerShape(sizes.eight))
                             .background(
-                                MaterialTheme.colorScheme
-                                    .secondaryContainer
+                                Brush.linearGradient(
+                                    colors =
+                                        listOf(
+                                            MaterialTheme.colorScheme
+                                                .primary.copy(
+                                                    alpha = 0.1f
+                                                ),
+                                            MaterialTheme.colorScheme
+                                                .secondary.copy(
+                                                    alpha = 0.1f
+                                                )
+                                        )
+                                )
                             ),
                     contentAlignment = Alignment.Center
                 ) {
@@ -92,7 +109,7 @@ fun GameCard(
 
             Spacer(modifier = Modifier.height(sizes.four))
 
-            // Player Count (Bottom Left)
+            // Player Count (Bottom Let)
             Text(
                 text = strings.gamePlayers.replace("%s", game.players.toString()),
                 style = MaterialTheme.typography.labelMedium,
@@ -104,7 +121,9 @@ fun GameCard(
 
 @Composable
 private fun StatusPill(isLive: Boolean, strings: HomeStrings) {
-    val color = if (isLive) Color(0xFF00C853) else Color.Gray // Green vs Gray
+    val backgroundColor =
+        if (isLive) Color(0xFF00C853).copy(alpha = 0.2f) else Color.Gray.copy(alpha = 0.2f)
+    val contentColor = if (isLive) Color(0xFF00C853) else Color.Gray
     val text = if (isLive) strings.gameLive else strings.gameOffline
 
     val alpha =
@@ -112,7 +131,7 @@ private fun StatusPill(isLive: Boolean, strings: HomeStrings) {
             val infiniteTransition = rememberInfiniteTransition()
             infiniteTransition.animateFloat(
                 initialValue = 1f,
-                targetValue = 0.4f,
+                targetValue = 0.6f,
                 animationSpec =
                     infiniteRepeatable(
                         animation = tween(1000),
@@ -124,10 +143,17 @@ private fun StatusPill(isLive: Boolean, strings: HomeStrings) {
             1f
         }
 
-    Text(
-        text = text,
-        style = MaterialTheme.typography.labelSmall,
-        color = color.copy(alpha = alpha),
-        fontWeight = FontWeight.Bold
-    )
+    Box(
+        modifier =
+            Modifier.alpha(alpha)
+                .background(backgroundColor, RoundedCornerShape(4.dp))
+                .padding(horizontal = 6.dp, vertical = 2.dp)
+    ) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.labelSmall,
+            color = contentColor,
+            fontWeight = FontWeight.Bold
+        )
+    }
 }

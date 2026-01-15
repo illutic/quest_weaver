@@ -48,18 +48,29 @@ The project follows a **Clean Architecture** approach with **MVVM** (Model-View-
     * `Component`: Reusable UI elements.
 * **Design System**:
     * Always use components and tokens from the `core.ui` Design System.
-  * Refer to [DESIGN_SPEC.md](DESIGN_SPEC.md) for detailed design specifications.
-      * If a reusable component is missing, create it in `core.components` (if generic) or within
-        the
-        feature's `components` package (if feature-specific) before using it.
+    * Refer to [DESIGN_SPEC.md](DESIGN_SPEC.md) for detailed design specifications.
+        * If a reusable component is missing, create it in `core.components` (if generic) or within
+          the
+          feature's `components` package (if feature-specific) before using it.
 * **Animations**: Use animations to make the app feel alive and responsive.
 * **ViewModel**:
     * Extends `ViewModel`.
     * Implements `KoinComponent` for dependency injection.
     * Exposes `StateFlow<T>` for UI state.
     * Manages navigation actions.
-  * **Must** provide a `createFactory()` method in its `companion object` to allow instantiation
-    from the iOS App.
+    * **Must** provide a `createFactory()` method in its `companion object` to allow instantiation
+      from the iOS App. This should be of the form:
+      ```kotlin
+      companion object {
+          fun createFactory() = viewModelFactory {
+              initializer {
+                  MyViewModel(
+                      // dependencies
+                  )
+              }
+          }
+      }
+      ```
 * **State**: Defined as a `data class` or `sealed interface`.
 * **Route**:
     * Defined in a separate file (e.g., `OnboardingRoute.kt`).
@@ -131,8 +142,9 @@ The project follows a **Clean Architecture** approach with **MVVM** (Model-View-
     * SwiftUI views should observe `ObservableObject` ViewModels (often the Shared KMP ViewModel
       wrapped or used directly if KMP–Swift interop allows).
     * Use `@StateObject` for ownership and `@ObservedObject` for dependency injection.
-  * StateFlows exposed by the ViewModel should be consumed using the `subscribe` utility to ensure
-    proper updates.
+    * StateFlows exposed by the ViewModel should be consumed using the `subscribe` utility to ensure
+      proper updates. When using this utility, provide explicit type in closure like so
+      `{ (value: Type) in }`.
 
 ### 2. Styling & Design
 

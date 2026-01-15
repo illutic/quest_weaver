@@ -2,6 +2,8 @@ package gr.questweaver.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import gr.questweaver.navigation.Route
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -109,8 +111,6 @@ class HomeViewModel(private val navigateToCallback: ((Route) -> Unit)? = null) :
     }
 
     companion object {
-        fun createFactory(): HomeViewModel {
-            return HomeViewModel()
-        }
+        fun createFactory() = viewModelFactory { initializer { HomeViewModel() } }
     }
 }

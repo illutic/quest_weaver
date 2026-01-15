@@ -99,3 +99,34 @@ extension View {
         modifier(AdaptiveLayout())
     }
 }
+
+// MARK: - Glassmorphism
+
+struct GlassMorphic: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .background(.thinMaterial)
+            .cornerRadius(16)
+            .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: 5)
+            .overlay(
+                RoundedRectangle(cornerRadius: 16)
+                    .stroke(
+                        LinearGradient(
+                            gradient: Gradient(colors: [
+                                Color.white.opacity(0.6),
+                                Color.white.opacity(0.1)
+                            ]),
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ),
+                        lineWidth: 1
+                    )
+            )
+    }
+}
+
+extension View {
+    func glassCard() -> some View {
+        modifier(GlassMorphic())
+    }
+}
