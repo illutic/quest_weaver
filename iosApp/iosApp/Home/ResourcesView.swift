@@ -8,7 +8,7 @@ struct ResourcesView: View {
 
     var body: some View {
         ScrollView {
-            VStack(spacing: Theme.Dimens.spacing2) {
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 340), spacing: Theme.Dimens.spacing2)], spacing: Theme.Dimens.spacing2) {
                 ForEach(resources, id: \.id) { resource in
                     ResourceCard(
                         resource: resource,
@@ -18,7 +18,6 @@ struct ResourcesView: View {
             }
             .padding(Theme.Dimens.spacing2)
         }
-        .background(Theme.Colors.background.ignoresSafeArea())
         .navigationTitle(strings.usefulResourcesTitle)
         .navigationBarTitleDisplayMode(.inline)
     }

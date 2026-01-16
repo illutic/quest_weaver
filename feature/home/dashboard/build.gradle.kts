@@ -13,6 +13,7 @@ kotlin {
             api(projects.feature.home.core)
             implementation(projects.feature.home.recents)
             implementation(projects.feature.home.resources)
+            implementation(projects.feature.home.create)
 
             implementation(libs.compose.viewmodel)
             implementation(libs.compose.lifecycle.viewmodel)

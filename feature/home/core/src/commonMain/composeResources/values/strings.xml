@@ -15,4 +15,12 @@
     <string name="home_game_live">Live</string>
     <string name="home_game_offline">Offline</string>
     <string name="home_game_players">%s players</string>
+
+    <!-- Create Game Modal -->
+    <string name="home_create_game_modal_title">Create a game</string>
+    <string name="home_create_game_input_label">Game title</string>
+    <string name="home_create_game_campaign">Campaign</string>
+    <string name="home_create_game_oneshot">One shot</string>
+    <string name="home_start_game_button">Start game</string>
+    <string name="home_cancel_button">Cancel</string>
 </resources>

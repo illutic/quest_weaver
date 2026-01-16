@@ -80,7 +80,6 @@ struct WelcomeView: View {
             .animation(.easeOut(duration: 0.6).delay(0.6), value: isVisible)
 
         }
-        .background(Theme.Colors.background.ignoresSafeArea())
         .navigationBarHidden(true)
         .onAppear {
             isVisible = true

@@ -47,7 +47,6 @@ struct ResourceDetailsView: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .background(Theme.Colors.background.ignoresSafeArea())
             .navigationTitle(resource.title)
             .navigationBarTitleDisplayMode(.inline)
         } else {

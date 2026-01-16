@@ -42,6 +42,7 @@ import gr.questweaver.home.ResourceDetailsScreen
 import gr.questweaver.home.ResourcesListScreen
 import gr.questweaver.home.SheetUiState
 import gr.questweaver.home.components.HomeBottomBar
+import gr.questweaver.home.create.CreateGameScreen
 import gr.questweaver.navigation.Route
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -107,7 +108,9 @@ fun HomeUiRoute(
                                 onJoinGameClick = {
                                     viewModel.onEvent(HomeEvent.OnJoinGameClick)
                                 },
-                                onGameClick = { viewModel.onEvent(HomeEvent.OnGameClick(it)) },
+                                onGameClick = {
+                                    viewModel.onEvent(HomeEvent.OnGameClick(it))
+                                },
                                 onRecentGamesViewAllClick = {
                                     viewModel.onEvent(HomeEvent.OnRecentGamesViewAllClick)
                                 },
@@ -126,7 +129,9 @@ fun HomeUiRoute(
                         HomeRoute.RecentGames -> {
                             RecentGamesScreen(
                                 state = state,
-                                onGameClick = { viewModel.onEvent(HomeEvent.OnGameClick(it)) },
+                                onGameClick = {
+                                    viewModel.onEvent(HomeEvent.OnGameClick(it))
+                                },
                                 onBackClick = { viewModel.onEvent(HomeEvent.OnBackClick) }
                             )
                         }
@@ -142,9 +147,7 @@ fun HomeUiRoute(
                         }
 
                         HomeRoute.Search -> SearchScreen()
-
                         HomeRoute.Settings -> SettingsScreen()
-
                         else -> error("Unknown Home route: $route")
                     }
                 }
@@ -155,13 +158,19 @@ fun HomeUiRoute(
     HomeUiRouteSheet(
         sheetState = state.sheet,
         onBack = { viewModel.onEvent(HomeEvent.OnDismissSheet) },
-        state = state
+        state = state,
+        onEvent = { viewModel.onEvent(it) }
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun HomeUiRouteSheet(sheetState: SheetUiState, onBack: () -> Unit, state: HomeState) {
+private fun HomeUiRouteSheet(
+    sheetState: SheetUiState,
+    onBack: () -> Unit,
+    state: HomeState,
+    onEvent: (HomeEvent) -> Unit
+) {
     val modalBottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     LaunchedEffect(sheetState.backStack) {
@@ -188,8 +197,15 @@ private fun HomeUiRouteSheet(sheetState: SheetUiState, onBack: () -> Unit, state
                             .padding(horizontal = 16.dp, vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    val title =
+                        when (val route = sheetState.backStack.lastOrNull()) {
+                            is HomeRoute.ResourceDetails -> route.title
+                            is HomeRoute.CreateGame -> state.strings.createGameModalTitle
+                            else -> ""
+                        }
+
                     Text(
-                        text = sheetState.title,
+                        text = title,
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier.weight(1f)
                     )
@@ -205,6 +221,16 @@ private fun HomeUiRouteSheet(sheetState: SheetUiState, onBack: () -> Unit, state
                     NavEntry(route) {
                         ResourceDetailsScreen(
                             resource = state.selectedResource,
+                        )
+                    }
+
+                is HomeRoute.CreateGame ->
+                    NavEntry(route) {
+                        CreateGameScreen(
+                            onSubmit = { title, type ->
+                                onEvent(HomeEvent.OnSubmitCreateGame(title, type))
+                            },
+                            strings = state.strings
                         )
                     }
 

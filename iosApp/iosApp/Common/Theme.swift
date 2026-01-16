@@ -73,6 +73,7 @@ struct Theme {
         static let spacing1 = SharedTokens.shared.sizes.one.toCGFloat()
         static let spacing2 = SharedTokens.shared.sizes.two.toCGFloat()
         static let spacing4 = SharedTokens.shared.sizes.four.toCGFloat()
+        static let spacing6 = SharedTokens.shared.sizes.six.toCGFloat()
     }
 
     struct Layout {
@@ -100,12 +101,13 @@ struct Theme {
 
 struct AdaptiveLayout: ViewModifier {
     @Environment(\.horizontalSizeClass) var sizeClass
+    var alignment: Alignment = .center
 
     func body(content: Content) -> some View {
         if sizeClass == .regular {
             content
                 .frame(maxWidth: Theme.Layout.maxContentWidth)
-                .frame(maxWidth: .infinity, alignment: .center)
+                .frame(maxWidth: .infinity, alignment: alignment)
         } else {
             content
         }
@@ -113,8 +115,8 @@ struct AdaptiveLayout: ViewModifier {
 }
 
 extension View {
-    func adaptive() -> some View {
-        modifier(AdaptiveLayout())
+    func adaptive(alignment: Alignment = .center) -> some View {
+        modifier(AdaptiveLayout(alignment: alignment))
     }
 }
 

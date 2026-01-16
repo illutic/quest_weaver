@@ -8,24 +8,7 @@
 import SwiftUI
 import Shared
 
-struct WelcomeSection: View {
-    let strings: HomeStrings
 
-    var body: some View {
-        VStack(alignment: .leading, spacing: Theme.Dimens.spacing1) {
-            Text(strings.welcomeTitle)
-                .font(.headline)
-                .foregroundColor(Theme.Colors.onBackground)
-
-            Text(strings.welcomeSubtitle)
-                .font(.title2)
-                .fontWeight(.bold)
-                .foregroundColor(Theme.Colors.primary)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal, Theme.Dimens.spacing2)
-    }
-}
 
 struct RecentGamesSection: View {
     let strings: HomeStrings
@@ -47,7 +30,7 @@ struct RecentGamesSection: View {
                     HStack(spacing: Theme.Dimens.spacing2) {
                         ForEach(games, id: \.id) { game in
                             GameCard(game: game, strings: strings, onClick: { onGameClick(game.id) })
-                                .frame(width: 260) // Fixed width for horizontal scroll
+                                .frame(minWidth: 260)
                         }
                     }
                     .padding(.horizontal, Theme.Dimens.spacing2)
@@ -75,9 +58,9 @@ struct GameCard: View {
 
     var body: some View {
         Button(role: nil, action: onClick) {
-            VStack(alignment: .leading, spacing: 0) { // Spacing 0 to manage padding manually
+            VStack(alignment: .leading) {
                 // Header: Icon + Title/Details + Status
-                HStack(alignment: .top, spacing: Theme.Dimens.spacing2) {
+                HStack(alignment: .top, spacing: Theme.Dimens.spacing4) {
                     // Game Icon Placeholder
                     ZStack {
                         LinearGradient(colors: [Theme.Colors.primary.opacity(0.1), Theme.Colors.secondary.opacity(0.1)], startPoint: .topLeading, endPoint: .bottomTrailing)
@@ -92,31 +75,38 @@ struct GameCard: View {
                     .clipShape(RoundedRectangle(cornerRadius: 8))
 
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(game.title)
-                            .font(.headline)
-                            .foregroundColor(Theme.Colors.onBackground)
-                            .lineLimit(1)
+                        HStack(alignment: .top) {
+                            Text(game.title)
+                                .font(.headline)
+                                .foregroundColor(Theme.Colors.onBackground)
+                                .lineLimit(1)
+                                .layoutPriority(1)
+
+                            StatusBadge(isStats: false, text: game.isLive ? strings.gameLive : strings.gameOffline, isLive: game.isLive)
+                        }
 
                         Text("\(game.type) • Level \(game.level)")
                             .font(.caption)
                             .foregroundColor(Theme.Colors.onBackground.opacity(0.7))
+                            .lineLimit(1)
                     }
-
-                    Spacer()
-
-                    StatusBadge(isStats: false, text: game.isLive ? strings.gameLive : strings.gameOffline, isLive: game.isLive)
                 }
-                .padding(Theme.Dimens.spacing2)
 
                 // Player Count (Bottom)
                 Text(strings.gamePlayers.replacingOccurrences(of: "%s", with: String(game.players)))
                     .font(.caption)
                     .fontWeight(.medium)
                     .foregroundColor(Theme.Colors.onBackground.opacity(0.7))
-                    .padding(.horizontal, Theme.Dimens.spacing2)
-                    .padding(.bottom, Theme.Dimens.spacing2)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, Theme.Dimens.spacing4)
+            .adaptive(alignment: .leading)
+            .padding(.vertical, Theme.Dimens.spacing2)
             .glassCard()
+            .overlay(
+                RoundedRectangle(cornerRadius: 16)
+                    .stroke(Theme.Colors.primary, lineWidth: 1)
+            )
         }
         .buttonStyle(ButtonScaleButtonStyle())
     }
@@ -152,6 +142,7 @@ struct QuickActionsSection: View {
             }
             .padding(.horizontal, Theme.Dimens.spacing2)
         }
+        .adaptive(alignment: .leading)
     }
 }
 
@@ -197,9 +188,11 @@ struct ResourcesSection: View {
         VStack(alignment: .leading, spacing: Theme.Dimens.spacing2) {
             SectionHeader(title: strings.usefulResourcesTitle, actionText: strings.usefulResourcesViewAll, onAction: onViewAllClick)
 
-            VStack(spacing: Theme.Dimens.spacing2) {
-                AiAssistantCard(strings: strings, onClick: onAiAssistantClick)
+            AiAssistantCard(strings: strings, onClick: onAiAssistantClick)
+                .padding(.horizontal, Theme.Dimens.spacing2)
+                .adaptive(alignment: .leading)
 
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 340), spacing: Theme.Dimens.spacing2)], spacing: Theme.Dimens.spacing2) {
                 ForEach(resources, id: \.id) { resource in
                     ResourceCard(resource: resource, onClick: { onResourceClick(resource.id) })
                 }
@@ -340,8 +333,6 @@ struct StatusBadge: View {
 #Preview {
     ScrollView {
         VStack(spacing: 20) {
-            WelcomeSection(strings: HomeStrings.companion.Default)
-
             QuickActionsSection(
                 strings: HomeStrings.companion.Default,
                 onCreateGameClick: {},

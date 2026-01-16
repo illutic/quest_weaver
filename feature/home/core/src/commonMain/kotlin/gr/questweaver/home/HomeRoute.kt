@@ -47,4 +47,10 @@ sealed interface HomeRoute : Route {
         override val path: String = "resource_sheet/$resourceId?title=$title"
         override val id: String = resourceId
     }
+
+    @Serializable
+    data object CreateGame : SheetRoute {
+        override val path: String = "create_game"
+        override val id: String = "create_game"
+    }
 }

@@ -6,6 +6,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import gr.questweaver.navigation.Route
 import gr.questweaver.navigation.SheetRoute
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -75,7 +76,7 @@ class HomeViewModel : ViewModel(), KoinComponent {
     fun onEvent(event: HomeEvent) {
         when (event) {
             is HomeEvent.OnJoinGameClick -> emitToast("Join Game Clicked!")
-            is HomeEvent.OnCreateGameClick -> emitToast("Create Game Clicked!")
+            is HomeEvent.OnCreateGameClick -> navigateTo(HomeRoute.CreateGame)
             is HomeEvent.OnGameClick -> emitToast("Game ${event.gameId} Clicked!")
             is HomeEvent.OnRecentGamesViewAllClick -> navigateTo(HomeRoute.RecentGames)
             is HomeEvent.OnAiAssistantClick -> emitToast("AI Assistant Clicked!")
@@ -91,6 +92,25 @@ class HomeViewModel : ViewModel(), KoinComponent {
             is HomeEvent.OnBottomNavClick -> switchTab(event.route)
             is HomeEvent.OnBackClick -> navigateBack()
             is HomeEvent.OnDismissSheet -> dismissSheet()
+            is HomeEvent.OnSubmitCreateGame -> createGame(event.title, event.type)
+        }
+    }
+
+    private fun createGame(title: String, type: GameType) {
+        // Mock game creation
+        val newGame =
+            GameSession(
+                id = (state.value.recentGames.size + 1).toString(),
+                title = title,
+                type = type.displayName,
+                level = 1,
+                master = "You",
+                players = 4,
+                isLive = false
+            )
+        _state.update {
+            val updatedGames = it.recentGames.toPersistentList().add(0, newGame)
+            it.copy(recentGames = updatedGames, sheet = it.sheet.copy(backStack = emptyList()))
         }
     }
 

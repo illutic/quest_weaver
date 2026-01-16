@@ -103,7 +103,7 @@ struct HomeTabScreen: View {
                     state: state,
                     viewModel: viewModel
                 )
-                .navigationTitle(state.sheet.title)
+                .navigationTitle(getSheetTitle(state: state))
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
@@ -118,23 +118,39 @@ struct HomeTabScreen: View {
                         state: state,
                         viewModel: viewModel
                     )
-                        .navigationTitle(state.sheet.title)
+                        .navigationTitle(getSheetTitle(state: state))
                         .navigationBarTitleDisplayMode(.inline)
                 }
             }
-        }
-        .overlay(alignment: .bottom) {
-            if let message = toastMessage {
-                Text(message)
-                    .padding()
-                    .background(Color.black.opacity(0.8))
-                    .foregroundColor(.white)
-                    .cornerRadius(8)
-                    .padding(.bottom, 60)
-                    .onTapGesture {
-                        onToastDismiss()
-                    }
+            .presentationDetents([.medium, .large])
+            .presentationDragIndicator(.visible)
+            .overlay(alignment: .bottom) {
+                if let message = toastMessage {
+                    Text(message)
+                        .padding()
+                        .background(Color.black.opacity(0.8))
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
+                        .padding(.bottom, 60)
+                        .onTapGesture {
+                            onToastDismiss()
+                        }
+                }
             }
         }
+    }
+
+    private func getSheetTitle(state: HomeState) -> String {
+        guard let route = state.sheet.backStack.last else {
+            return ""
+        }
+
+        if let r = route as? HomeRouteResourceDetails {
+            return r.title
+        }
+        if route is HomeRouteCreateGame {
+            return state.strings.createGameModalTitle
+        }
+        return ""
     }
 }

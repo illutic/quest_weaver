@@ -19,7 +19,13 @@ data class HomeStrings(
     val gamePlayers: String = "",
     val navDashboard: String = "",
     val navSearch: String = "",
-    val navSettings: String = ""
+    val navSettings: String = "",
+    val createGameModalTitle: String = "",
+    val createGameInputLabel: String = "",
+    val createGameCampaign: String = "",
+    val createGameOneShot: String = "",
+    val startGameButton: String = "",
+    val cancelButton: String = ""
 ) {
     companion object {
         val Default = HomeStrings()

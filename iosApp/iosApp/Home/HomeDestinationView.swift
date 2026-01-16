@@ -58,6 +58,17 @@ struct HomeDestinationView: View {
         case is HomeRouteSettings:
             SettingsPlaceholderView()
 
+        case is HomeRouteCreateGame:
+            CreateGameView(
+                strings: state.strings,
+                onSubmit: { title, type in
+                    viewModel.onEvent(event: HomeEventOnSubmitCreateGame(title: title, type: type))
+                },
+                onCancel: {
+                    viewModel.onEvent(event: HomeEventOnDismissSheet.shared)
+                }
+            )
+
         default:
             Text("Unknown Route")
         }

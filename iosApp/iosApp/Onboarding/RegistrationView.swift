@@ -118,7 +118,6 @@ struct RegistrationView: View {
             .offset(y: isVisible ? 0 : 20)
             .animation(.easeOut(duration: 0.5), value: isVisible)
         }
-        .background(Theme.Colors.background.ignoresSafeArea())
         .navigationBarHidden(true)
         .onAppear {
             isVisible = true

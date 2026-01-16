@@ -7,13 +7,7 @@ import kotlinx.collections.immutable.persistentListOf
 
 data class SheetUiState(
     val backStack: List<SheetRoute> = emptyList(),
-) {
-    val title =
-        when (val route = backStack.lastOrNull()) {
-            is HomeRoute.ResourceDetails -> route.title
-            else -> ""
-        }
-}
+)
 
 data class HomeState(
     val isLoading: Boolean = false,
@@ -55,4 +49,9 @@ enum class ResourceType {
     CharacterSheet,
     Spellbook,
     ItemHeader
+}
+
+enum class GameType(val displayName: String) {
+    Campaign("Campaign"),
+    OneShot("One shot")
 }

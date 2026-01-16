@@ -12,7 +12,7 @@ struct HomeDashboardView: View {
     let onResourcesViewAllClick: () -> Void
 
     // Animation States
-    @State private var isWelcomeVisible = false
+    // isWelcomeVisible removed
     @State private var isRecentGamesVisible = false
     @State private var isQuickActionsVisible = false
     @State private var isResourcesVisible = false
@@ -20,9 +20,7 @@ struct HomeDashboardView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: Theme.Dimens.spacing4) {
-                WelcomeSection(strings: strings)
-                    .opacity(isWelcomeVisible ? 1 : 0)
-                    .offset(y: isWelcomeVisible ? 0 : 20)
+                // WelcomeSection removed
 
                 RecentGamesSection(
                     strings: strings,
@@ -52,22 +50,19 @@ struct HomeDashboardView: View {
                     .offset(y: isResourcesVisible ? 0 : 20)
             }
             .padding(.vertical, Theme.Dimens.spacing4)
-            .adaptive()
+            .padding(.bottom, 50) // Ensure content clears TabBar
         }
         .onAppear {
             withAnimation(.easeOut(duration: 0.5)) {
-                isWelcomeVisible = true
-            }
-            withAnimation(.easeOut(duration: 0.5).delay(0.1)) {
                 isRecentGamesVisible = true
             }
-            withAnimation(.easeOut(duration: 0.5).delay(0.2)) {
+            withAnimation(.easeOut(duration: 0.5).delay(0.1)) {
                 isQuickActionsVisible = true
             }
-            withAnimation(.easeOut(duration: 0.5).delay(0.3)) {
+            withAnimation(.easeOut(duration: 0.5).delay(0.2)) {
                 isResourcesVisible = true
             }
         }
-        .navigationTitle(strings.homeTitle)
+        .navigationTitle(strings.welcomeSubtitle)
     }
 }

@@ -11,4 +11,5 @@ sealed interface HomeEvent {
     data class OnBottomNavClick(val route: HomeRoute) : HomeEvent
     data object OnBackClick : HomeEvent
     data object OnDismissSheet : HomeEvent
+    data class OnSubmitCreateGame(val title: String, val type: GameType) : HomeEvent
 }
