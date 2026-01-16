@@ -3,8 +3,10 @@ package gr.questweaver.home.screens
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -15,6 +17,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -38,6 +41,7 @@ import gr.questweaver.home.RecentGamesScreen
 import gr.questweaver.home.ResourceDetailsScreen
 import gr.questweaver.home.ResourcesListScreen
 import gr.questweaver.home.SheetUiState
+import gr.questweaver.home.components.HomeBottomBar
 import gr.questweaver.navigation.Route
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,73 +64,93 @@ fun HomeUiRoute(
         }
     }
 
-    NavDisplay(
-        backStack = state.backStack,
-        onBack = { viewModel.onEvent(HomeEvent.OnBackClick) },
-        transitionSpec = {
-            slideInHorizontally { width -> width } togetherWith
-                    slideOutHorizontally { width -> -width }
-        },
-        popTransitionSpec = {
-            slideInHorizontally { width -> -width } togetherWith
-                    slideOutHorizontally { width -> width }
-        },
-        predictivePopTransitionSpec = {
-            slideInHorizontally { width -> -width } togetherWith
-                    slideOutHorizontally { width -> width }
-        },
-        entryProvider = { route ->
-            NavEntry(route) {
-                when (route) {
-                    HomeRoute.Home -> {
-                        HomeScreen(
-                            state = state,
-                            snackbarHostState = snackbarHostState,
-                            onCreateGameClick = {
-                                viewModel.onEvent(HomeEvent.OnCreateGameClick)
-                            },
-                            onJoinGameClick = {
-                                viewModel.onEvent(HomeEvent.OnJoinGameClick)
-                            },
-                            onGameClick = { viewModel.onEvent(HomeEvent.OnGameClick(it)) },
-                            onRecentGamesViewAllClick = {
-                                viewModel.onEvent(HomeEvent.OnRecentGamesViewAllClick)
-                            },
-                            onAiAssistantClick = {
-                                viewModel.onEvent(HomeEvent.OnAiAssistantClick)
-                            },
-                            onResourceClick = {
-                                viewModel.onEvent(HomeEvent.OnResourceClick(it))
-                            },
-                            onResourcesViewAllClick = {
-                                viewModel.onEvent(HomeEvent.OnResourcesViewAllClick)
-                            }
-                        )
+    Scaffold(
+        bottomBar = {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                HomeBottomBar(
+                    modifier = Modifier.align(Alignment.Center),
+                    currentRoute = state.currentRoute,
+                    strings = state.strings,
+                    onNavigate = { route ->
+                        viewModel.onEvent(HomeEvent.OnBottomNavClick(route))
                     }
+                )
+            }
+        },
+        modifier = Modifier.fillMaxSize()
+    ) {
+        NavDisplay(
+            backStack = state.backStack,
+            onBack = { viewModel.onEvent(HomeEvent.OnBackClick) },
+            transitionSpec = {
+                slideInHorizontally { width -> width } togetherWith
+                        slideOutHorizontally { width -> -width }
+            },
+            popTransitionSpec = {
+                slideInHorizontally { width -> -width } togetherWith
+                        slideOutHorizontally { width -> width }
+            },
+            predictivePopTransitionSpec = {
+                slideInHorizontally { width -> -width } togetherWith
+                        slideOutHorizontally { width -> width }
+            },
+            entryProvider = { route ->
+                NavEntry(route) {
+                    when (route) {
+                        HomeRoute.Home -> {
+                            HomeScreen(
+                                state = state,
+                                snackbarHostState = snackbarHostState,
+                                onCreateGameClick = {
+                                    viewModel.onEvent(HomeEvent.OnCreateGameClick)
+                                },
+                                onJoinGameClick = {
+                                    viewModel.onEvent(HomeEvent.OnJoinGameClick)
+                                },
+                                onGameClick = { viewModel.onEvent(HomeEvent.OnGameClick(it)) },
+                                onRecentGamesViewAllClick = {
+                                    viewModel.onEvent(HomeEvent.OnRecentGamesViewAllClick)
+                                },
+                                onAiAssistantClick = {
+                                    viewModel.onEvent(HomeEvent.OnAiAssistantClick)
+                                },
+                                onResourceClick = {
+                                    viewModel.onEvent(HomeEvent.OnResourceClick(it))
+                                },
+                                onResourcesViewAllClick = {
+                                    viewModel.onEvent(HomeEvent.OnResourcesViewAllClick)
+                                }
+                            )
+                        }
 
-                    HomeRoute.RecentGames -> {
-                        RecentGamesScreen(
-                            state = state,
-                            onGameClick = { viewModel.onEvent(HomeEvent.OnGameClick(it)) },
-                            onBackClick = { viewModel.onEvent(HomeEvent.OnBackClick) }
-                        )
+                        HomeRoute.RecentGames -> {
+                            RecentGamesScreen(
+                                state = state,
+                                onGameClick = { viewModel.onEvent(HomeEvent.OnGameClick(it)) },
+                                onBackClick = { viewModel.onEvent(HomeEvent.OnBackClick) }
+                            )
+                        }
+
+                        HomeRoute.ResourcesList -> {
+                            ResourcesListScreen(
+                                state = state,
+                                onResourceClick = {
+                                    viewModel.onEvent(HomeEvent.OnResourceClick(it))
+                                },
+                                onBackClick = { viewModel.onEvent(HomeEvent.OnBackClick) }
+                            )
+                        }
+
+                        HomeRoute.Search -> SearchScreen()
+
+                        HomeRoute.Settings -> SettingsScreen()
+
+                        else -> error("Unknown Home route: $route")
                     }
-
-                    HomeRoute.ResourcesList -> {
-                        ResourcesListScreen(
-                            state = state,
-                            onResourceClick = {
-                                viewModel.onEvent(HomeEvent.OnResourceClick(it))
-                            },
-                            onBackClick = { viewModel.onEvent(HomeEvent.OnBackClick) }
-                        )
-                    }
-
-                    else -> error("Unknown Home route: $route")
                 }
             }
-        }
-    )
+        )
+    }
 
     HomeUiRouteSheet(
         sheetState = state.sheet,

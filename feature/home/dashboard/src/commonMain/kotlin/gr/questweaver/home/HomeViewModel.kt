@@ -87,11 +87,15 @@ class HomeViewModel : ViewModel(), KoinComponent {
                     navigateTo(HomeRoute.ResourceDetails(event.resourceId, title))
                 }
             }
-
             is HomeEvent.OnResourcesViewAllClick -> navigateTo(HomeRoute.ResourcesList)
+            is HomeEvent.OnBottomNavClick -> switchTab(event.route)
             is HomeEvent.OnBackClick -> navigateBack()
             is HomeEvent.OnDismissSheet -> dismissSheet()
         }
+    }
+
+    private fun switchTab(route: Route) {
+        _state.update { it.copy(backStack = listOf(route)) }
     }
 
     private fun navigateTo(route: Route) {

@@ -16,7 +16,10 @@ data class HomeStrings(
     val aiAssistantDescription: String = "",
     val gameLive: String = "",
     val gameOffline: String = "",
-    val gamePlayers: String = ""
+    val gamePlayers: String = "",
+    val navDashboard: String = "",
+    val navSearch: String = "",
+    val navSettings: String = ""
 ) {
     companion object {
         val Default = HomeStrings()

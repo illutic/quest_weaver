@@ -8,14 +8,14 @@ Dark modes.
 
 ### Key Colors
 
-| Role           | Color Name          | Hex Code (Light)              | Hex Code (Dark)               | Usage                                               |
-|:---------------|:--------------------|:------------------------------|:------------------------------|:----------------------------------------------------|
-| **Primary**    | **Arcane Purple**   | `#6750A4`                     | `#D0BCFF`                     | Main actions, active states, key branding.          |
-| **On Primary** | White / Dark Violet | `#FFFFFF`                     | `#381E72`                     | Text on Primary buttons/components.                 |
-| **Secondary**  | **Mystical Gold**   | `#625B71` (Muted) / `#9C6E00` | `#CCC2DC` (Muted) / `#FFD740` | Accents, treasures, high-value highlights.          |
-| **Tertiary**   | **Deep Void Blue**  | `#0D47A1`                     | `#82B1FF`                     | Background accents, magical effects, unread states. |
-| **Background** | Scroll / Void       | `#FFFBFE`                     | `#1C1B1F`                     | App background.                                     |
-| **Surface**    | Card / Plate        | `#E7E0EC`                     | `#49454F`                     | Cards, sheets, dialogs.                             |
+| Role           | Color Name           | Hex Code (Light) | Hex Code (Dark) | Usage                                         |
+|:---------------|:---------------------|:-----------------|:----------------|:----------------------------------------------|
+| **Primary**    | **Deep Crimson**     | `#8B0000`        | `#FFB4AB`       | Main actions, Dragon-themed elements.         |
+| **On Primary** | White / Dark Red     | `#FFFFFF`        | `#690005`       | Text on Primary buttons/components.           |
+| **Secondary**  | **Antique Gold**     | `#B08C05`        | `#FFD700`       | Treasures, success states, secondary actions. |
+| **Tertiary**   | **Forest Green**     | `#4A6546`        | `#A5D6A0`       | Ranger/Nature accents, unread states.         |
+| **Background** | Parchment / Obsidian | `#F5E6D3`        | `#121212`       | App background (Paper feel vs Void).          |
+| **Surface**    | Parchment / Dark     | `#F5E6D3`        | `#121212`       | Cards, sheets, dialogs.                       |
 
 *Note: For iOS "Liquid Glass" style, the Dark Mode Surface colors should have alpha values (
 e.g., `#1C1B1FCC`) combined with a background blur effect.*
@@ -48,7 +48,18 @@ We prioritize readability for campaign text while using display fonts for immers
 | `bodyLarge`      | Sans-Serif | Regular  | 16sp | Main text, chat messages, campaign notes  |
 | `labelMedium`    | Sans-Serif | Medium   | 12sp | Button text, Chip labels, Metadata        |
 
-## 3. Component Hierarchy
+## 3. Shape System
+
+The design uses rounded shapes to evoke a worn, organic feel, typical of parchment or well-used
+equipment, rather than sharp, mechanical edges.
+
+* **Standard Component**: `RoundedCornerShape(16.dp)` (e.g., Cards, Sheets).
+* **Buttons**: `RoundedCornerShape(4.dp)` or `RoundedCornerShape(8.dp)` for a distinct tactile feel.
+* **Chips/Tags**: Full pill shape (`CircleShape` or large rounded corners).
+
+*Avoid `CutCornerShape` unless specifically replicating a gem or crystal interface.*
+
+## 4. Component Hierarchy
 
 The UI is built from atomic components, most of which are shared across platforms via Compose
 Multiplatform, but some high-level containers are platform-aware.
@@ -78,7 +89,7 @@ These components adapt to the host OS paradigm.
     * **Android**: System Back button / Gesture.
     * **iOS**: Swipe-from-edge gesture.
 
-## 4. UX Flow
+## 5. UX Flow
 
 ### User Journey: "The Weekly Session"
 
@@ -102,7 +113,7 @@ These components adapt to the host OS paradigm.
     * **Interaction**: Scroll list, tap "Fireball" to expand `SpellCard`.
     * **Action**: Tap "Cast" on the card -> Deducts spell slot -> Posts to Chat.
 
-## 5. ASCII Wireframe: Main Game Screen
+## 6. ASCII Wireframe: Main Game Screen
 
 ```text
 +--------------------------------------------------+
@@ -115,7 +126,7 @@ These components adapt to the host OS paradigm.
 |  | DM: "You see a dark castle ahead..."       |  |
 |  | [Image: Castle.png]                        |  |
 |  +--------------------------------------------+  |
-|                                                  |
+|  |                                                  |
 |  +------------------------+                      |
 |  | Player 1 (You):        |                      |
 |  | I cast Detect Magic!   |                      |
@@ -134,7 +145,7 @@ These components adapt to the host OS paradigm.
 +--------------------------------------------------+
 ```
 
-## 6. KMP Strategy
+## 7. KMP Strategy
 
 To handle platform-specific UX differences while maximizing code sharing, we will use a **Slot-Based
 Architecture** and **Platform Composition Locals**.
