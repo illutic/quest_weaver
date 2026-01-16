@@ -11,9 +11,6 @@ struct ResourceDetailsView: View {
 
                     // Header Image
                     if let imageUrl = resource.imageUrl {
-                        // ... (keep usage of imageUrl)
-                        // Placeholder since we don't have a reliable network image loader setup in shared code usage example yet,
-                        // I will use AsyncImage which is standard in SwiftUI (iOS 15+).
                         AsyncImage(url: URL(string: imageUrl)) { phase in
                             if let image = phase.image {
                                 image.resizable()

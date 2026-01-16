@@ -10,7 +10,6 @@ import Shared
 
 struct WelcomeView: View {
     let strings: OnboardingStrings
-    let drawables: OnboardingDrawables
     let onStartClick: () -> Void
 
     @State private var isVisible = false
@@ -27,7 +26,7 @@ struct WelcomeView: View {
                     VStack(spacing: 0) {
                         Spacer()
 
-                        Image(drawables.logoName)
+                        Image("ic_logo")
                             .resizable()
                             .frame(width: 120, height: 120)
                             .scaleEffect(isVisible ? 1.0 : 0.5)

@@ -37,7 +37,7 @@ struct MainNavigation: View {
             viewModel.navigationState.subscribe(
                 scope: viewModel.viewModelScope,
                 onError: { _ in },
-                onNext: { state in self.state = state ?? NavigationState(backStack: [], currentRoute: nil, isLoading: false) }
+                onNext: { state in self.state = state ?? NavigationState.companion.Default }
             )
         }
     }

@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CutCornerShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -54,16 +54,16 @@ fun ChatBubble(
     ) {
         Column(
             modifier =
-                Modifier
-                    .fillMaxWidth(0.5f)
+                Modifier.fillMaxWidth(0.5f)
                     .clip(
-                        CutCornerShape(
+                        RoundedCornerShape(
                             topStart = 16.dp,
                             topEnd = 16.dp,
                             bottomStart = if (isMe) 16.dp else 4.dp,
                             bottomEnd = if (isMe) 4.dp else 16.dp,
                         ),
-                    ).background(containerColor)
+                    )
+                    .background(containerColor)
                     .padding(12.dp),
         ) {
             if (!isMe) {

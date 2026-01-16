@@ -127,27 +127,6 @@ struct QuickActionsSection: View {
     let onCreateGameClick: () -> Void
     let onJoinGameClick: () -> Void
 
-    // Gradients matching Android
-    // 0xFF7F52FF -> 0xFFC852FF
-    let createGradient = LinearGradient(
-        gradient: Gradient(colors: [
-            Color(red: 0x7F / 255.0, green: 0x52 / 255.0, blue: 0xFF / 255.0),
-            Color(red: 0xC8 / 255.0, green: 0x52 / 255.0, blue: 0xFF / 255.0)
-        ]),
-        startPoint: .leading,
-        endPoint: .trailing
-    )
-
-    // 0xFFC852FF -> 0xFFFF52C8
-    let joinGradient = LinearGradient(
-        gradient: Gradient(colors: [
-            Color(red: 0xC8 / 255.0, green: 0x52 / 255.0, blue: 0xFF / 255.0),
-            Color(red: 0xFF / 255.0, green: 0x52 / 255.0, blue: 0xC8 / 255.0)
-        ]),
-        startPoint: .leading,
-        endPoint: .trailing
-    )
-
     var body: some View {
         VStack(alignment: .leading, spacing: Theme.Dimens.spacing2) {
             Text(strings.quickActionsTitle)
@@ -160,14 +139,14 @@ struct QuickActionsSection: View {
                 QuickActionButton(
                     title: strings.createGameButton,
                     icon: "plus",
-                    gradient: createGradient,
+                    color: Theme.Colors.primary,
                     action: onCreateGameClick
                 )
 
                 QuickActionButton(
                     title: strings.joinGameButton,
                     icon: "person.3.fill",
-                    gradient: joinGradient,
+                    color: Theme.Colors.secondary,
                     action: onJoinGameClick
                 )
             }
@@ -179,7 +158,7 @@ struct QuickActionsSection: View {
 struct QuickActionButton: View {
     let title: String
     let icon: String
-    let gradient: LinearGradient
+    let color: Color
     let action: () -> Void
 
     var body: some View {
@@ -194,7 +173,7 @@ struct QuickActionButton: View {
             }
             .frame(maxWidth: .infinity)
             .frame(height: 100)
-            .background(gradient)
+            .background(color)
             .foregroundColor(.white)
             .cornerRadius(16)
             .shadow(color: Color.black.opacity(0.15), radius: 8, x: 0, y: 4)

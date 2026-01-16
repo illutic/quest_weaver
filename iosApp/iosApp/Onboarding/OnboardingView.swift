@@ -21,18 +21,34 @@ struct OnboardingView: View {
 
         OnboardingContent(
             state: state,
-            onBack: { viewModel.navigateBack() },
-            viewModel: viewModel,
-            onNavigateGlobal: onNavigateGlobal
+            onBack: { viewModel.onEvent(event: OnboardingEventOnNavigateBack.shared) },
+            viewModel: viewModel
         )
-            .environmentObject(viewModelStoreOwner)
-            .task {
-                viewModel.state.subscribe(
-                    scope: viewModel.viewModelScope,
-                    onError: { _ in },
-                    onNext: { state in self.state = state ?? self.state }
-                )
-            }
+        .environmentObject(viewModelStoreOwner)
+        .task {
+            viewModel.state.subscribe(
+                scope: viewModel.viewModelScope,
+                onError: { _ in },
+                onNext: { state in self.state = state ?? self.state }
+            )
+        }
+        .task {
+            viewModel.sideEffects.subscribe(
+                scope: viewModel.viewModelScope,
+                onError: { _ in },
+                onNext: { (sideEffect: OnboardingSideEffect) in
+                    switch sideEffect {
+                    case let sideEffect as OnboardingSideEffectNavigate:
+                        onNavigateGlobal(sideEffect.route)
+                    case let sideEffect as OnboardingSideEffectShowToast:
+                        // TODO: Show toast (use a specific mechanism or alert)
+                        print("Show toast: \(sideEffect.message)")
+                    default:
+                        break
+                    }
+                }
+            )
+        }
     }
 }
 
@@ -40,7 +56,6 @@ private struct OnboardingContent: View {
     let state: OnboardingState
     let onBack: () -> Void
     let viewModel: OnboardingViewModel
-    let onNavigateGlobal: (Route) -> Void
 
     var body: some View {
         let pathBinding = getPathBinding(
@@ -54,15 +69,13 @@ private struct OnboardingContent: View {
                     route: root,
                     state: state,
                     viewModel: viewModel,
-                    onNavigateGlobal: onNavigateGlobal
-                )
+                    )
                     .navigationDestination(for: AnyRoute.self) { anyRoute in
                         OnboardingDestinationView(
                             route: anyRoute.base,
                             state: state,
                             viewModel: viewModel,
-                            onNavigateGlobal: onNavigateGlobal
-                        )
+                            )
                     }
             }
         }
@@ -73,34 +86,32 @@ private struct OnboardingDestinationView: View {
     let route: Route
     let state: OnboardingState
     let viewModel: OnboardingViewModel
-    let onNavigateGlobal: (Route) -> Void
 
     var body: some View {
         switch route {
         case is OnboardingRouteWelcome:
             WelcomeView(
                 strings: state.strings,
-                drawables: state.drawables,
-                onStartClick: { viewModel.navigateTo(route: OnboardingRouteRegistration.shared) }
+                onStartClick: { viewModel.onEvent(event: OnboardingEventOnNavigate(route: OnboardingRouteRegistration.shared)) }
             )
         case is OnboardingRouteRegistration:
             RegistrationView(
                 strings: state.strings,
                 name: state.name,
-                onNameChange: { viewModel.onNameChange(name: $0) },
+                onNameChange: { viewModel.onEvent(event: OnboardingEventOnNameChange(name: $0)) },
                 onRegisterClick: { name in
-                    viewModel.registerUser(name: name)
-                    viewModel.navigateTo(route: OnboardingRouteTutorial.shared)
+                    viewModel.onEvent(event: OnboardingEventOnRegisterClick(name: name))
+                    viewModel.onEvent(event: OnboardingEventOnNavigate(route: OnboardingRouteTutorial.shared))
                 },
-                onRandomNameClick: { viewModel.generateRandomName() },
+                onRandomNameClick: { viewModel.onEvent(event: OnboardingEventOnGenerateRandomName.shared) },
                 error: state.error,
-                onErrorDismiss: { viewModel.clearError() }
+                onErrorDismiss: { viewModel.onEvent(event: OnboardingEventOnClearError.shared) }
             )
         case is OnboardingRouteTutorial:
             TutorialView(
                 strings: state.strings,
-                onCompleteClick: { onNavigateGlobal(OnboardingRouteGraph.shared) }
-            )
+                onCompleteClick: { viewModel.onEvent(event: OnboardingEventOnCompleteOnboarding.shared) },
+                )
         default:
             EmptyView()
         }

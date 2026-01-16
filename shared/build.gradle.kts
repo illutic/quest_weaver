@@ -17,10 +17,12 @@ kotlin {
             export(projects.core.common)
             export(projects.core.database)
             export(projects.core.navigation)
-            export(projects.feature.onboarding)
-            export(projects.feature.home)
+            export(projects.feature.onboarding.core)
+            export(projects.feature.onboarding.presentation)
+            export(projects.feature.home.dashboard)
+            export(projects.feature.home.core)
             export(projects.feature.user.data)
-            export(projects.feature.user.domain)
+            export(projects.feature.user.state)
             export(libs.androidx.lifecycle.viewmodel)
         }
     }
@@ -31,10 +33,12 @@ kotlin {
             api(projects.core.common)
             api(projects.core.database)
             api(projects.core.navigation)
-            api(projects.feature.onboarding)
-            api(projects.feature.home)
+            api(projects.feature.onboarding.core)
+            api(projects.feature.onboarding.presentation)
+            api(projects.feature.home.dashboard)
+            api(projects.feature.home.core)
             api(projects.feature.user.data)
-            api(projects.feature.user.domain)
+            api(projects.feature.user.state)
         }
         iosMain.dependencies {
             api(libs.androidx.lifecycle.viewmodel)

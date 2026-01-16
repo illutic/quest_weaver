@@ -17,8 +17,7 @@ Quest Weaver is a **Kotlin Multiplatform (KMP)** project following a modular arc
     - **`navigation`**: Navigation system definitions (`Route` interfaces).
     - **`ui`**: Design system and shared UI elements.
 - **`feature`**: Standalone functional modules.
-    - Features may be structured as a **single module** (e.g., `onboarding`) or **split modules** (
-      e.g., `user` with `domain`, `data`, etc.).
+    - Features are structured as **split modules** (e.g., `user` with `domain`, `data`, etc.).
 
 ## Feature Module Patterns
 
@@ -26,12 +25,24 @@ Features are the building blocks of the application.
 
 ### 1. Module Organization
 
-* **Single-Module Feature** (Small/Medium scope):
-    * Contains `screens/`, `ViewModel`, `State`, and `Route` in one module.
-    * Example: `feature/onboarding`.
 * **Multi-Module Feature** (Complex scope):
-    * Split into sub-modules like `:domain`, `:data`, and the main feature module (UI).
-    * Example: `feature/user`.
+    * Split into two modules:
+        * **`:core`** - Shared contracts and data (State, Route, Strings, Event, SideEffect). Has
+          minimal dependencies (typically just `core.navigation`). Business logic and wiring (
+          ViewModel, DI modules). This will be shared with the iOS app.
+        * **`:presentation`** - UI layer (Screens, UiRoute composables only). Depends on `:core` and
+          core UI modules.
+    * Example: `feature/onboarding`, `feature/home`.
+* **Domain Module with Sub-Features** (Very Complex scope):
+    * When a feature has multiple independent areas, split presentation further:
+        * `:core` - Shared models for entire feature
+        * `:subfeature1`, `:subfeature2`, etc. - Individual sub-features
+    * Each sub-feature follows `:presentation` patterns internally.
+    * If a sub-feature has multiple independent areas, split presentation further.
+    * Example: `feature/home` (has dashboard, recents, resources submodules).
+    * **Shared Resources Rule**: When multiple submodules need access to the same data models (e.g.,
+      `Resource`, `GameSession`), create a `:core` module to hold these shared models. All other
+      submodules depend on `:core`, never on each other.
 
 ### 2. Architectural Patterns
 
@@ -63,8 +74,9 @@ Model-View-ViewModel).
   * Exposes `onEvent(event: Event)` for processing user actions.
   * **No Helper Methods**: ViewModels should NOT expose data lookup helpers (e.g.,
     `getResource(id)`). All data must flow through state.
-    * **Must** provide a `createFactory()` method in its `companion object` to allow instantiation
-      from the iOS App.
+      * **Must** provide a `createFactory()` method in its `companion object` to allow
+        instantiation
+        from the iOS App.
 * **State**: Defined as a `data class`.
 * **Event**: Defined as a `sealed interface`.
 * **Route**:
@@ -158,6 +170,8 @@ Model-View-ViewModel).
 
 ### 4. Linting
 
+* **Detekt**: All Kotlin code must adhere to [Detekt](https://detekt.dev/) rules. Jetpack Compose
+  code must adhere to [Detekt Jetpack Compose](https://github.com/mrmans0n/compose-rules) rules.
 * **SwiftLint**: All Swift code must adhere to [SwiftLint](https://github.com/realm/SwiftLint)
   rules.
 * **Format**: Run `swiftformat .` before committing if configured.

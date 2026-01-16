@@ -22,7 +22,12 @@ class NavigationViewModel(
 
     fun navigateTo(route: Route) {
         _navigationState.update {
-            val newBackStack = it.backStack + route
+            val newBackStack = if (route.popBackStack) {
+                listOf(route)
+            } else {
+                it.backStack + route
+            }
+
             NavigationState(backStack = newBackStack, currentRoute = route)
         }
     }
