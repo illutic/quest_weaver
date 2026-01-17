@@ -79,7 +79,7 @@ class HomeViewModel : ViewModel(), KoinComponent {
             is HomeEvent.OnCreateGameClick -> navigateTo(HomeRoute.CreateGame)
             is HomeEvent.OnGameClick -> emitToast("Game ${event.gameId} Clicked!")
             is HomeEvent.OnRecentGamesViewAllClick -> navigateTo(HomeRoute.RecentGames)
-            is HomeEvent.OnAiAssistantClick -> emitToast("AI Assistant Clicked!")
+            is HomeEvent.OnAiAssistantClick -> navigateTo(HomeRoute.AiAssistant)
             is HomeEvent.OnResourceClick -> {
                 val resource = state.value.resources.find { it.id == event.resourceId }
                 if (resource != null) {

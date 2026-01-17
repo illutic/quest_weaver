@@ -58,6 +58,9 @@ struct HomeDestinationView: View {
         case is HomeRouteSettings:
             SettingsPlaceholderView()
 
+        case is HomeRouteAiAssistant:
+            AiAssistantView(strings: state.strings)
+            
         case is HomeRouteCreateGame:
             CreateGameView(
                 strings: state.strings,

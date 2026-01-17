@@ -146,6 +146,17 @@ fun HomeUiRoute(
                             )
                         }
 
+                        HomeRoute.ResourcesList -> {
+                            ResourcesListScreen(
+                                state = state,
+                                onResourceClick = {
+                                    viewModel.onEvent(HomeEvent.OnResourceClick(it))
+                                },
+                                onBackClick = { viewModel.onEvent(HomeEvent.OnBackClick) }
+                            )
+                        }
+
+                        HomeRoute.AiAssistant -> AiAssistantScreen()
                         HomeRoute.Search -> SearchScreen()
                         HomeRoute.Settings -> SettingsScreen()
                         else -> error("Unknown Home route: $route")
@@ -223,7 +234,6 @@ private fun HomeUiRouteSheet(
                             resource = state.selectedResource,
                         )
                     }
-
                 is HomeRoute.CreateGame ->
                     NavEntry(route) {
                         CreateGameScreen(
@@ -233,7 +243,6 @@ private fun HomeUiRouteSheet(
                             strings = state.strings
                         )
                     }
-
                 else -> error("Unknown Home Sheet route: $route")
             }
         }

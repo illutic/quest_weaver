@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import gr.questweaver.core.ui.sizes
+import gr.questweaver.home.components.AiAssistantCard
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
@@ -50,6 +51,8 @@ fun ResourcesSection(
             modifier = Modifier.padding(horizontal = sizes.four),
             verticalArrangement = Arrangement.spacedBy(sizes.four)
         ) {
+            AiAssistantCard(strings = strings, onClick = onAiAssistantClick)
+
             resources.forEach { resource ->
                 ResourceCard(resource = resource, onClick = { onResourceClick(resource.id) })
             }
