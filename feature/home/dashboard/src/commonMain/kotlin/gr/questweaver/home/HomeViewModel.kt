@@ -11,6 +11,7 @@ import gr.questweaver.bottombar.BottomBarItem
 import gr.questweaver.bottombar.BottomBarMode
 import gr.questweaver.navigation.NavigationController
 import gr.questweaver.navigation.Route
+import gr.questweaver.search.SearchRoute
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -49,7 +50,7 @@ class HomeViewModel : ViewModel(), KoinComponent {
                             BottomBarItem(
                                     strings.navSearch,
                                     BottomBarIcon.Search,
-                                    HomeRoute.Search,
+                                SearchRoute.Search,
                                     false
                             ),
                             BottomBarItem(

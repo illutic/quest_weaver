@@ -35,7 +35,6 @@ fun HomeUiRoute(route: HomeRoute, viewModel: HomeViewModel = viewModel { HomeVie
                 }
             )
         }
-
         HomeRoute.RecentGames -> {
             RecentGamesScreen(
                 state = state,
@@ -43,15 +42,12 @@ fun HomeUiRoute(route: HomeRoute, viewModel: HomeViewModel = viewModel { HomeVie
                 onBackClick = { viewModel.onEvent(HomeEvent.OnBackClick) }
             )
         }
-
         HomeRoute.ResourcesList -> {
             ResourcesListScreen(
                 state = state,
                 onResourceClick = { viewModel.onEvent(HomeEvent.OnResourceClick(it)) }
             )
         }
-
-        HomeRoute.Search -> SearchScreen()
         HomeRoute.Settings -> SettingsScreen()
         else -> {}
     }

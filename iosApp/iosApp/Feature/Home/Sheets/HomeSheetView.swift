@@ -8,7 +8,6 @@ import SwiftUI
 
 struct HomeSheetView: View {
     let route: HomeRoute
-    let onBack: () -> Void
 
     @StateObject private var viewModelStoreOwner = IosViewModelStoreOwner()
     @State private var state: HomeState = HomeState.companion.Default
@@ -34,7 +33,7 @@ struct HomeSheetView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Close") {
-                        onBack()
+                        viewModel.onEvent(event: HomeEventOnDismissSheet())
                     }
                 }
             }

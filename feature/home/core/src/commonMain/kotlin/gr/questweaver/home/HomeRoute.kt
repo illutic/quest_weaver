@@ -26,13 +26,6 @@ sealed interface HomeRoute : Route {
     }
 
     @Serializable
-    data object Search : HomeRoute {
-        override val path: String = "search"
-        override val id: String = "search"
-        override val popBackStack: Boolean = true
-    }
-
-    @Serializable
     data object Settings : HomeRoute {
         override val path: String = "settings"
         override val id: String = "settings"

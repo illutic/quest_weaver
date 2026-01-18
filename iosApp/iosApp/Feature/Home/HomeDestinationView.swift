@@ -38,9 +38,6 @@ struct HomeDestinationView: View {
                 }
             )
 
-        case is HomeRouteSearch:
-            SearchPlaceholderView()
-
         case is HomeRouteSettings:
             SettingsPlaceholderView()
 

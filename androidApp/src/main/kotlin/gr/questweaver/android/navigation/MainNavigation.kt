@@ -31,10 +31,8 @@ fun MainNavigation(
             entryProvider = { key ->
                 when (key) {
                     is OnboardingRoute -> {
-                        NavEntry(key) {
-                            OnboardingUiRoute(route = key)
+                        NavEntry(key) { OnboardingUiRoute(route = key) }
                         }
-                    }
 
                     is HomeRoute -> {
                         NavEntry(key) { HomeUiRoute(route = key) }
@@ -42,6 +40,10 @@ fun MainNavigation(
 
                     is AiRoute.AiAssistant -> {
                         NavEntry(key) { AiAssistantScreen() }
+                    }
+
+                    is gr.questweaver.search.SearchRoute.Search -> {
+                        NavEntry(key) { gr.questweaver.search.screens.SearchScreen() }
                     }
 
                     else -> {
@@ -68,7 +70,6 @@ fun MainNavigation(
                         onBack = onBack,
                     )
                 }
-
                 else -> {
                     Text("Unknown sheet route: $currentSheet")
                 }

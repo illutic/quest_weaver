@@ -25,6 +25,8 @@ kotlin {
             export(projects.feature.user.state)
             export(projects.feature.ai.core)
             export(projects.feature.ai.presentation)
+            export(projects.feature.search.core)
+            export(projects.feature.search.presentation)
             export(projects.feature.bottombar)
             export(libs.androidx.lifecycle.viewmodel)
         }
@@ -44,6 +46,8 @@ kotlin {
             api(projects.feature.user.state)
             api(projects.feature.ai.core)
             api(projects.feature.ai.presentation)
+            api(projects.feature.search.core)
+            api(projects.feature.search.presentation)
             api(projects.feature.bottombar)
         }
         iosMain.dependencies {

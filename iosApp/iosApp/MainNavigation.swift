@@ -25,8 +25,8 @@ struct MainNavigation: View {
         ZStack {
             MainNavigationContent(
                 navigationState: state,
-                onBack: { viewModel.navigateBack() },
-                onNavigate: { viewModel.navigateTo(route: $0) }
+                onBack: viewModel.navigateBack,
+                onNavigate: viewModel.navigateTo
             )
                 .environmentObject(viewModelStoreOwner)
 
@@ -37,7 +37,7 @@ struct MainNavigation: View {
             }
         }
         .sheet(item: sheetBinding) { sheetRoute in
-            SheetView(route: sheetRoute.base, onBack: { viewModel.navigateBack() })
+            SheetView(route: sheetRoute.base)
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
         }
@@ -97,6 +97,8 @@ struct RouteView: View {
             HomeView(route: r, navigationState: navigationState)
         case _ as AiRoute:
             AiAssistantView()
+        case _ as SearchRoute:
+            SearchView()
         default:
             Text("Unknown Route: \(route.path)")
         }
@@ -105,7 +107,6 @@ struct RouteView: View {
 
 struct SheetView: View {
     let route: SheetRoute
-    let onBack: () -> Void
 
     var body: some View {
         // Simple wrapper for now, assuming Home sheets are the main ones.
@@ -113,7 +114,7 @@ struct SheetView: View {
         // Here we can switch.
         if let homeRoute = route as? HomeRoute {
             // Need a HomeSheetView similar to HomeSheetUi
-            HomeSheetView(route: homeRoute, onBack: onBack)
+            HomeSheetView(route: homeRoute)
         } else {
             Text("Unknown Sheet: \(route.path)")
         }
