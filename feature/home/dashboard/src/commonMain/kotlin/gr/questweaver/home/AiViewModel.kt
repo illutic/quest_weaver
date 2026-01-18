@@ -2,6 +2,8 @@ package gr.questweaver.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import gr.questweaver.bottombar.BottomBarController
 import gr.questweaver.bottombar.BottomBarMode
 import gr.questweaver.navigation.NavigationController
@@ -23,6 +25,12 @@ class AiViewModel : ViewModel(), KoinComponent {
                 }
                 bottomBarController.setMode(mode)
             }
+        }
+    }
+
+    companion object {
+        fun createFactory() = viewModelFactory {
+            initializer { AiViewModel() }
         }
     }
 }

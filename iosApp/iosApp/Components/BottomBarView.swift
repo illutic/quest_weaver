@@ -25,20 +25,22 @@ struct BottomBarView: View {
                     ZStack {
                         if state.mode is BottomBarModeStandard {
                             StandardContent(items: state.items, onEvent: viewModel.onEvent)
+                                .frame(maxWidth: 300, minHeight: 64)
+                                .glass(shape: .capsule)
+                                .contentShape(Capsule())
                         } else if let mode = state.mode as? BottomBarModeTextField {
                             TextFieldContent(
                                 placeholder: mode.placeholder,
                                 value: state.inputValue,
                                 onEvent: viewModel.onEvent
                             )
+                                .frame(minHeight: 64)
+                                .glass(shape: RoundedRectangle(cornerRadius: 16))
+                                .contentShape(RoundedRectangle(cornerRadius: 16))
                         }
                     }
-                    .frame(height: 64)
                 }
-                .glass(shape: .capsule)
-                .contentShape(.capsule)
                 .padding(.horizontal, Theme.Dimens.spacing2)
-                .frame(maxWidth: 300)
             }
         }
         .task {
@@ -84,21 +86,31 @@ private struct TextFieldContent: View {
     let onEvent: (BottomBarEvent) -> Void
     
     var body: some View {
-        HStack {
+        HStack(spacing: 8) {
             TextField(placeholder, text: Binding(
                 get: { value },
                 set: { onEvent(BottomBarEventOnInputChanged(value: $0)) }
-            ))
-            .padding(.horizontal)
+            ), axis: .vertical)
+                .padding(.vertical, 8)
+                .padding(.horizontal, 16)
+                .background(Theme.Colors.surface)
+                .cornerRadius(20)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20)
+                        .stroke(Theme.Colors.onBackground.opacity(0.1), lineWidth: 1)
+                )
             
             Button(action: {
                 onEvent(BottomBarEventOnSubmitClick.shared)
             }) {
                 Image(systemName: "paperplane.fill")
-                    .foregroundColor(Theme.Colors.primary)
+                    .foregroundColor(Theme.Colors.onPrimary)
+                    .padding(10)
+                    .background(Theme.Colors.primary)
+                    .clipShape(Circle())
             }
-            .padding(.trailing)
         }
+        .padding(.horizontal, 8)
     }
 }
 

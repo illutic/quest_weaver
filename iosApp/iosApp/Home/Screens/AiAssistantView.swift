@@ -10,9 +10,13 @@ import Shared
 
 struct AiAssistantView: View {
     let strings: HomeStrings
+    @StateObject private var viewModelStoreOwner = IosViewModelStoreOwner()
     @Environment(\.dismiss) var dismiss
 
     var body: some View {
+        let viewModel: AiViewModel = viewModelStoreOwner.viewModel(
+            factory: AiViewModel.Companion.shared.createFactory()
+        )
         VStack(spacing: Theme.Dimens.spacing4) {
             Spacer()
 

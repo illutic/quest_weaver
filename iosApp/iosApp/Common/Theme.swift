@@ -66,6 +66,14 @@ struct Theme {
             })
         }
 
+        static var onSurface: SwiftUI.Color {
+            Color(UIColor { trait in
+                return trait.userInterfaceStyle == .dark ?
+                    SharedTokens.shared.darkColorScheme.onSurface.toUIColor() :
+                    SharedTokens.shared.lightColorScheme.onSurface.toUIColor()
+            })
+        }
+
         // Add other needed colors similarly if used
     }
 
