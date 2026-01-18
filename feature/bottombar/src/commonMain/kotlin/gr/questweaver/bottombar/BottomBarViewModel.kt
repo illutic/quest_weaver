@@ -21,7 +21,7 @@ class BottomBarViewModel : ViewModel(), KoinComponent {
                 items = bottomBarState.items.map {
                     it.copy(selected = it.route == navState.currentRoute)
                 },
-                showBackButton = navState.backStack.size > 1 && bottomBarState.mode == BottomBarMode.Standard
+                showBackButton = navState.visibleBackStack.size > 1
             )
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), BottomBarState())
 

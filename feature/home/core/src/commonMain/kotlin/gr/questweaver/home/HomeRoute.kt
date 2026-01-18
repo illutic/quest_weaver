@@ -10,6 +10,7 @@ sealed interface HomeRoute : Route {
     data object Home : HomeRoute {
         override val path: String = "home"
         override val id: String = "home"
+        override val popBackStack: Boolean = true
     }
 
     @Serializable
@@ -28,12 +29,14 @@ sealed interface HomeRoute : Route {
     data object Search : HomeRoute {
         override val path: String = "search"
         override val id: String = "search"
+        override val popBackStack: Boolean = true
     }
 
     @Serializable
     data object Settings : HomeRoute {
         override val path: String = "settings"
         override val id: String = "settings"
+        override val popBackStack: Boolean = true
     }
 
     @Serializable

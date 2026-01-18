@@ -55,12 +55,6 @@ fun HomeUiRoute(route: HomeRoute, viewModel: HomeViewModel = viewModel { HomeVie
         HomeRoute.AiAssistant -> AiAssistantScreen()
         HomeRoute.Search -> SearchScreen()
         HomeRoute.Settings -> SettingsScreen()
-        is HomeRoute.CreateGame -> {
-            // Handled as Sheet in MainNavigation / HomeSheetUi
-        }
-
-        is HomeRoute.ResourceDetails -> {
-            // Handled as Sheet in MainNavigation / HomeSheetUi
-        }
+        else -> {}
     }
 }

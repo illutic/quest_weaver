@@ -11,7 +11,8 @@ class NavigationController {
     val state: StateFlow<NavigationState> = _state.asStateFlow()
 
     fun navigateTo(route: Route) {
-        _state.update { it.copy(backStack = it.backStack + route, currentRoute = route) }
+        val newBackStack = if (route.popBackStack) listOf(route) else _state.value.backStack + route
+        _state.update { it.copy(backStack = newBackStack, currentRoute = route) }
     }
 
     fun navigateBack() {
