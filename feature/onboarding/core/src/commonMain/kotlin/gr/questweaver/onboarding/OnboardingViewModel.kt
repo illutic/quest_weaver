@@ -63,7 +63,7 @@ class OnboardingViewModel : ViewModel(), KoinComponent {
 
             // If already registered, navigate to home
             if (isRegistered) {
-                _sideEffects.send(OnboardingSideEffect.Navigate(HomeRoute.Graph))
+                _sideEffects.send(OnboardingSideEffect.Navigate(HomeRoute.Home))
             }
         }
 
@@ -94,7 +94,7 @@ class OnboardingViewModel : ViewModel(), KoinComponent {
     }
 
     private fun completeOnboarding() {
-        viewModelScope.launch { _sideEffects.send(OnboardingSideEffect.Navigate(HomeRoute.Graph)) }
+        viewModelScope.launch { _sideEffects.send(OnboardingSideEffect.Navigate(HomeRoute.Home)) }
     }
 
     init {

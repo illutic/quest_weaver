@@ -160,6 +160,10 @@ Model-View-ViewModel).
 
 ### 2. Styling & Design
 
+* **Typography**: Use the Design System for consistent typography.
+* **Colors**: Use the Design System for consistent colors.
+* **Design Tokens**: Use the Design System for consistent styling.
+* **Spacing**: Use the Design System for consistent spacing.
 * **Modifiers**: Create custom ViewModifiers for reusable styles.
 * **Extensions**: Use extensions on `View` or `Color` for clean API access to design tokens.
 

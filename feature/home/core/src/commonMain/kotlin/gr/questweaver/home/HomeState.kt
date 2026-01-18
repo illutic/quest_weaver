@@ -1,26 +1,15 @@
 package gr.questweaver.home
 
-import gr.questweaver.navigation.Route
-import gr.questweaver.navigation.SheetRoute
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-
-data class SheetUiState(
-    val backStack: List<SheetRoute> = emptyList(),
-)
 
 data class HomeState(
     val isLoading: Boolean = false,
     val recentGames: ImmutableList<GameSession> = persistentListOf(),
     val resources: ImmutableList<Resource> = persistentListOf(),
     val selectedResource: Resource? = null,
-    val backStack: List<Route> = listOf(HomeRoute.Home),
-    val sheet: SheetUiState = SheetUiState(),
     val strings: HomeStrings = HomeStrings.Default
 ) {
-    val currentRoute: Route
-        get() = backStack.lastOrNull() ?: HomeRoute.Home
-
     companion object {
         val Default = HomeState()
     }

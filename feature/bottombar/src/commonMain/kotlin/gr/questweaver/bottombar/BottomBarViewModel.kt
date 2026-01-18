@@ -18,6 +18,9 @@ class BottomBarViewModel : ViewModel(), KoinComponent {
     val state: StateFlow<BottomBarState> =
         combine(bottomBarController.state, navigationController.state) { bottomBarState, navState ->
             bottomBarState.copy(
+                items = bottomBarState.items.map {
+                    it.copy(selected = it.route == navState.currentRoute)
+                },
                 showBackButton = navState.backStack.size > 1 && bottomBarState.mode == BottomBarMode.Standard
             )
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), BottomBarState())

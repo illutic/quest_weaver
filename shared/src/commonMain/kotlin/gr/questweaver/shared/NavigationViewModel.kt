@@ -29,7 +29,7 @@ class NavigationViewModel(
         setLoading(true)
         val isRegistered = isUserRegisteredUseCase().getOrElse { false }
         if (isRegistered) {
-            navigateTo(HomeRoute.Graph)
+            navigateTo(HomeRoute.Home)
         } else {
             navigateTo(OnboardingRoute.Graph)
         }

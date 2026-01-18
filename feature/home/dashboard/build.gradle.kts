@@ -16,6 +16,7 @@ kotlin {
             implementation(projects.feature.home.create)
 
             implementation(libs.compose.viewmodel)
+            implementation(libs.compose.navigation3.ui)
             implementation(projects.feature.bottombar)
         }
     }

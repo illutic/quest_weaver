@@ -5,6 +5,8 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -35,6 +37,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import gr.questweaver.core.ui.sizes
@@ -59,49 +64,86 @@ fun BottomBar(
                     .padding(horizontal = sizes.two),
             contentAlignment = Alignment.Center
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(sizes.two)
+            BottomBarInternalLayout(
+                modifier = Modifier.fillMaxWidth()
             ) {
-                // Back Button FAB
                 AnimatedVisibility(
                     visible = state.showBackButton,
-                    enter = scaleIn(),
-                    exit = scaleOut()
+                    enter = fadeIn() + slideInHorizontally { it },
+                    exit = fadeOut() + slideOutHorizontally { it },
+                    modifier = Modifier.layoutId("back")
                 ) {
                     FloatingActionButton(
                         onClick = { viewModel.onEvent(BottomBarEvent.OnBackClick) },
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                        contentColor = MaterialTheme.colorScheme.onSurface,
                         shape = CircleShape
                     ) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back") }
                 }
 
-                // Main Content
-                Surface(
-                    shape = CircleShape,
-                    color = MaterialTheme.colorScheme.surfaceContainer,
-                    shadowElevation = 8.dp,
-                    modifier = Modifier.height(64.dp)
-                ) {
-                    when (val mode = state.mode) {
-                        is BottomBarMode.Standard -> {
-                            StandardContent(items = state.items, onEvent = viewModel::onEvent)
-                        }
+                Box(modifier = Modifier.layoutId("main")) {
+                    Surface(
+                        shape = CircleShape,
+                        color = MaterialTheme.colorScheme.surfaceContainer,
+                        shadowElevation = 8.dp,
+                        modifier = Modifier.height(64.dp)
+                    ) {
+                        when (val mode = state.mode) {
+                            is BottomBarMode.Standard -> {
+                                StandardContent(items = state.items, onEvent = viewModel::onEvent)
+                            }
 
-                        is BottomBarMode.TextField -> {
-                            TextFieldContent(
-                                placeholder = mode.placeholder,
-                                value = state.inputValue,
-                                onEvent = viewModel::onEvent
-                            )
-                        }
+                            is BottomBarMode.TextField -> {
+                                TextFieldContent(
+                                    placeholder = mode.placeholder,
+                                    value = state.inputValue,
+                                    onEvent = viewModel::onEvent
+                                )
+                            }
 
-                        BottomBarMode.Empty -> {
-                            /* Should not happen due to outer visibility check */
+                            BottomBarMode.Empty -> {
+                                /* Should not happen due to outer visibility check */
+                            }
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun BottomBarInternalLayout(
+    modifier: Modifier = Modifier,
+    spacing: Dp = sizes.two,
+    content: @Composable () -> Unit
+) {
+    Layout(
+        content = content,
+        modifier = modifier
+    ) { measurables, constraints ->
+        val mainMeasurable = measurables.find { it.layoutId == "main" }
+        val backMeasurable = measurables.find { it.layoutId == "back" }
+
+        val looseConstraints = constraints.copy(minWidth = 0)
+        val mainPlaceable = mainMeasurable?.measure(looseConstraints)
+        val backPlaceable = backMeasurable?.measure(looseConstraints)
+
+        val width = constraints.maxWidth
+        val height = maxOf(mainPlaceable?.height ?: 0, backPlaceable?.height ?: 0)
+
+        layout(width, height) {
+            val mainWidth = mainPlaceable?.width ?: 0
+            val mainX = (width - mainWidth) / 2
+            val mainY = (height - (mainPlaceable?.height ?: 0)) / 2
+
+            mainPlaceable?.placeRelative(mainX, mainY)
+
+            if (backPlaceable != null) {
+                val spacing = spacing.roundToPx()
+                val backX = mainX - spacing - backPlaceable.width
+                val backY = (height - backPlaceable.height) / 2
+                backPlaceable.placeRelative(backX, backY)
             }
         }
     }

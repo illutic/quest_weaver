@@ -5,12 +5,11 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import gr.questweaver.bottombar.BottomBarController
-import gr.questweaver.bottombar.BottomBarEvent
 import gr.questweaver.bottombar.BottomBarIcon
 import gr.questweaver.bottombar.BottomBarItem
 import gr.questweaver.bottombar.BottomBarMode
+import gr.questweaver.navigation.NavigationController
 import gr.questweaver.navigation.Route
-import gr.questweaver.navigation.SheetRoute
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,21 +30,9 @@ class HomeViewModel : ViewModel(), KoinComponent {
     val sideEffects = _sideEffects.receiveAsFlow()
 
     private val bottomBarController: BottomBarController by inject()
+    val navigationController: NavigationController by inject()
 
     init {
-        viewModelScope.launch {
-            // Observe Bottom Bar Events to handle internal tab switching
-            bottomBarController.events.collect { event ->
-                if (event is BottomBarEvent.OnItemClick) {
-                    // Check if route belongs to Home tabs and switch
-                    when (event.route) {
-                        HomeRoute.Home, HomeRoute.Search, HomeRoute.Settings ->
-                            switchTab(event.route)
-                    }
-                }
-            }
-        }
-
         viewModelScope.launch {
             val strings = loadHomeStrings()
 
@@ -56,22 +43,19 @@ class HomeViewModel : ViewModel(), KoinComponent {
                         strings.navDashboard,
                         BottomBarIcon.Home,
                         HomeRoute.Home,
-                        true,
-                        performDefaultNavigation = false
+                        true
                     ),
                     BottomBarItem(
                         strings.navSearch,
                         BottomBarIcon.Search,
                         HomeRoute.Search,
-                        false,
-                        performDefaultNavigation = false
+                        false
                     ),
                     BottomBarItem(
                         strings.navSettings,
                         BottomBarIcon.Settings,
                         HomeRoute.Settings,
-                        false,
-                        performDefaultNavigation = false
+                        false
                     )
                 )
             )
@@ -138,6 +122,7 @@ class HomeViewModel : ViewModel(), KoinComponent {
                     navigateTo(HomeRoute.ResourceDetails(event.resourceId, title))
                 }
             }
+
             is HomeEvent.OnResourcesViewAllClick -> navigateTo(HomeRoute.ResourcesList)
             is HomeEvent.OnBackClick -> navigateBack()
             is HomeEvent.OnDismissSheet -> dismissSheet()
@@ -159,39 +144,25 @@ class HomeViewModel : ViewModel(), KoinComponent {
             )
         _state.update {
             val updatedGames = it.recentGames.toPersistentList().add(0, newGame)
-            it.copy(recentGames = updatedGames, sheet = it.sheet.copy(backStack = emptyList()))
+            it.copy(recentGames = updatedGames)
         }
+        navigationController.navigateBack()
     }
 
     private fun switchTab(route: Route) {
-        _state.update { it.copy(backStack = listOf(route)) }
+        navigationController.navigateTo(route)
     }
 
     private fun navigateTo(route: Route) {
-        _state.update {
-            if (route is SheetRoute) {
-                it.copy(sheet = it.sheet.copy(backStack = it.sheet.backStack + route))
-            } else {
-                it.copy(backStack = it.backStack + route)
-            }
-        }
+        navigationController.navigateTo(route)
     }
 
     private fun navigateBack() {
-        _state.update {
-            if (it.sheet.backStack.isNotEmpty()) {
-                val newSheetStack = it.sheet.backStack.dropLast(1)
-                it.copy(sheet = it.sheet.copy(backStack = newSheetStack))
-            } else if (it.backStack.size > 1) {
-                it.copy(backStack = it.backStack.dropLast(1))
-            } else {
-                it
-            }
-        }
+        navigationController.navigateBack()
     }
 
     private fun dismissSheet() {
-        _state.update { it.copy(sheet = it.sheet.copy(backStack = emptyList())) }
+        navigationController.navigateBack()
     }
 
     private fun emitToast(message: String) {

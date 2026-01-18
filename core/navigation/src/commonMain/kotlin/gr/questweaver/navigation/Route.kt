@@ -6,7 +6,7 @@ interface Route {
     val popBackStack: Boolean get() = false
 }
 
-interface SheetRoute : Route {
-    override val path: String
-    override val id: String
+interface SheetRoute {
+    val path: String
+    val id: String
 }
