@@ -102,11 +102,7 @@ struct GameCard: View {
             .padding(.horizontal, Theme.Dimens.spacing4)
             .adaptive(alignment: .leading)
             .padding(.vertical, Theme.Dimens.spacing2)
-            .glassCard()
-            .overlay(
-                RoundedRectangle(cornerRadius: 16)
-                    .stroke(Theme.Colors.primary, lineWidth: 1)
-            )
+            .glass()
         }
         .buttonStyle(ButtonScaleButtonStyle())
     }
@@ -232,7 +228,7 @@ struct AiAssistantCard: View {
                     .foregroundColor(Theme.Colors.onBackground.opacity(0.5))
             }
             .padding()
-            .glassCard()
+            .glass()
         }
         .buttonStyle(ButtonScaleButtonStyle())
     }
@@ -247,7 +243,8 @@ struct ResourceCard: View {
             VStack(alignment: .leading, spacing: 0) {
                 // Large Image Placeholder
                 ZStack {
-                    Color.gray.opacity(0.2)
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(Color.gray.opacity(0.2))
 
                     Image(systemName: "doc.text.fill")
                         .resizable()
@@ -257,8 +254,6 @@ struct ResourceCard: View {
                 }
                 .aspectRatio(1.8, contentMode: .fit)
                 .frame(maxWidth: .infinity)
-                .clipped()
-
                 VStack(alignment: .leading, spacing: Theme.Dimens.spacing1) {
                     Text(resource.title)
                         .font(.headline) // titleMedium
@@ -273,7 +268,7 @@ struct ResourceCard: View {
                 }
                 .padding(Theme.Dimens.spacing2)
             }
-            .glassCard()
+            .glass()
         }
         .buttonStyle(ButtonScaleButtonStyle())
     }

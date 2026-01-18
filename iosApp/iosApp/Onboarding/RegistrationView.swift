@@ -21,10 +21,6 @@ struct RegistrationView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // Fixed Header
-            ProgressView(value: 0.66)
-                .tint(Theme.Colors.primary)
-
             // Scrollable Content
             GeometryReader { geometry in
                 ScrollView {

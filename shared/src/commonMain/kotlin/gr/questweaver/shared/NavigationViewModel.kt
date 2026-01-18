@@ -10,11 +10,13 @@ import gr.questweaver.navigation.Route
 import gr.questweaver.onboarding.OnboardingRoute
 import gr.questweaver.user.domain.usecase.IsUserRegisteredUseCase
 import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class NavigationViewModel(
-    private val isUserRegisteredUseCase: IsUserRegisteredUseCase,
-    private val navigationController: NavigationController
-) : ViewModel() {
+class NavigationViewModel : ViewModel(), KoinComponent {
+    private val isUserRegisteredUseCase: IsUserRegisteredUseCase by inject()
+    private val navigationController: NavigationController by inject()
+
     val navigationState = navigationController.state
 
     fun navigateTo(route: Route) {
@@ -45,11 +47,8 @@ class NavigationViewModel(
     }
 
     companion object {
-        fun createFactory(
-            isUserRegisteredUseCase: IsUserRegisteredUseCase,
-            navigationController: NavigationController
-        ) = viewModelFactory {
-            initializer { NavigationViewModel(isUserRegisteredUseCase, navigationController) }
+        fun createFactory() = viewModelFactory {
+            initializer { NavigationViewModel() }
         }
     }
 }

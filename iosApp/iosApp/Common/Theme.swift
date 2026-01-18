@@ -122,14 +122,20 @@ extension View {
 
 // MARK: - Glassmorphism
 
-struct GlassMorphic: ViewModifier {
+struct GlassMorphic<S: Shape>: ViewModifier {
+    let shape: S
+
+    init(shape: S) {
+        self.shape = shape
+    }
+
     func body(content: Content) -> some View {
         content
-            .background(.thinMaterial)
-            .cornerRadius(16)
+            .background(.ultraThinMaterial)
+            .clipShape(shape)
             .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: 5)
             .overlay(
-                RoundedRectangle(cornerRadius: 16)
+                shape
                     .stroke(
                         LinearGradient(
                             gradient: Gradient(colors: [
@@ -146,7 +152,12 @@ struct GlassMorphic: ViewModifier {
 }
 
 extension View {
-    func glassCard() -> some View {
-        modifier(GlassMorphic())
+    @ViewBuilder
+    func glass<S: Shape>(shape: S = RoundedRectangle(cornerRadius: 16)) -> some View {
+        if #available(iOS 26.0, *) {
+            glassEffect(in: shape)
+        } else {
+            modifier(GlassMorphic(shape: shape))
+        }
     }
 }

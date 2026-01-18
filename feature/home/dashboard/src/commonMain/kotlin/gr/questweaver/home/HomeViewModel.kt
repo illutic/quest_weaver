@@ -38,70 +38,70 @@ class HomeViewModel : ViewModel(), KoinComponent {
 
             // Set Bottom Bar Items
             bottomBarController.setItems(
-                listOf(
-                    BottomBarItem(
-                        strings.navDashboard,
-                        BottomBarIcon.Home,
-                        HomeRoute.Home,
-                        true
-                    ),
-                    BottomBarItem(
-                        strings.navSearch,
-                        BottomBarIcon.Search,
-                        HomeRoute.Search,
-                        false
-                    ),
-                    BottomBarItem(
-                        strings.navSettings,
-                        BottomBarIcon.Settings,
-                        HomeRoute.Settings,
-                        false
+                    listOf(
+                            BottomBarItem(
+                                    strings.navDashboard,
+                                    BottomBarIcon.Home,
+                                    HomeRoute.Home,
+                                    true
+                            ),
+                            BottomBarItem(
+                                    strings.navSearch,
+                                    BottomBarIcon.Search,
+                                    HomeRoute.Search,
+                                    false
+                            ),
+                            BottomBarItem(
+                                    strings.navSettings,
+                                    BottomBarIcon.Settings,
+                                    HomeRoute.Settings,
+                                    false
+                            )
                     )
-                )
             )
             bottomBarController.setMode(BottomBarMode.Standard)
 
             _state.update {
                 it.copy(
-                    strings = strings,
-                    recentGames =
-                        kotlinx.collections.immutable.persistentListOf(
-                            GameSession(
-                                "1",
-                                "The Lost Mine",
-                                "Campaign",
-                                5,
-                                "DM Steve",
-                                4,
-                                true
-                            ),
-                            GameSession(
-                                "2",
-                                "Storm King's Thunder",
-                                "One shot",
-                                3,
-                                "DM Sarah",
-                                4,
-                                false
-                            )
-                        ),
-                    resources =
-                        kotlinx.collections.immutable.persistentListOf(
-                            Resource(
-                                "1",
-                                "Player's Handbook",
-                                "Essential rules for D&D 5e",
-                                ResourceType.Rulebook,
-                                "https://example.com/phb.jpg"
-                            ),
-                            Resource(
-                                "2",
-                                "Character Sheet",
-                                "Standard character sheet",
-                                ResourceType.CharacterSheet,
-                                "https://example.com/charsheet.jpg"
-                            )
-                        )
+                        strings = strings,
+                        recentGames =
+                                kotlinx.collections.immutable.persistentListOf(
+                                        GameSession(
+                                                "1",
+                                                "The Lost Mine",
+                                                "Campaign",
+                                                5,
+                                                "DM Steve",
+                                                4,
+                                                true
+                                        ),
+                                        GameSession(
+                                                "2",
+                                                "Storm King's Thunder",
+                                                "One shot",
+                                                3,
+                                                "DM Sarah",
+                                                4,
+                                                false
+                                        )
+                                ),
+                        resources =
+                                kotlinx.collections.immutable.persistentListOf(
+                                        Resource(
+                                                "1",
+                                                "Player's Handbook",
+                                                "Essential rules for D&D 5e",
+                                                ResourceType.Rulebook,
+                                                "https://example.com/phb.jpg"
+                                        ),
+                                        Resource(
+                                                "2",
+                                                "Character Sheet",
+                                                "Standard character sheet",
+                                                ResourceType.CharacterSheet,
+                                                "https://example.com/charsheet.jpg"
+                                        )
+                                )
                 )
             }
         }
@@ -122,7 +122,6 @@ class HomeViewModel : ViewModel(), KoinComponent {
                     navigateTo(HomeRoute.ResourceDetails(event.resourceId, title))
                 }
             }
-
             is HomeEvent.OnResourcesViewAllClick -> navigateTo(HomeRoute.ResourcesList)
             is HomeEvent.OnBackClick -> navigateBack()
             is HomeEvent.OnDismissSheet -> dismissSheet()
@@ -133,15 +132,15 @@ class HomeViewModel : ViewModel(), KoinComponent {
     private fun createGame(title: String, type: GameType) {
         // Mock game creation
         val newGame =
-            GameSession(
-                id = (state.value.recentGames.size + 1).toString(),
-                title = title,
-                type = type.displayName,
-                level = 1,
-                master = "You",
-                players = 4,
-                isLive = false
-            )
+                GameSession(
+                        id = (state.value.recentGames.size + 1).toString(),
+                        title = title,
+                        type = type.displayName,
+                        level = 1,
+                        master = "You",
+                        players = 4,
+                        isLive = false
+                )
         _state.update {
             val updatedGames = it.recentGames.toPersistentList().add(0, newGame)
             it.copy(recentGames = updatedGames)

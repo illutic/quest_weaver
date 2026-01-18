@@ -7,7 +7,11 @@ data class BottomBarState(
     val mode: BottomBarMode = BottomBarMode.Empty,
     val inputValue: String = "",
     val showBackButton: Boolean = false
-)
+) {
+    companion object {
+        val Default = BottomBarState()
+    }
+}
 
 sealed interface BottomBarMode {
     data object Standard : BottomBarMode

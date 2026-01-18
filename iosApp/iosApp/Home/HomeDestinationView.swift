@@ -20,15 +20,6 @@ struct HomeDestinationView: View {
                 strings: state.strings,
                 state: state,
                 viewModel: viewModel,
-                onRecentGamesViewAllClick: {
-                    viewModel.onEvent(event: HomeEventOnRecentGamesViewAllClick.shared)
-                },
-                onResourceClick: { resourceId in
-                    viewModel.onEvent(event: HomeEventOnResourceClick(resourceId: resourceId))
-                },
-                onResourcesViewAllClick: {
-                    viewModel.onEvent(event: HomeEventOnResourcesViewAllClick.shared)
-                }
             )
 
         case is HomeRouteRecentGames:
@@ -47,11 +38,6 @@ struct HomeDestinationView: View {
                 }
             )
 
-        case is HomeRouteResourceDetails:
-            ResourceDetailsView(
-                resource: state.selectedResource
-            )
-
         case is HomeRouteSearch:
             SearchPlaceholderView()
 
@@ -60,20 +46,9 @@ struct HomeDestinationView: View {
 
         case is HomeRouteAiAssistant:
             AiAssistantView(strings: state.strings)
-            
-        case is HomeRouteCreateGame:
-            CreateGameView(
-                strings: state.strings,
-                onSubmit: { title, type in
-                    viewModel.onEvent(event: HomeEventOnSubmitCreateGame(title: title, type: type))
-                },
-                onCancel: {
-                    viewModel.onEvent(event: HomeEventOnDismissSheet.shared)
-                }
-            )
 
         default:
-            Text("Unknown Route")
+            EmptyView()
         }
     }
 }

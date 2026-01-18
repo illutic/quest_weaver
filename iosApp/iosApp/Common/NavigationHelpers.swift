@@ -12,14 +12,14 @@ import Shared
 /// SwiftUI requires navigation paths to consist of Hashable elements. 
 /// Since KMP `Route` interface doesn't inherit from Hashable (in Swift), we wrap it.
 struct AnyRoute: Hashable {
+    static func == (lhs: AnyRoute, rhs: AnyRoute) -> Bool {
+        ObjectIdentifier(lhs.base) == ObjectIdentifier(rhs.base)
+    }
+    
     let base: Route
 
-    static func ==(lhs: AnyRoute, rhs: AnyRoute) -> Bool {
-        return lhs.base.path == rhs.base.path
-    }
-
     func hash(into hasher: inout Hasher) {
-        hasher.combine(base.path)
+        hasher.combine(ObjectIdentifier(base))
     }
 }
 

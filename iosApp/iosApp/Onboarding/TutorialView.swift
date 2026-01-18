@@ -16,10 +16,6 @@ struct TutorialView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // Fixed Header
-            ProgressView(value: 1.0)
-                .tint(Theme.Colors.primary)
-
             // Scrollable Content
             GeometryReader { geometry in
                 ScrollView {

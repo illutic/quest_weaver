@@ -17,12 +17,7 @@ import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
     private val viewModel: NavigationViewModel by viewModels {
-        val isUserRegisteredUseCase: IsUserRegisteredUseCase by inject()
-        val navigationController: NavigationController by inject()
-        NavigationViewModel.createFactory(
-            isUserRegisteredUseCase = isUserRegisteredUseCase,
-            navigationController = navigationController
-        )
+        NavigationViewModel.createFactory()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -16,22 +16,30 @@ struct MainNavigation: View {
 
     var body: some View {
         let viewModel: NavigationViewModel = viewModelStoreOwner.viewModel(
-            factory: NavigationViewModel.companion.createFactory(isUserRegisteredUseCase: get())
+            factory: NavigationViewModel.companion.createFactory()
         )
+        
+        // Sheet Binding
+        let sheetBinding = getSheetRootBinding(sheetBackStack: state.sheetBackStack, onDismiss: viewModel.navigateBack)
 
         ZStack {
             MainNavigationContent(
-                state: state,
+                navigationState: state,
                 onBack: { viewModel.navigateBack() },
                 onNavigate: { viewModel.navigateTo(route: $0) }
             )
-                .environmentObject(viewModelStoreOwner)
+            .environmentObject(viewModelStoreOwner)
 
             if state.isLoading {
                 ProgressView()
                     .progressViewStyle(CircularProgressViewStyle())
                     .scaleEffect(1.5)
             }
+        }
+        .sheet(item: sheetBinding) { sheetRoute in
+            SheetView(route: sheetRoute.base, onBack: { viewModel.navigateBack() })
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
         }
         .task {
             viewModel.navigationState.subscribe(
@@ -44,24 +52,33 @@ struct MainNavigation: View {
 }
 
 private struct MainNavigationContent: View {
-    let state: NavigationState
+    let navigationState: NavigationState
     let onBack: () -> Void
     let onNavigate: (Route) -> Void
 
     var body: some View {
         let pathBinding = getPathBinding(
-            backStack: state.backStack,
+            backStack: navigationState.visibleBackStack,
             onBack: onBack
         )
 
         NavigationStack(path: pathBinding) {
-            if let root = state.backStack.first {
-                RouteView(route: root, onNavigate: onNavigate)
-                    .navigationDestination(for: AnyRoute.self) { anyRoute in
-                        RouteView(route: anyRoute.base, onNavigate: onNavigate)
-                    }
+            if let root = navigationState.visibleBackStack.first {
+                RouteView(
+                    route: root,
+                    navigationState: navigationState,
+                    onNavigate: onNavigate
+                )
+                .navigationDestination(for: AnyRoute.self) { anyRoute in
+                    RouteView(
+                        route: anyRoute.base,
+                        navigationState: navigationState,
+                        onNavigate: onNavigate
+                    )
+                }
             } else {
-                Color.clear
+                 // Should not happen if app starts with a route
+                 Color.white
             }
         }
     }
@@ -69,16 +86,34 @@ private struct MainNavigationContent: View {
 
 struct RouteView: View {
     let route: Route
+    let navigationState: NavigationState
     let onNavigate: (Route) -> Void
 
     var body: some View {
         switch route {
-        case is OnboardingRouteGraph:
-            OnboardingView(onNavigateGlobal: onNavigate)
-        case is HomeRouteGraph:
-            HomeView()
+        case let r as OnboardingRoute:
+            OnboardingView(route: r)
+        case let r as HomeRoute:
+            HomeView(route: r, navigationState: navigationState)
         default:
-            EmptyView()
+            Text("Unknown Route: \(route.path)")
+        }
+    }
+}
+
+struct SheetView: View {
+    let route: SheetRoute
+    let onBack: () -> Void
+    
+    var body: some View {
+        // Simple wrapper for now, assuming Home sheets are the main ones.
+        // In Android we have HomeSheetUi.
+        // Here we can switch.
+        if let homeRoute = route as? HomeRoute {
+            // Need a HomeSheetView similar to HomeSheetUi
+             HomeSheetView(route: homeRoute, onBack: onBack)
+        } else {
+            Text("Unknown Sheet: \(route.path)")
         }
     }
 }

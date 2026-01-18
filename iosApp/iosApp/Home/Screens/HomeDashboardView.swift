@@ -6,11 +6,6 @@ struct HomeDashboardView: View {
     let state: HomeState
     let viewModel: HomeViewModel
 
-    // Navigation Callbacks
-    let onRecentGamesViewAllClick: () -> Void
-    let onResourceClick: (String) -> Void
-    let onResourcesViewAllClick: () -> Void
-
     // Animation States
     // isWelcomeVisible removed
     @State private var isRecentGamesVisible = false
@@ -26,7 +21,7 @@ struct HomeDashboardView: View {
                     strings: strings,
                     games: state.recentGames,
                     onGameClick: { viewModel.onEvent(event: HomeEventOnGameClick(gameId: $0)) },
-                    onViewAllClick: { onRecentGamesViewAllClick() }
+                    onViewAllClick: { viewModel.onEvent(event: HomeEventOnRecentGamesViewAllClick.shared) }
                 )
                     .opacity(isRecentGamesVisible ? 1 : 0)
                     .offset(y: isRecentGamesVisible ? 0 : 20)
@@ -43,8 +38,8 @@ struct HomeDashboardView: View {
                     strings: strings,
                     resources: state.resources,
                     onAiAssistantClick: { viewModel.onEvent(event: HomeEventOnAiAssistantClick.shared) },
-                    onResourceClick: { onResourceClick($0) },
-                    onViewAllClick: { onResourcesViewAllClick() }
+                    onResourceClick: { viewModel.onEvent(event: HomeEventOnResourceClick(resourceId: $0)) },
+                    onViewAllClick: { viewModel.onEvent(event: HomeEventOnResourcesViewAllClick.shared) }
                 )
                     .opacity(isResourcesVisible ? 1 : 0)
                     .offset(y: isResourcesVisible ? 0 : 20)

@@ -2,6 +2,8 @@ package gr.questweaver.bottombar
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import gr.questweaver.navigation.NavigationController
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -49,6 +51,12 @@ class BottomBarViewModel : ViewModel(), KoinComponent {
             is BottomBarEvent.OnSubmitClick -> {
                 bottomBarController.emitEvent(event)
             }
+        }
+    }
+
+    companion object {
+        fun createFactory() = viewModelFactory {
+            initializer { BottomBarViewModel() }
         }
     }
 }

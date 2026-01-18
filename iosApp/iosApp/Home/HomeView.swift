@@ -9,6 +9,8 @@ import SwiftUI
 import Shared
 
 struct HomeView: View {
+    let route: HomeRoute
+    let navigationState: NavigationState
     @StateObject private var viewModelStoreOwner = IosViewModelStoreOwner()
     @State private var state: HomeState = HomeState.companion.Default
 
@@ -22,7 +24,9 @@ struct HomeView: View {
         )
 
         HomeTabScreen(
+            route: route,
             state: state,
+            navigationState: navigationState,
             toastMessage: toastMessage,
             viewModel: viewModel,
             onToastDismiss: {
@@ -59,8 +63,4 @@ struct HomeView: View {
             )
         }
     }
-}
-
-#Preview {
-    HomeView()
 }
