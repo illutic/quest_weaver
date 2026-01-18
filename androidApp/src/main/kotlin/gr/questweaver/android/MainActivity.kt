@@ -10,6 +10,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import gr.questweaver.android.navigation.MainNavigation
 import gr.questweaver.core.ui.QuestWeaverTheme
+import gr.questweaver.navigation.NavigationController
 import gr.questweaver.shared.NavigationViewModel
 import gr.questweaver.user.domain.usecase.IsUserRegisteredUseCase
 import org.koin.android.ext.android.inject
@@ -17,7 +18,11 @@ import org.koin.android.ext.android.inject
 class MainActivity : ComponentActivity() {
     private val viewModel: NavigationViewModel by viewModels {
         val isUserRegisteredUseCase: IsUserRegisteredUseCase by inject()
-        NavigationViewModel.createFactory(isUserRegisteredUseCase = isUserRegisteredUseCase)
+        val navigationController: NavigationController by inject()
+        NavigationViewModel.createFactory(
+            isUserRegisteredUseCase = isUserRegisteredUseCase,
+            navigationController = navigationController
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

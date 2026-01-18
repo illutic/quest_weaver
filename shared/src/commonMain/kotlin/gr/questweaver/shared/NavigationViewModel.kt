@@ -5,39 +5,24 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import gr.questweaver.home.HomeRoute
-import gr.questweaver.navigation.NavigationState
+import gr.questweaver.navigation.NavigationController
 import gr.questweaver.navigation.Route
 import gr.questweaver.onboarding.OnboardingRoute
 import gr.questweaver.user.domain.usecase.IsUserRegisteredUseCase
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class NavigationViewModel(
     private val isUserRegisteredUseCase: IsUserRegisteredUseCase,
+    private val navigationController: NavigationController
 ) : ViewModel() {
-    private val _navigationState = MutableStateFlow(NavigationState())
-    val navigationState = _navigationState.asStateFlow()
+    val navigationState = navigationController.state
 
     fun navigateTo(route: Route) {
-        _navigationState.update {
-            val newBackStack = if (route.popBackStack) {
-                listOf(route)
-            } else {
-                it.backStack + route
-            }
-
-            NavigationState(backStack = newBackStack, currentRoute = route)
-        }
+        navigationController.navigateTo(route)
     }
 
     fun navigateBack() {
-        _navigationState.update {
-            if (it.backStack.size <= 1) return@update it
-            val newBackStack = it.backStack.dropLast(1)
-            NavigationState(backStack = newBackStack, currentRoute = newBackStack.last())
-        }
+        navigationController.navigateBack()
     }
 
     private suspend fun load() {
@@ -52,7 +37,7 @@ class NavigationViewModel(
     }
 
     private fun setLoading(isLoading: Boolean) {
-        _navigationState.update { it.copy(isLoading = isLoading) }
+        navigationController.setLoading(isLoading)
     }
 
     init {
@@ -60,9 +45,11 @@ class NavigationViewModel(
     }
 
     companion object {
-        fun createFactory(isUserRegisteredUseCase: IsUserRegisteredUseCase) =
-            viewModelFactory {
-                initializer { NavigationViewModel(isUserRegisteredUseCase) }
-            }
+        fun createFactory(
+            isUserRegisteredUseCase: IsUserRegisteredUseCase,
+            navigationController: NavigationController
+        ) = viewModelFactory {
+            initializer { NavigationViewModel(isUserRegisteredUseCase, navigationController) }
+        }
     }
 }

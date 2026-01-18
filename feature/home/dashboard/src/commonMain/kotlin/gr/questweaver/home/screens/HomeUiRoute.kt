@@ -3,7 +3,6 @@ package gr.questweaver.home.screens
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -41,7 +40,6 @@ import gr.questweaver.home.RecentGamesScreen
 import gr.questweaver.home.ResourceDetailsScreen
 import gr.questweaver.home.ResourcesListScreen
 import gr.questweaver.home.SheetUiState
-import gr.questweaver.home.components.HomeBottomBar
 import gr.questweaver.home.create.CreateGameScreen
 import gr.questweaver.navigation.Route
 
@@ -65,21 +63,7 @@ fun HomeUiRoute(
         }
     }
 
-    Scaffold(
-        bottomBar = {
-            Box(modifier = Modifier.fillMaxWidth()) {
-                HomeBottomBar(
-                    modifier = Modifier.align(Alignment.Center),
-                    currentRoute = state.currentRoute,
-                    strings = state.strings,
-                    onNavigate = { route ->
-                        viewModel.onEvent(HomeEvent.OnBottomNavClick(route))
-                    }
-                )
-            }
-        },
-        modifier = Modifier.fillMaxSize()
-    ) {
+    Scaffold(modifier = Modifier.fillMaxSize()) {
         NavDisplay(
             backStack = state.backStack,
             onBack = { viewModel.onEvent(HomeEvent.OnBackClick) },

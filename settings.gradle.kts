@@ -29,3 +29,4 @@ include(
 )
 include(":feature:user:data", ":feature:user:state")
 include(":core:common", ":core:navigation", ":core:components", ":core:ui", ":core:database")
+include(":feature:bottombar")

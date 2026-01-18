@@ -1,8 +1,12 @@
 package gr.questweaver.android.navigation
 
+import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
+import gr.questweaver.bottombar.BottomBar
 import gr.questweaver.home.HomeRoute
 import gr.questweaver.home.screens.HomeUiRoute
 import gr.questweaver.navigation.NavigationState
@@ -16,23 +20,28 @@ fun MainNavigation(
     onBack: () -> Unit,
     onNavigate: (Route) -> Unit,
 ) {
-    NavDisplay(
-        backStack = navigationState.backStack,
-        onBack = onBack,
-        entryProvider = { key ->
-            when (key) {
-                is OnboardingRoute.Graph -> {
-                    NavEntry(key) { OnboardingUiRoute(onNavigate = onNavigate) }
-                }
+    Scaffold(
+        modifier = Modifier.safeDrawingPadding(),
+        bottomBar = { BottomBar() }
+    ) {
+        NavDisplay(
+            backStack = navigationState.backStack,
+            onBack = onBack,
+            entryProvider = { key ->
+                when (key) {
+                    is OnboardingRoute.Graph -> {
+                        NavEntry(key) { OnboardingUiRoute(onNavigate = onNavigate) }
+                    }
 
-                is HomeRoute.Graph -> {
-                    NavEntry(key) { HomeUiRoute(onNavigate = onNavigate) }
-                }
+                    is HomeRoute.Graph -> {
+                        NavEntry(key) { HomeUiRoute(onNavigate = onNavigate) }
+                    }
 
-                else -> {
-                    error("Unknown route: $key")
+                    else -> {
+                        error("Unknown route: $key")
+                    }
                 }
-            }
-        },
-    )
+            },
+        )
+    }
 }

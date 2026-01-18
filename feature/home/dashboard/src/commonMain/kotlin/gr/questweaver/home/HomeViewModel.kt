@@ -4,6 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import gr.questweaver.bottombar.BottomBarController
+import gr.questweaver.bottombar.BottomBarEvent
+import gr.questweaver.bottombar.BottomBarIcon
+import gr.questweaver.bottombar.BottomBarItem
+import gr.questweaver.bottombar.BottomBarMode
 import gr.questweaver.navigation.Route
 import gr.questweaver.navigation.SheetRoute
 import kotlinx.collections.immutable.toPersistentList
@@ -15,6 +20,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 class HomeViewModel : ViewModel(), KoinComponent {
 
@@ -24,9 +30,53 @@ class HomeViewModel : ViewModel(), KoinComponent {
     private val _sideEffects = Channel<HomeSideEffect>()
     val sideEffects = _sideEffects.receiveAsFlow()
 
+    private val bottomBarController: BottomBarController by inject()
+
     init {
         viewModelScope.launch {
+            // Observe Bottom Bar Events to handle internal tab switching
+            bottomBarController.events.collect { event ->
+                if (event is BottomBarEvent.OnItemClick) {
+                    // Check if route belongs to Home tabs and switch
+                    when (event.route) {
+                        HomeRoute.Home, HomeRoute.Search, HomeRoute.Settings ->
+                            switchTab(event.route)
+                    }
+                }
+            }
+        }
+
+        viewModelScope.launch {
             val strings = loadHomeStrings()
+
+            // Set Bottom Bar Items
+            bottomBarController.setItems(
+                listOf(
+                    BottomBarItem(
+                        strings.navDashboard,
+                        BottomBarIcon.Home,
+                        HomeRoute.Home,
+                        true,
+                        performDefaultNavigation = false
+                    ),
+                    BottomBarItem(
+                        strings.navSearch,
+                        BottomBarIcon.Search,
+                        HomeRoute.Search,
+                        false,
+                        performDefaultNavigation = false
+                    ),
+                    BottomBarItem(
+                        strings.navSettings,
+                        BottomBarIcon.Settings,
+                        HomeRoute.Settings,
+                        false,
+                        performDefaultNavigation = false
+                    )
+                )
+            )
+            bottomBarController.setMode(BottomBarMode.Standard)
+
             _state.update {
                 it.copy(
                     strings = strings,
@@ -89,7 +139,6 @@ class HomeViewModel : ViewModel(), KoinComponent {
                 }
             }
             is HomeEvent.OnResourcesViewAllClick -> navigateTo(HomeRoute.ResourcesList)
-            is HomeEvent.OnBottomNavClick -> switchTab(event.route)
             is HomeEvent.OnBackClick -> navigateBack()
             is HomeEvent.OnDismissSheet -> dismissSheet()
             is HomeEvent.OnSubmitCreateGame -> createGame(event.title, event.type)

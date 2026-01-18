@@ -23,6 +23,7 @@ kotlin {
             export(projects.feature.home.core)
             export(projects.feature.user.data)
             export(projects.feature.user.state)
+            export(projects.feature.bottombar)
             export(libs.androidx.lifecycle.viewmodel)
         }
     }
@@ -39,6 +40,7 @@ kotlin {
             api(projects.feature.home.core)
             api(projects.feature.user.data)
             api(projects.feature.user.state)
+            api(projects.feature.bottombar)
         }
         iosMain.dependencies {
             api(libs.androidx.lifecycle.viewmodel)
