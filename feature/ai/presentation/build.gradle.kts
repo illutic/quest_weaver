@@ -10,15 +10,11 @@ kotlin {
             implementation(projects.core.ui)
             implementation(projects.core.components)
             implementation(projects.core.navigation)
-            api(projects.feature.home.core)
-            implementation(projects.feature.home.recents)
-            implementation(projects.feature.home.resources)
-            implementation(projects.feature.home.create)
+            implementation(projects.feature.ai.core)
+            implementation(projects.feature.bottombar)
 
             implementation(libs.compose.viewmodel)
             implementation(libs.compose.navigation3.ui)
-            implementation(projects.feature.bottombar)
-            implementation(projects.feature.ai.core)
         }
     }
 }

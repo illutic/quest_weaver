@@ -29,15 +29,15 @@ struct HomeSheetView: View {
                     viewModel.onEvent(event: HomeEventOnDismissSheet())
                 }
             )
-                .navigationTitle(getSheetTitle(route: route, state: state))
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button("Close") {
-                            onBack()
-                        }
+            .navigationTitle(getSheetTitle(route: route, state: state))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Close") {
+                        onBack()
                     }
                 }
+            }
         }
         .task {
             viewModel.state.subscribe(
@@ -64,7 +64,7 @@ struct HomeSheetContentView: View {
     let route: HomeRoute
     let onSubmit: (String, GameType) -> Void
     let onCancel: () -> Void
-    
+
     var body: some View {
         switch route {
         case is HomeRouteResourceDetails:

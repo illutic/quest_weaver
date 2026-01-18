@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import gr.questweaver.ai.AiRoute
 import gr.questweaver.bottombar.BottomBarController
 import gr.questweaver.bottombar.BottomBarIcon
 import gr.questweaver.bottombar.BottomBarItem
@@ -113,7 +114,7 @@ class HomeViewModel : ViewModel(), KoinComponent {
             is HomeEvent.OnCreateGameClick -> navigateTo(HomeRoute.CreateGame)
             is HomeEvent.OnGameClick -> emitToast("Game ${event.gameId} Clicked!")
             is HomeEvent.OnRecentGamesViewAllClick -> navigateTo(HomeRoute.RecentGames)
-            is HomeEvent.OnAiAssistantClick -> navigateTo(HomeRoute.AiAssistant)
+            is HomeEvent.OnAiAssistantClick -> navigateTo(AiRoute.AiAssistant)
             is HomeEvent.OnResourceClick -> {
                 val resource = state.value.resources.find { it.id == event.resourceId }
                 if (resource != null) {
@@ -146,10 +147,6 @@ class HomeViewModel : ViewModel(), KoinComponent {
             it.copy(recentGames = updatedGames)
         }
         navigationController.navigateBack()
-    }
-
-    private fun switchTab(route: Route) {
-        navigationController.navigateTo(route)
     }
 
     private fun navigateTo(route: Route) {

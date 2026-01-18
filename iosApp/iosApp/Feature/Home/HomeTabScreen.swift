@@ -15,7 +15,7 @@ struct HomeTabScreen: View {
     let toastMessage: String?
     let viewModel: HomeViewModel
     let onToastDismiss: () -> Void
-    
+
     var body: some View {
         VStack(spacing: 0) {
             HomeDestinationView(
@@ -23,7 +23,7 @@ struct HomeTabScreen: View {
                 state: state,
                 viewModel: viewModel
             )
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .overlay(alignment: .bottom) {
             BottomBarView()

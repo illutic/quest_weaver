@@ -40,12 +40,6 @@ sealed interface HomeRoute : Route {
     }
 
     @Serializable
-    data object AiAssistant : HomeRoute {
-        override val path: String = "ai_assistant"
-        override val id: String = "ai_assistant"
-    }
-
-    @Serializable
     data class ResourceDetails(val resourceId: String, val title: String) : HomeRoute, SheetRoute {
         override val path: String = "resource_sheet/$resourceId?title=$title"
         override val id: String = resourceId

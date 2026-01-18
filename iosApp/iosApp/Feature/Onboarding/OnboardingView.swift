@@ -18,7 +18,7 @@ struct OnboardingView: View {
         let viewModel: OnboardingViewModel = viewModelStoreOwner.viewModel(
             factory: OnboardingViewModel.companion.createFactory()
         )
-        
+
         // Progress logic (simplified approximation)
         let progress: Float = {
             switch route {
@@ -32,7 +32,7 @@ struct OnboardingView: View {
         VStack {
             ProgressView(value: progress)
                 .tint(Theme.Colors.primary)
-            
+
             switch route {
             case is OnboardingRouteWelcome:
                 WelcomeView(

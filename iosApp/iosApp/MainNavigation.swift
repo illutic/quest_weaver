@@ -18,7 +18,7 @@ struct MainNavigation: View {
         let viewModel: NavigationViewModel = viewModelStoreOwner.viewModel(
             factory: NavigationViewModel.companion.createFactory()
         )
-        
+
         // Sheet Binding
         let sheetBinding = getSheetRootBinding(sheetBackStack: state.sheetBackStack, onDismiss: viewModel.navigateBack)
 
@@ -28,7 +28,7 @@ struct MainNavigation: View {
                 onBack: { viewModel.navigateBack() },
                 onNavigate: { viewModel.navigateTo(route: $0) }
             )
-            .environmentObject(viewModelStoreOwner)
+                .environmentObject(viewModelStoreOwner)
 
             if state.isLoading {
                 ProgressView()
@@ -69,16 +69,16 @@ private struct MainNavigationContent: View {
                     navigationState: navigationState,
                     onNavigate: onNavigate
                 )
-                .navigationDestination(for: AnyRoute.self) { anyRoute in
-                    RouteView(
-                        route: anyRoute.base,
-                        navigationState: navigationState,
-                        onNavigate: onNavigate
-                    )
-                }
+                    .navigationDestination(for: AnyRoute.self) { anyRoute in
+                        RouteView(
+                            route: anyRoute.base,
+                            navigationState: navigationState,
+                            onNavigate: onNavigate
+                        )
+                    }
             } else {
-                 // Should not happen if app starts with a route
-                 Color.white
+                // Should not happen if app starts with a route
+                Color.white
             }
         }
     }
@@ -95,6 +95,8 @@ struct RouteView: View {
             OnboardingView(route: r)
         case let r as HomeRoute:
             HomeView(route: r, navigationState: navigationState)
+        case _ as AiRoute:
+            AiAssistantView()
         default:
             Text("Unknown Route: \(route.path)")
         }
@@ -104,14 +106,14 @@ struct RouteView: View {
 struct SheetView: View {
     let route: SheetRoute
     let onBack: () -> Void
-    
+
     var body: some View {
         // Simple wrapper for now, assuming Home sheets are the main ones.
         // In Android we have HomeSheetUi.
         // Here we can switch.
         if let homeRoute = route as? HomeRoute {
             // Need a HomeSheetView similar to HomeSheetUi
-             HomeSheetView(route: homeRoute, onBack: onBack)
+            HomeSheetView(route: homeRoute, onBack: onBack)
         } else {
             Text("Unknown Sheet: \(route.path)")
         }

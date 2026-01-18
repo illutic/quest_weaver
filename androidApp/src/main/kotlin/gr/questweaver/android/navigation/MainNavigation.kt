@@ -6,9 +6,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
+import gr.questweaver.ai.AiRoute
+import gr.questweaver.ai.screens.AiAssistantScreen
 import gr.questweaver.bottombar.BottomBar
 import gr.questweaver.home.HomeRoute
 import gr.questweaver.home.screens.HomeSheetUi
@@ -23,7 +24,7 @@ fun MainNavigation(
     navigationState: NavigationState,
     onBack: () -> Unit,
 ) {
-    Scaffold(modifier = Modifier, bottomBar = { BottomBar() }) {
+    Scaffold(bottomBar = { BottomBar() }) { padding ->
         NavDisplay(
             backStack = navigationState.visibleBackStack,
             onBack = onBack,
@@ -37,6 +38,10 @@ fun MainNavigation(
 
                     is HomeRoute -> {
                         NavEntry(key) { HomeUiRoute(route = key) }
+                    }
+
+                    is AiRoute.AiAssistant -> {
+                        NavEntry(key) { AiAssistantScreen() }
                     }
 
                     else -> {

@@ -11,12 +11,12 @@ import Shared
 struct BottomBarView: View {
     @StateObject private var viewModelStoreOwner = IosViewModelStoreOwner()
     @State private var state: BottomBarState = BottomBarState.Companion().Default
-    
+
     var body: some View {
         let viewModel: BottomBarViewModel = viewModelStoreOwner.viewModel(
             factory: BottomBarViewModel.Companion.shared.createFactory()
         )
-        
+
         VStack {
             if state.mode is BottomBarModeEmpty {
                 EmptyView()
@@ -62,7 +62,7 @@ struct BottomBarView: View {
 private struct StandardContent: View {
     let items: [BottomBarItem]
     let onEvent: (BottomBarEvent) -> Void
-    
+
     var body: some View {
         HStack {
             ForEach(items, id: \.self) { item in
@@ -84,7 +84,7 @@ private struct TextFieldContent: View {
     let placeholder: String
     let value: String
     let onEvent: (BottomBarEvent) -> Void
-    
+
     var body: some View {
         HStack(spacing: 8) {
             TextField(placeholder, text: Binding(
@@ -99,7 +99,7 @@ private struct TextFieldContent: View {
                     RoundedRectangle(cornerRadius: 20)
                         .stroke(Theme.Colors.onBackground.opacity(0.1), lineWidth: 1)
                 )
-            
+
             Button(action: {
                 onEvent(BottomBarEventOnSubmitClick.shared)
             }) {

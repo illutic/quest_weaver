@@ -1,4 +1,4 @@
-package gr.questweaver.home.screens
+package gr.questweaver.ai.screens
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,16 +13,20 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import gr.questweaver.home.AiViewModel
+import gr.questweaver.ai.AiViewModel
 
 @Composable
-fun AiAssistantScreen() {
-    viewModel<AiViewModel>()
+fun AiAssistantScreen(
+    viewModel: AiViewModel = viewModel(factory = AiViewModel.createFactory())
+) {
+    val state by viewModel.state.collectAsState()
 
     Box(modifier = Modifier.fillMaxSize().padding(16.dp), contentAlignment = Alignment.Center) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -40,12 +44,19 @@ fun AiAssistantScreen() {
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text =
-                    "This feature is coming soon! Our goblins are working hard to train the dragons.",
+                text = "This feature is coming soon! Our goblins are working hard to train the dragons.",
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
             )
+            if (state.response != null) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = state.response ?: "",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
         }
     }
 }

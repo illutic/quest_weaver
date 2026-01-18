@@ -9,7 +9,6 @@ import SwiftUI
 import Shared
 
 struct AiAssistantView: View {
-    let strings: HomeStrings
     @StateObject private var viewModelStoreOwner = IosViewModelStoreOwner()
     @Environment(\.dismiss) var dismiss
 
@@ -17,6 +16,7 @@ struct AiAssistantView: View {
         let viewModel: AiViewModel = viewModelStoreOwner.viewModel(
             factory: AiViewModel.Companion.shared.createFactory()
         )
+
         VStack(spacing: Theme.Dimens.spacing4) {
             Spacer()
 
@@ -29,7 +29,7 @@ struct AiAssistantView: View {
                 .background(Theme.Colors.primary.opacity(0.1))
                 .clipShape(Circle())
 
-            Text(strings.aiAssistantTitle)
+            Text("AI Assistant")
                 .font(Theme.Typography.displayLarge)
                 .foregroundColor(Theme.Colors.onBackground)
 
@@ -44,11 +44,11 @@ struct AiAssistantView: View {
         .padding()
         .background(Theme.Colors.background)
         .adaptive()
-        .navigationTitle(strings.aiAssistantTitle)
+        .navigationTitle("AI Assistant")
         .navigationBarTitleDisplayMode(.inline)
+        .overlay(alignment: .bottom) {
+            BottomBarView()
+        }
     }
 }
 
-#Preview {
-    AiAssistantView(strings: HomeStrings.companion.Default)
-}

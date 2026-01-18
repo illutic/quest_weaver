@@ -51,7 +51,6 @@ fun HomeUiRoute(route: HomeRoute, viewModel: HomeViewModel = viewModel { HomeVie
             )
         }
 
-        HomeRoute.AiAssistant -> AiAssistantScreen()
         HomeRoute.Search -> SearchScreen()
         HomeRoute.Settings -> SettingsScreen()
         else -> {}

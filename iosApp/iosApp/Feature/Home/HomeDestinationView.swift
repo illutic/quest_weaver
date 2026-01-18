@@ -20,7 +20,7 @@ struct HomeDestinationView: View {
                 strings: state.strings,
                 state: state,
                 viewModel: viewModel,
-            )
+                )
 
         case is HomeRouteRecentGames:
             RecentGamesView(
@@ -43,9 +43,6 @@ struct HomeDestinationView: View {
 
         case is HomeRouteSettings:
             SettingsPlaceholderView()
-
-        case is HomeRouteAiAssistant:
-            AiAssistantView(strings: state.strings)
 
         default:
             EmptyView()

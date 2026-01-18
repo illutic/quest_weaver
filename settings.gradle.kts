@@ -27,6 +27,7 @@ include(
     ":feature:home:resources",
     ":feature:home:create"
 )
+include(":feature:ai:core", ":feature:ai:presentation")
 include(":feature:user:data", ":feature:user:state")
 include(":core:common", ":core:navigation", ":core:components", ":core:ui", ":core:database")
 include(":feature:bottombar")

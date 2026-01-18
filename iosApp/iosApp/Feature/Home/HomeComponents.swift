@@ -9,7 +9,6 @@ import SwiftUI
 import Shared
 
 
-
 struct RecentGamesSection: View {
     let strings: HomeStrings
     let games: [GameSession]
