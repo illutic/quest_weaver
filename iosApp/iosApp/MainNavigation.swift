@@ -20,7 +20,10 @@ struct MainNavigation: View {
         )
 
         // Sheet Binding
-        let sheetBinding = getSheetRootBinding(sheetBackStack: state.sheetBackStack, onDismiss: viewModel.navigateBack)
+        let sheetBinding = getSheetRootBinding(
+            sheetBackStack: state.sheetBackStack,
+            onDismiss: viewModel.dismissSheet,
+            )
 
         ZStack {
             MainNavigationContent(

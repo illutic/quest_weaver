@@ -62,7 +62,6 @@ fun HomeSheetUi(
                     strings = state.strings
                 )
             }
-
             is HomeRoute.ResourceDetails -> {
                 val resource = state.resources.find { it.id == route.resourceId }
                 if (resource != null) {
@@ -71,7 +70,6 @@ fun HomeSheetUi(
                     Text("Resource not found")
                 }
             }
-
             else -> {
                 Text("Unknown Home Sheet: $route")
             }

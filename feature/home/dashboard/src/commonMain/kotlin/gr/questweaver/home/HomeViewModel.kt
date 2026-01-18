@@ -159,7 +159,7 @@ class HomeViewModel : ViewModel(), KoinComponent {
     }
 
     private fun dismissSheet() {
-        navigationController.navigateBack()
+        navigationController.dismissSheet()
     }
 
     private fun emitToast(message: String) {

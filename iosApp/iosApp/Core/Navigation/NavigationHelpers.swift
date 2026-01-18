@@ -79,7 +79,6 @@ func getSheetRootBinding(
             return nil
         },
         set: { newValue in
-            // If set to nil, it means dismiss (e.g. swipe down)
             if newValue == nil {
                 onDismiss()
             }

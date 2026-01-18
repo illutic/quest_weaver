@@ -26,6 +26,13 @@ class NavigationController {
         }
     }
 
+    fun dismissSheet() {
+        _state.update {
+            val newStack = it.backStack.dropLastWhile { route -> route is SheetRoute }
+            it.copy(backStack = newStack, currentRoute = newStack.lastOrNull())
+        }
+    }
+
     fun setLoading(isLoading: Boolean) {
         _state.update { it.copy(isLoading = isLoading) }
     }

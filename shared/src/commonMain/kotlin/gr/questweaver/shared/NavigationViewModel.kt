@@ -27,6 +27,10 @@ class NavigationViewModel : ViewModel(), KoinComponent {
         navigationController.navigateBack()
     }
 
+    fun dismissSheet() {
+        navigationController.dismissSheet()
+    }
+
     private suspend fun load() {
         setLoading(true)
         val isRegistered = isUserRegisteredUseCase().getOrElse { false }
@@ -47,8 +51,6 @@ class NavigationViewModel : ViewModel(), KoinComponent {
     }
 
     companion object {
-        fun createFactory() = viewModelFactory {
-            initializer { NavigationViewModel() }
-        }
+        fun createFactory() = viewModelFactory { initializer { NavigationViewModel() } }
     }
 }
