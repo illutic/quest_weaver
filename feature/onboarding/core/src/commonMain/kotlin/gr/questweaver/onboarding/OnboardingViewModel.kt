@@ -5,14 +5,13 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import gr.questweaver.home.HomeRoute
+import gr.questweaver.navigation.NavigationController
 import gr.questweaver.navigation.Route
 import gr.questweaver.user.domain.usecase.GenerateUsernameUseCase
 import gr.questweaver.user.domain.usecase.IsUserRegisteredUseCase
 import gr.questweaver.user.domain.usecase.SetUserUseCase
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
@@ -22,12 +21,10 @@ class OnboardingViewModel : ViewModel(), KoinComponent {
     private val isUserRegisteredUseCase: IsUserRegisteredUseCase by inject()
     private val setUserUseCase: SetUserUseCase by inject()
     private val generateUsernameUseCase: GenerateUsernameUseCase by inject()
+    private val navigationController: NavigationController by inject()
 
     private val _state = MutableStateFlow(OnboardingState())
     val state = _state.asStateFlow()
-
-    private val _sideEffects = Channel<OnboardingSideEffect>()
-    val sideEffects = _sideEffects.receiveAsFlow()
 
     fun onEvent(event: OnboardingEvent) {
         when (event) {
@@ -61,24 +58,17 @@ class OnboardingViewModel : ViewModel(), KoinComponent {
             val isRegistered = isUserRegisteredUseCase().getOrElse { false }
             _state.update { it.copy(strings = strings) }
 
-            // If already registered, navigate to home
             if (isRegistered) {
-                _sideEffects.send(OnboardingSideEffect.Navigate(HomeRoute.Home))
+                navigationController.navigateTo(HomeRoute.Home)
             }
         }
 
     private fun navigateTo(route: Route) {
-        _state.update { it.copy(backStack = it.backStack + route) }
+        navigationController.navigateTo(route)
     }
 
     private fun navigateBack() {
-        _state.update {
-            if (it.backStack.size > 1) {
-                it.copy(backStack = it.backStack.dropLast(1))
-            } else {
-                it
-            }
-        }
+        navigationController.navigateBack()
     }
 
     private fun onNameChange(name: String) {
@@ -94,7 +84,7 @@ class OnboardingViewModel : ViewModel(), KoinComponent {
     }
 
     private fun completeOnboarding() {
-        viewModelScope.launch { _sideEffects.send(OnboardingSideEffect.Navigate(HomeRoute.Home)) }
+        navigationController.navigateTo(HomeRoute.Home)
     }
 
     init {

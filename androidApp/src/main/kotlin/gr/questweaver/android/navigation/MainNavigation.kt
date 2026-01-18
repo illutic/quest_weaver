@@ -14,7 +14,6 @@ import gr.questweaver.home.HomeRoute
 import gr.questweaver.home.screens.HomeSheetUi
 import gr.questweaver.home.screens.HomeUiRoute
 import gr.questweaver.navigation.NavigationState
-import gr.questweaver.navigation.Route
 import gr.questweaver.onboarding.OnboardingRoute
 import gr.questweaver.onboarding.OnboardingUiRoute
 
@@ -23,7 +22,6 @@ import gr.questweaver.onboarding.OnboardingUiRoute
 fun MainNavigation(
     navigationState: NavigationState,
     onBack: () -> Unit,
-    onNavigate: (Route) -> Unit,
 ) {
     Scaffold(modifier = Modifier, bottomBar = { BottomBar() }) {
         NavDisplay(
@@ -31,8 +29,10 @@ fun MainNavigation(
             onBack = onBack,
             entryProvider = { key ->
                 when (key) {
-                    is OnboardingRoute.Graph -> {
-                        NavEntry(key) { OnboardingUiRoute(onNavigate = onNavigate) }
+                    is OnboardingRoute -> {
+                        NavEntry(key) {
+                            OnboardingUiRoute(route = key)
+                        }
                     }
 
                     is HomeRoute -> {
