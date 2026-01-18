@@ -47,8 +47,7 @@ fun HomeUiRoute(route: HomeRoute, viewModel: HomeViewModel = viewModel { HomeVie
         HomeRoute.ResourcesList -> {
             ResourcesListScreen(
                 state = state,
-                onResourceClick = { viewModel.onEvent(HomeEvent.OnResourceClick(it)) },
-                onBackClick = { viewModel.onEvent(HomeEvent.OnBackClick) }
+                onResourceClick = { viewModel.onEvent(HomeEvent.OnResourceClick(it)) }
             )
         }
 
