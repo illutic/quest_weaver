@@ -1,5 +1,5 @@
 [versions]
-compose-multiplatform = "1.10.0-rc02"
+compose-multiplatform = "1.11.0-alpha01"
 
 # Google
 android-firebaseBom = "34.7.0"
