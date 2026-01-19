@@ -20,6 +20,7 @@ kotlin {
             implementation(projects.feature.bottombar)
             implementation(projects.feature.ai.core)
             implementation(projects.feature.search.core)
+            implementation(projects.feature.settings.core)
         }
     }
 }

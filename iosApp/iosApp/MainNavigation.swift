@@ -102,6 +102,8 @@ struct RouteView: View {
             AiAssistantView()
         case _ as SearchRoute:
             SearchView()
+        case _ as SettingsRoute:
+            SettingsView()
         default:
             Text("Unknown Route: \(route.path)")
         }

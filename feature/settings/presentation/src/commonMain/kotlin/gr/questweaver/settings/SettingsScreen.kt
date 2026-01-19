@@ -1,4 +1,4 @@
-package gr.questweaver.home.screens
+package gr.questweaver.settings
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

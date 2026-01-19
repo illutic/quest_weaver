@@ -21,36 +21,35 @@ import gr.questweaver.onboarding.OnboardingUiRoute
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainNavigation(
-    navigationState: NavigationState,
-    onBack: () -> Unit,
+        navigationState: NavigationState,
+        onBack: () -> Unit,
 ) {
     Scaffold(bottomBar = { BottomBar() }) { padding ->
         NavDisplay(
-            backStack = navigationState.visibleBackStack,
-            onBack = onBack,
-            entryProvider = { key ->
-                when (key) {
-                    is OnboardingRoute -> {
-                        NavEntry(key) { OnboardingUiRoute(route = key) }
+                backStack = navigationState.visibleBackStack,
+                onBack = onBack,
+                entryProvider = { key ->
+                    when (key) {
+                        is OnboardingRoute -> {
+                            NavEntry(key) { OnboardingUiRoute(route = key) }
                         }
-
-                    is HomeRoute -> {
-                        NavEntry(key) { HomeUiRoute(route = key) }
+                        is HomeRoute -> {
+                            NavEntry(key) { HomeUiRoute(route = key) }
+                        }
+                        is AiRoute.AiAssistant -> {
+                            NavEntry(key) { AiAssistantScreen() }
+                        }
+                        is gr.questweaver.search.SearchRoute.Search -> {
+                            NavEntry(key) { gr.questweaver.search.screens.SearchScreen() }
+                        }
+                        is gr.questweaver.settings.SettingsRoute.Settings -> {
+                            NavEntry(key) { gr.questweaver.settings.SettingsScreen() }
+                        }
+                        else -> {
+                            NavEntry(key) { Text("Unknown route: $key") }
+                        }
                     }
-
-                    is AiRoute.AiAssistant -> {
-                        NavEntry(key) { AiAssistantScreen() }
-                    }
-
-                    is gr.questweaver.search.SearchRoute.Search -> {
-                        NavEntry(key) { gr.questweaver.search.screens.SearchScreen() }
-                    }
-
-                    else -> {
-                        NavEntry(key) { Text("Unknown route: $key") }
-                    }
-                }
-            },
+                },
         )
     }
 
@@ -59,15 +58,15 @@ fun MainNavigation(
         val currentSheet = navigationState.sheetBackStack.last()
 
         ModalBottomSheet(
-            onDismissRequest = onBack,
-            sheetState = sheetState,
-            dragHandle = null,
+                onDismissRequest = onBack,
+                sheetState = sheetState,
+                dragHandle = null,
         ) {
             when (currentSheet) {
                 is HomeRoute -> {
                     HomeSheetUi(
-                        route = currentSheet,
-                        onBack = onBack,
+                            route = currentSheet,
+                            onBack = onBack,
                     )
                 }
                 else -> {

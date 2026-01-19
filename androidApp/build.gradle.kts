@@ -15,6 +15,8 @@ dependencies {
     implementation(projects.feature.ai.presentation)
     implementation(projects.feature.search.core)
     implementation(projects.feature.search.presentation)
+    implementation(projects.feature.settings.core)
+    implementation(projects.feature.settings.presentation)
     implementation(projects.feature.home.resources)
     implementation(projects.feature.home.core)
     implementation(libs.compose.material3)

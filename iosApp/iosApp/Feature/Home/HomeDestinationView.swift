@@ -38,8 +38,7 @@ struct HomeDestinationView: View {
                 }
             )
 
-        case is HomeRouteSettings:
-            SettingsPlaceholderView()
+
 
         default:
             EmptyView()

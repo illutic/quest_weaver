@@ -20,35 +20,34 @@ fun HomeUiRoute(route: HomeRoute, viewModel: HomeViewModel = viewModel { HomeVie
     when (route) {
         HomeRoute.Home -> {
             HomeScreen(
-                state = state,
-                snackbarHostState = snackbarHostState,
-                onJoinGameClick = { viewModel.onEvent(HomeEvent.OnJoinGameClick) },
-                onCreateGameClick = { viewModel.onEvent(HomeEvent.OnCreateGameClick) },
-                onGameClick = { viewModel.onEvent(HomeEvent.OnGameClick(it)) },
-                onRecentGamesViewAllClick = {
-                    viewModel.onEvent(HomeEvent.OnRecentGamesViewAllClick)
-                },
-                onAiAssistantClick = { viewModel.onEvent(HomeEvent.OnAiAssistantClick) },
-                onResourceClick = { viewModel.onEvent(HomeEvent.OnResourceClick(it)) },
-                onResourcesViewAllClick = {
-                    viewModel.onEvent(HomeEvent.OnResourcesViewAllClick)
-                }
+                    state = state,
+                    snackbarHostState = snackbarHostState,
+                    onJoinGameClick = { viewModel.onEvent(HomeEvent.OnJoinGameClick) },
+                    onCreateGameClick = { viewModel.onEvent(HomeEvent.OnCreateGameClick) },
+                    onGameClick = { viewModel.onEvent(HomeEvent.OnGameClick(it)) },
+                    onRecentGamesViewAllClick = {
+                        viewModel.onEvent(HomeEvent.OnRecentGamesViewAllClick)
+                    },
+                    onAiAssistantClick = { viewModel.onEvent(HomeEvent.OnAiAssistantClick) },
+                    onResourceClick = { viewModel.onEvent(HomeEvent.OnResourceClick(it)) },
+                    onResourcesViewAllClick = {
+                        viewModel.onEvent(HomeEvent.OnResourcesViewAllClick)
+                    }
             )
         }
         HomeRoute.RecentGames -> {
             RecentGamesScreen(
-                state = state,
-                onGameClick = { viewModel.onEvent(HomeEvent.OnGameClick(it)) },
-                onBackClick = { viewModel.onEvent(HomeEvent.OnBackClick) }
+                    state = state,
+                    onGameClick = { viewModel.onEvent(HomeEvent.OnGameClick(it)) },
+                    onBackClick = { viewModel.onEvent(HomeEvent.OnBackClick) }
             )
         }
         HomeRoute.ResourcesList -> {
             ResourcesListScreen(
-                state = state,
-                onResourceClick = { viewModel.onEvent(HomeEvent.OnResourceClick(it)) }
+                    state = state,
+                    onResourceClick = { viewModel.onEvent(HomeEvent.OnResourceClick(it)) }
             )
         }
-        HomeRoute.Settings -> SettingsScreen()
         else -> {}
     }
 }
