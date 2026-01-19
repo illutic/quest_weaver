@@ -6,7 +6,7 @@ android-firebaseBom = "34.7.0"
 playServicesNearby = "19.3.0"
 
 # Android
-android-agp = "8.13.2"
+android-agp = "9.0.0"
 android-coreKtx = "1.17.0"
 android-activityCompose = "1.12.2"
 android-appcompat = "1.7.1"
