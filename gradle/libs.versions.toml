@@ -2,7 +2,7 @@
 compose-multiplatform = "1.10.0-rc02"
 
 # Google
-android-firebaseBom = "34.7.0"
+android-firebaseBom = "34.8.0"
 playServicesNearby = "19.3.0"
 
 # Android
