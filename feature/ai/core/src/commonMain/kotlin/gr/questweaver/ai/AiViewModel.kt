@@ -4,8 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import gr.questweaver.bottombar.BottomBarController
-import gr.questweaver.bottombar.BottomBarMode
 import gr.questweaver.navigation.NavigationController
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +15,6 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class AiViewModel : ViewModel(), KoinComponent {
-    private val bottomBarController: BottomBarController by inject()
     private val navigationController: NavigationController by inject()
 
     private val _state = MutableStateFlow(AiState())
@@ -27,44 +24,89 @@ class AiViewModel : ViewModel(), KoinComponent {
     val effect = _effect.asSharedFlow()
 
     init {
-        viewModelScope.launch {
-            navigationController.state.collect {
-                val mode = if (it.currentRoute is AiRoute.AiAssistant) {
-                    BottomBarMode.TextField("Type your prompt...")
-                } else {
-                    BottomBarMode.Standard
-                }
-                bottomBarController.setMode(mode)
-            }
+        _state.update {
+            it.copy(
+                quickActions =
+                    listOf(
+                        QuickAction(
+                            "1",
+                            "Generate Image",
+                            "Generate an image of a dark fantasy castle"
+                        ),
+                        QuickAction(
+                            "2",
+                            "Create NPC",
+                            "Create a level 5 goblin rogue NPC"
+                        ),
+                        QuickAction(
+                            "3",
+                            "Plot Hook",
+                            "Give me a plot hook for a seaside village"
+                        )
+                    )
+            )
         }
     }
 
     fun onEvent(event: AiEvent) {
         when (event) {
-            is AiEvent.OnPromptChanged -> {
-                _state.update { it.copy(prompt = event.prompt) }
+            is AiEvent.OnInputChanged -> {
+                _state.update { it.copy(inputText = event.text) }
             }
 
-            AiEvent.OnGenerateClick -> {
-                // TODO: Implement generation logic
-                _state.update { it.copy(isLoading = true) }
-                viewModelScope.launch {
-                    // Simulate delay
-                    // delay(2000)
-                    _state.update {
-                        it.copy(
-                            isLoading = false,
-                            response = "I am a dragon, ask me anything!"
-                        )
-                    }
+            is AiEvent.OnSendClick -> {
+                val input = state.value.inputText
+                if (input.isNotBlank()) {
+                    sendMessage(input)
                 }
+            }
+
+            is AiEvent.OnQuickActionClick -> {
+                sendMessage(event.action.query)
+            }
+
+            AiEvent.OnAttachClick -> {
+                // TODO: Implement file picker
+            }
+
+            is AiEvent.OnRemoveAttachment -> {
+                _state.update { it.copy(attachedFiles = it.attachedFiles - event.file) }
             }
         }
     }
 
-    companion object {
-        fun createFactory() = viewModelFactory {
-            initializer { AiViewModel() }
+    private fun sendMessage(text: String) {
+        val userMessage =
+            UiMessage(
+                id = generateId(),
+                text = text,
+                isUser = true,
+                timestamp = 0L // TODO: use clock
+            )
+
+        _state.update {
+            it.copy(messages = it.messages + userMessage, inputText = "", isGenerating = true)
         }
+
+        viewModelScope.launch {
+            // Simulate network delay
+            kotlinx.coroutines.delay(1500)
+
+            val aiMessage =
+                UiMessage(
+                    id = generateId(),
+                    text = "This is a simulated response to: \"$text\"",
+                    isUser = false,
+                    timestamp = 0L
+                )
+
+            _state.update { it.copy(messages = it.messages + aiMessage, isGenerating = false) }
+        }
+    }
+
+    private fun generateId(): String = (state.value.messages.size + 1).toString()
+
+    companion object {
+        fun createFactory() = viewModelFactory { initializer { AiViewModel() } }
     }
 }
