@@ -18,14 +18,17 @@ class BottomBarViewModel : ViewModel(), KoinComponent {
     private val navigationController: NavigationController by inject()
 
     val state: StateFlow<BottomBarState> =
-        combine(bottomBarController.state, navigationController.state) { bottomBarState, navState ->
+        combine(bottomBarController.state, navigationController.state) { bottomBarState,
+                                                                         navState ->
             bottomBarState.copy(
-                items = bottomBarState.items.map {
-                    it.copy(selected = it.route == navState.currentRoute)
-                },
+                items =
+                    bottomBarState.items.map {
+                        it.copy(selected = it.route == navState.currentRoute)
+                    },
                 showBackButton = navState.visibleBackStack.size > 1
             )
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), BottomBarState())
+        }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), BottomBarState())
 
     fun onEvent(event: BottomBarEvent) {
         when (event) {
@@ -43,20 +46,10 @@ class BottomBarViewModel : ViewModel(), KoinComponent {
                     navigationController.navigateTo(event.route)
                 }
             }
-
-            is BottomBarEvent.OnInputChanged -> {
-                bottomBarController.setInputValue(event.value)
-            }
-
-            is BottomBarEvent.OnSubmitClick -> {
-                bottomBarController.emitEvent(event)
-            }
         }
     }
 
     companion object {
-        fun createFactory() = viewModelFactory {
-            initializer { BottomBarViewModel() }
-        }
+        fun createFactory() = viewModelFactory { initializer { BottomBarViewModel() } }
     }
 }

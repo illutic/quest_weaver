@@ -5,7 +5,6 @@ import gr.questweaver.navigation.Route
 data class BottomBarState(
     val items: List<BottomBarItem> = emptyList(),
     val mode: BottomBarMode = BottomBarMode.Empty,
-    val inputValue: String = "",
     val showBackButton: Boolean = false
 ) {
     companion object {
@@ -15,7 +14,6 @@ data class BottomBarState(
 
 sealed interface BottomBarMode {
     data object Standard : BottomBarMode
-    data class TextField(val placeholder: String) : BottomBarMode
     data object Empty : BottomBarMode
 }
 

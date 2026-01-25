@@ -29,10 +29,6 @@ class BottomBarController {
         _state.update { it.copy(mode = mode) }
     }
 
-    fun setInputValue(value: String) {
-        _state.update { it.copy(inputValue = value) }
-    }
-
     /* internal */ fun emitEvent(event: BottomBarEvent) {
         _events.tryEmit(event)
     }
