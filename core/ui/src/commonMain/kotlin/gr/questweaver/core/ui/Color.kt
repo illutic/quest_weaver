@@ -24,8 +24,8 @@ internal val onErrorLight = Color(0xFFFFFFFF)
 internal val errorContainerLight = Color(0xFFFFDAD6)
 internal val onErrorContainerLight = Color(0xFF410002)
 
-internal val backgroundLight = Color(0xFFF5E6D3) // Parchment
-internal val onBackgroundLight = Color(0xFF1F1B16)
+internal val backgroundLight = Color(0xFFFFFFFF) // Parchment
+internal val onBackgroundLight = Color(0xFF000000)
 internal val surfaceLight = Color(0xFFF5E6D3) // Parchment
 internal val onSurfaceLight = Color(0xFF1F1B16)
 internal val surfaceVariantLight = Color(0xFFEBE1CF)
@@ -66,8 +66,8 @@ internal val onErrorDark = Color(0xFF690005)
 internal val errorContainerDark = Color(0xFF93000A)
 internal val onErrorContainerDark = Color(0xFFFFDAD6)
 
-internal val backgroundDark = Color(0xFF121212) // Obsidian
-internal val onBackgroundDark = Color(0xFFEAE1D9)
+internal val backgroundDark = Color(0xFF0C0C0C) // Obsidian
+internal val onBackgroundDark = Color(0xFFFFFFFF)
 internal val surfaceDark = Color(0xFF121212)
 internal val onSurfaceDark = Color(0xFFEAE1D9)
 internal val surfaceVariantDark = Color(0xFF4D4639)
