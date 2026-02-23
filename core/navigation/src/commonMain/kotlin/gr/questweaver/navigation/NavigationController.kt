@@ -1,39 +1,41 @@
 package gr.questweaver.navigation
 
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 class NavigationController {
-
-    private val _state = MutableStateFlow(NavigationState.Default)
-    val state: StateFlow<NavigationState> = _state.asStateFlow()
+    private val _navigationState = MutableStateFlow(NavigationState())
+    val state = _navigationState.asStateFlow()
 
     fun navigateTo(route: Route) {
-        val newBackStack = if (route.popBackStack) listOf(route) else _state.value.backStack + route
-        _state.update { it.copy(backStack = newBackStack, currentRoute = route) }
-    }
-
-    fun navigateBack() {
-        _state.update {
-            if (it.backStack.isNotEmpty()) {
-                val newStack = it.backStack.dropLast(1)
-                it.copy(backStack = newStack, currentRoute = newStack.lastOrNull())
+        _navigationState.update { currentState ->
+            val newBackStack = if (route.popBackStack) {
+                listOf(route)
             } else {
-                it
+                currentState.backStack + route
             }
-        }
-    }
-
-    fun dismissSheet() {
-        _state.update {
-            val newStack = it.backStack.dropLastWhile { route -> route is SheetRoute }
-            it.copy(backStack = newStack, currentRoute = newStack.lastOrNull())
+            currentState.copy(backStack = newBackStack)
         }
     }
 
     fun setLoading(isLoading: Boolean) {
-        _state.update { it.copy(isLoading = isLoading) }
+        _navigationState.update { currentState ->
+            currentState.copy(isLoading = isLoading)
+        }
+    }
+
+    fun navigateBack() {
+        _navigationState.update { currentState ->
+            if (currentState.backStack.isEmpty()) return@update currentState
+            val newBackStack = currentState.backStack.dropLast(1)
+            currentState.copy(backStack = newBackStack)
+        }
+    }
+
+    fun clearBackStack() {
+        _navigationState.update { currentState ->
+            currentState.copy(backStack = emptyList())
+        }
     }
 }

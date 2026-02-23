@@ -11,7 +11,6 @@ kotlin {
             implementation(projects.core.components)
             implementation(projects.core.navigation)
             implementation(projects.feature.ai.core)
-            implementation(projects.feature.bottombar)
 
             implementation(libs.compose.viewmodel)
             implementation(libs.compose.navigation3.ui)

@@ -98,9 +98,12 @@ Model-View-ViewModel).
 
 * **Dependency Injection**: [Koin](https://insert-koin.io/).
     * Usage: `private val useCase: MyUseCase by inject()` in classes implementing `KoinComponent`.
-* **Navigation**: Custom Route-based navigation system.
-    * Navigation commands (e.g., `navigateTo`, `navigateBack`) are handled in the ViewModel and
-      observed by the UI/Navigation host.
+* **Navigation**: Custom Route-based navigation system using `NavigationController`.
+    * **App Navigation Controller**: Handles screen-wide navigation (injected with `named(NavControllerType.App)`).
+    * **Feature Navigation Controller**: Handles internal screen navigation within a feature.
+    * **Sheet Navigation Controller**: Handles BottomSheet navigation (injected with `named(NavControllerType.Sheet)`).
+    * **ViewModels**: Should call the appropriate injected `NavigationController` to navigate the app, ensuring all navigation logic resides in one place.
+    * **Injectable & Shared**: The `NavigationController` is injectable and shared across different features.
 * **Connectivity**: Google's Nearby Connections API.
     * Used to create a local squad for:
         * Connecting to other nearby devices.

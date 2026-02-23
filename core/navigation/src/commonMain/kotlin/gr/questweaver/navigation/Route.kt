@@ -5,8 +5,3 @@ interface Route {
     val id: String
     val popBackStack: Boolean get() = false
 }
-
-interface SheetRoute {
-    val path: String
-    val id: String
-}

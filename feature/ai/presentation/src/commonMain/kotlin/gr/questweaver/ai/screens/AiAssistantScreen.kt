@@ -47,6 +47,7 @@ import gr.questweaver.ai.AiState
 import gr.questweaver.ai.AiViewModel
 import gr.questweaver.ai.QuickAction
 import gr.questweaver.ai.UiMessage
+import gr.questweaver.core.components.AppTopAppBar
 
 @Composable
 fun AiAssistantScreen(
@@ -65,6 +66,13 @@ fun AiAssistantContent(
 ) {
     Scaffold(
         modifier = modifier,
+        topBar = {
+            AppTopAppBar(
+                title = "AI Assistant",
+                showBack = true,
+                onBack = { onEvent(AiEvent.OnBackClick) }
+            )
+        },
         bottomBar = {
             Column(
                 modifier =

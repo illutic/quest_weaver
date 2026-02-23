@@ -15,18 +15,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import gr.questweaver.home.HomeDashboardViewModel
 import gr.questweaver.home.HomeEvent
 import gr.questweaver.home.HomeRoute
-import gr.questweaver.home.HomeViewModel
 import gr.questweaver.home.ResourceDetailsScreen
 import gr.questweaver.home.create.CreateGameScreen
-import gr.questweaver.navigation.SheetRoute
+import gr.questweaver.navigation.Route
 
 @Composable
 fun HomeSheetUi(
-    route: SheetRoute,
+    route: Route,
     onBack: () -> Unit,
-    viewModel: HomeViewModel = viewModel { HomeViewModel() }
+    viewModel: HomeDashboardViewModel = viewModel { HomeDashboardViewModel() }
 ) {
     if (route !is HomeRoute) return
 
@@ -62,6 +62,7 @@ fun HomeSheetUi(
                     strings = state.strings
                 )
             }
+
             is HomeRoute.ResourceDetails -> {
                 val resource = state.resources.find { it.id == route.resourceId }
                 if (resource != null) {
@@ -70,6 +71,7 @@ fun HomeSheetUi(
                     Text("Resource not found")
                 }
             }
+
             else -> {
                 Text("Unknown Home Sheet: $route")
             }

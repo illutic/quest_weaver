@@ -13,6 +13,7 @@ struct MainNavigation: View {
     @StateObject private var viewModelStoreOwner = IosViewModelStoreOwner()
     @State private var errorMessage: String?
     @State private var state: NavigationState = NavigationState.companion.Default
+    @State private var sheetState: NavigationState = NavigationState.companion.Default
 
     var body: some View {
         let viewModel: NavigationViewModel = viewModelStoreOwner.viewModel(
@@ -21,24 +22,40 @@ struct MainNavigation: View {
 
         // Sheet Binding
         let sheetBinding = getSheetRootBinding(
-            sheetBackStack: state.sheetBackStack,
-            onDismiss: viewModel.dismissSheet,
-            )
+            sheetBackStack: sheetState.backStack,
+            onDismiss: viewModel.dismissSheet
+        )
+
+        let pathBinding = getPathBinding(
+            backStack: state.backStack,
+            onBack: {
+                viewModel.navigateBack()
+            }
+        )
 
         ZStack {
-            MainNavigationContent(
-                navigationState: state,
-                onBack: viewModel.navigateBack,
-                onNavigate: viewModel.navigateTo
-            )
-                .environmentObject(viewModelStoreOwner)
-
             if state.isLoading {
                 ProgressView()
                     .progressViewStyle(CircularProgressViewStyle())
                     .scaleEffect(1.5)
+            } else {
+                NavigationStack(path: pathBinding) {
+                    Group {
+                        if let rootRoute = state.backStack.first {
+                            buildRootView(for: rootRoute)
+                        } else {
+                            // Fallback if backStack is unexpectedly empty when not loading.
+                            // The shared ViewModel should ensure Welcome or Home is initialized.
+                            Text("Loading Navigation...")
+                        }
+                    }
+                    .navigationDestination(for: AnyRoute.self) { anyRoute in
+                        buildRootView(for: anyRoute.base)
+                    }
+                }
             }
         }
+        .environmentObject(viewModelStoreOwner)
         .sheet(item: sheetBinding) { sheetRoute in
             SheetView(route: sheetRoute.base)
                 .presentationDetents([.medium, .large])
@@ -48,77 +65,36 @@ struct MainNavigation: View {
             viewModel.navigationState.subscribe(
                 scope: viewModel.viewModelScope,
                 onError: { _ in },
-                onNext: { state in self.state = state ?? NavigationState.companion.Default }
+                onNext: { self.state = $0 ?? .companion.Default }
+            )
+            viewModel.sheetState.subscribe(
+                scope: viewModel.viewModelScope,
+                onError: { _ in },
+                onNext: { self.sheetState = $0 ?? .companion.Default }
             )
         }
     }
-}
 
-private struct MainNavigationContent: View {
-    let navigationState: NavigationState
-    let onBack: () -> Void
-    let onNavigate: (Route) -> Void
-
-    var body: some View {
-        let pathBinding = getPathBinding(
-            backStack: navigationState.visibleBackStack,
-            onBack: onBack
-        )
-
-        NavigationStack(path: pathBinding) {
-            if let root = navigationState.visibleBackStack.first {
-                RouteView(
-                    route: root,
-                    navigationState: navigationState,
-                    onNavigate: onNavigate
-                )
-                    .navigationDestination(for: AnyRoute.self) { anyRoute in
-                        RouteView(
-                            route: anyRoute.base,
-                            navigationState: navigationState,
-                            onNavigate: onNavigate
-                        )
-                    }
-            } else {
-                // Should not happen if app starts with a route
-                Color.white
-            }
-        }
-    }
-}
-
-struct RouteView: View {
-    let route: Route
-    let navigationState: NavigationState
-    let onNavigate: (Route) -> Void
-
-    var body: some View {
+    @ViewBuilder
+    private func buildRootView(for route: Route) -> some View {
         switch route {
-        case let r as OnboardingRoute:
-            OnboardingView(route: r)
-        case let r as HomeRoute:
-            HomeView(route: r, navigationState: navigationState)
-        case _ as AiRoute:
+        case is HomeRoute, is SearchRouteSearch, is SettingsRouteSettings:
+            HomeRootView(route: route)
+        case is AiRoute:
             AiAssistantView()
-        case _ as SearchRoute:
-            SearchView()
-        case _ as SettingsRoute:
-            SettingsView()
+        case is OnboardingRoute:
+            OnboardingView()
         default:
-            Text("Unknown Route: \(route.path)")
+            Text("Unknown Global Route: \(route.path)")
         }
     }
 }
 
 struct SheetView: View {
-    let route: SheetRoute
+    let route: Route
 
     var body: some View {
-        // Simple wrapper for now, assuming Home sheets are the main ones.
-        // In Android we have HomeSheetUi.
-        // Here we can switch.
         if let homeRoute = route as? HomeRoute {
-            // Need a HomeSheetView similar to HomeSheetUi
             HomeSheetView(route: homeRoute)
         } else {
             Text("Unknown Sheet: \(route.path)")
@@ -126,8 +102,6 @@ struct SheetView: View {
     }
 }
 
-struct MainNavigation_Previews: PreviewProvider {
-    static var previews: some View {
-        MainNavigation()
-    }
+#Preview {
+    MainNavigation()
 }

@@ -25,11 +25,11 @@ include(
     ":feature:home:dashboard",
     ":feature:home:recents",
     ":feature:home:resources",
-    ":feature:home:create"
+    ":feature:home:create",
+    ":feature:home:navigation",
+    ":feature:home:search:core", ":feature:home:search:presentation"
 )
 include(":feature:ai:core", ":feature:ai:presentation")
-include(":feature:search:core", ":feature:search:presentation")
 include(":feature:settings:core", ":feature:settings:presentation")
 include(":feature:user:data", ":feature:user:state")
 include(":core:common", ":core:navigation", ":core:components", ":core:ui", ":core:database")
-include(":feature:bottombar")

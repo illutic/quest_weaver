@@ -44,8 +44,5 @@ struct SettingsView: View {
         .adaptive()
         .navigationTitle("Settings")
         .navigationBarTitleDisplayMode(.inline)
-        .overlay(alignment: .bottom) {
-            BottomBarView()
-        }
     }
 }

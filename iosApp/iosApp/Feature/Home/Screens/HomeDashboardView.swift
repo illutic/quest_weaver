@@ -2,12 +2,17 @@ import SwiftUI
 import Shared
 
 struct HomeDashboardView: View {
-    let strings: HomeStrings
-    let state: HomeState
-    let viewModel: HomeViewModel
+    let onGameClick: (String) -> Void
+    let onGameViewAllClick: () -> Void
+    let onCreateGameClick: () -> Void
+    let onJoinGameClick: () -> Void
+    let onAiClick: () -> Void
+    let onResourceClick: (String) -> Void
+    let onResourceViewAllClick: () -> Void
 
     // Animation States
     // isWelcomeVisible removed
+    @State var state: HomeState
     @State private var isRecentGamesVisible = false
     @State private var isQuickActionsVisible = false
     @State private var isResourcesVisible = false
@@ -18,28 +23,28 @@ struct HomeDashboardView: View {
                 // WelcomeSection removed
 
                 RecentGamesSection(
-                    strings: strings,
+                    strings: state.strings,
                     games: state.recentGames,
-                    onGameClick: { viewModel.onEvent(event: HomeEventOnGameClick(gameId: $0)) },
-                    onViewAllClick: { viewModel.onEvent(event: HomeEventOnRecentGamesViewAllClick.shared) }
+                    onGameClick: onGameClick,
+                    onViewAllClick: onGameViewAllClick
                 )
                     .opacity(isRecentGamesVisible ? 1 : 0)
                     .offset(y: isRecentGamesVisible ? 0 : 20)
 
                 QuickActionsSection(
-                    strings: strings,
-                    onCreateGameClick: { viewModel.onEvent(event: HomeEventOnCreateGameClick.shared) },
-                    onJoinGameClick: { viewModel.onEvent(event: HomeEventOnJoinGameClick.shared) }
+                    strings: state.strings,
+                    onCreateGameClick: onCreateGameClick,
+                    onJoinGameClick: onJoinGameClick
                 )
                     .opacity(isQuickActionsVisible ? 1 : 0)
                     .offset(y: isQuickActionsVisible ? 0 : 20)
 
                 ResourcesSection(
-                    strings: strings,
+                    strings: state.strings,
                     resources: state.resources,
-                    onAiAssistantClick: { viewModel.onEvent(event: HomeEventOnAiAssistantClick.shared) },
-                    onResourceClick: { viewModel.onEvent(event: HomeEventOnResourceClick(resourceId: $0)) },
-                    onViewAllClick: { viewModel.onEvent(event: HomeEventOnResourcesViewAllClick.shared) }
+                    onAiAssistantClick: onAiClick,
+                    onResourceClick: onResourceClick,
+                    onViewAllClick: onResourceViewAllClick
                 )
                     .opacity(isResourcesVisible ? 1 : 0)
                     .offset(y: isResourcesVisible ? 0 : 20)
@@ -58,6 +63,6 @@ struct HomeDashboardView: View {
                 isResourcesVisible = true
             }
         }
-        .navigationTitle(strings.welcomeSubtitle)
+        .navigationTitle(state.strings.welcomeSubtitle)
     }
 }

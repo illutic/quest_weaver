@@ -1,6 +1,5 @@
 package gr.questweaver.shared
 
-import gr.questweaver.bottombar.bottomBarModule
 import gr.questweaver.core.common.dispatchersModule
 import gr.questweaver.core.database.coreDatabaseModule
 import gr.questweaver.core.database.databaseModule
@@ -14,9 +13,8 @@ fun appModules() =
         dispatchersModule,
         databaseModule,
         coreDatabaseModule,
+        navigationModule,
         // Feature modules
         userDataModule,
         userUseCasesModule,
-        bottomBarModule,
-        navigationModule,
     )

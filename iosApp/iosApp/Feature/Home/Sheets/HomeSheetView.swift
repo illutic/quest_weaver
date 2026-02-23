@@ -13,8 +13,8 @@ struct HomeSheetView: View {
     @State private var state: HomeState = HomeState.companion.Default
 
     var body: some View {
-        let viewModel: HomeViewModel = viewModelStoreOwner.viewModel(
-            factory: HomeViewModel.Companion.shared.createFactory()
+        let viewModel: HomeDashboardViewModel = viewModelStoreOwner.viewModel(
+            factory: HomeDashboardViewModel.Companion.shared.createFactory()
         )
 
         NavigationStack {

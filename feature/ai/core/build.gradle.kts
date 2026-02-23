@@ -9,7 +9,7 @@ kotlin {
             implementation(projects.core.common)
             implementation(projects.core.navigation)
             implementation(projects.core.ui)
-            implementation(projects.feature.bottombar)
+            implementation(projects.feature.home.core)
             implementation(libs.koin.core)
             implementation(libs.kotlinx.collections.immutable)
         }

@@ -71,7 +71,6 @@ struct AiAssistantView: View {
                     onAttach: { viewModel.onEvent(event: AiEventOnAttachClick.shared) }
                 )
             }
-            .background(Theme.Colors.surface)
         }
         .background(Theme.Colors.background)
         .navigationTitle("AI Assistant")

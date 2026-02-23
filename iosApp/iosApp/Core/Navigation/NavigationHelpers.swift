@@ -58,7 +58,7 @@ func getPathBinding(
 
 /// A wrapper to make SheetRoute Identifiable for .sheet
 struct AnySheetRoute: Identifiable {
-    let base: SheetRoute
+    let base: Route
 
     var id: String {
         return base.id
@@ -68,7 +68,7 @@ struct AnySheetRoute: Identifiable {
 /// Creates a Binding<AnySheetRoute?> for the *root* of the sheet stack.
 /// Used to control the presentation of the sheet itself.
 func getSheetRootBinding(
-    sheetBackStack: [SheetRoute],
+    sheetBackStack: [Route],
     onDismiss: @escaping () -> Void
 ) -> Binding<AnySheetRoute?> {
     Binding(

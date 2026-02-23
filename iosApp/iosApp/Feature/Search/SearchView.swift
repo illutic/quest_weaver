@@ -45,8 +45,5 @@ struct SearchView: View {
         .adaptive()
         .navigationTitle("Search")
         .navigationBarTitleDisplayMode(.inline)
-        .overlay(alignment: .bottom) {
-            BottomBarView()
-        }
     }
 }

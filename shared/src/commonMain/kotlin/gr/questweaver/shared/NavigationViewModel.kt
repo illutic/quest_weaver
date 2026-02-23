@@ -6,29 +6,33 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import gr.questweaver.home.HomeRoute
 import gr.questweaver.navigation.NavigationController
+import gr.questweaver.navigation.NavControllerType
 import gr.questweaver.navigation.Route
 import gr.questweaver.onboarding.OnboardingRoute
 import gr.questweaver.user.domain.usecase.IsUserRegisteredUseCase
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import org.koin.core.qualifier.named
 
 class NavigationViewModel : ViewModel(), KoinComponent {
     private val isUserRegisteredUseCase: IsUserRegisteredUseCase by inject()
-    private val navigationController: NavigationController by inject()
+    private val appNavController: NavigationController by inject(named(NavControllerType.App))
+    private val sheetNavController: NavigationController by inject(named(NavControllerType.Sheet))
 
-    val navigationState = navigationController.state
+    val navigationState = appNavController.state
+    val sheetState = sheetNavController.state
 
     fun navigateTo(route: Route) {
-        navigationController.navigateTo(route)
+        appNavController.navigateTo(route)
     }
 
     fun navigateBack() {
-        navigationController.navigateBack()
+        appNavController.navigateBack()
     }
 
     fun dismissSheet() {
-        navigationController.dismissSheet()
+        sheetNavController.clearBackStack()
     }
 
     private suspend fun load() {
@@ -43,7 +47,7 @@ class NavigationViewModel : ViewModel(), KoinComponent {
     }
 
     private fun setLoading(isLoading: Boolean) {
-        navigationController.setLoading(isLoading)
+        appNavController.setLoading(isLoading)
     }
 
     init {

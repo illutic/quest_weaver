@@ -10,15 +10,25 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import gr.questweaver.core.components.AppTopAppBar
 import gr.questweaver.core.ui.sizes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ResourcesListScreen(
     state: HomeState,
+    onBack: () -> Unit,
     onResourceClick: (String) -> Unit
 ) {
-    Scaffold { paddingValues ->
+    Scaffold(
+        topBar = {
+            AppTopAppBar(
+                title = state.strings.usefulResourcesTitle,
+                showBack = true,
+                onBack = onBack
+            )
+        }
+    ) { paddingValues ->
         LazyColumn(
             modifier = Modifier.fillMaxSize().padding(paddingValues),
             contentPadding = PaddingValues(sizes.four),

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import gr.questweaver.navigation.NavControllerType
 import gr.questweaver.navigation.NavigationController
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,9 +14,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import org.koin.core.qualifier.named
 
 class AiViewModel : ViewModel(), KoinComponent {
-    private val navigationController: NavigationController by inject()
+    private val navigationController: NavigationController by inject(named(NavControllerType.App))
 
     private val _state = MutableStateFlow(AiState())
     val state = _state.asStateFlow()
@@ -50,6 +52,10 @@ class AiViewModel : ViewModel(), KoinComponent {
 
     fun onEvent(event: AiEvent) {
         when (event) {
+            is AiEvent.OnBackClick -> {
+                navigationController.navigateBack()
+            }
+
             is AiEvent.OnInputChanged -> {
                 _state.update { it.copy(inputText = event.text) }
             }

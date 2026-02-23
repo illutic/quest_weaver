@@ -9,10 +9,9 @@ import Shared
 import SwiftUI
 
 struct OnboardingView: View {
-    let route: OnboardingRoute
-
     @StateObject private var viewModelStoreOwner = IosViewModelStoreOwner()
     @State private var state: OnboardingState = OnboardingState.companion.Default
+    @State private var navigationState: NavigationState = .companion.Default
 
     var body: some View {
         let viewModel: OnboardingViewModel = viewModelStoreOwner.viewModel(
@@ -21,7 +20,7 @@ struct OnboardingView: View {
 
         // Progress logic (simplified approximation)
         let progress: Float = {
-            switch route {
+            switch navigationState.currentRoute {
             case is OnboardingRouteWelcome: return 0.33
             case is OnboardingRouteRegistration: return 0.66
             case is OnboardingRouteTutorial: return 1.0
@@ -33,7 +32,7 @@ struct OnboardingView: View {
             ProgressView(value: progress)
                 .tint(Theme.Colors.primary)
 
-            switch route {
+            switch navigationState.currentRoute {
             case is OnboardingRouteWelcome:
                 WelcomeView(
                     strings: state.strings,
@@ -67,6 +66,11 @@ struct OnboardingView: View {
                 scope: viewModel.viewModelScope,
                 onError: { _ in },
                 onNext: { state in self.state = state ?? self.state }
+            )
+            viewModel.navigationState.subscribe(
+                scope: viewModel.viewModelScope,
+                onError: { _ in },
+                onNext: { navigationState in self.navigationState = navigationState }
             )
         }
     }

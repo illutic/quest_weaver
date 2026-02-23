@@ -14,13 +14,12 @@ kotlin {
             implementation(projects.feature.home.recents)
             implementation(projects.feature.home.resources)
             implementation(projects.feature.home.create)
+            implementation(projects.feature.ai.core)
+
 
             implementation(libs.compose.viewmodel)
             implementation(libs.compose.navigation3.ui)
-            implementation(projects.feature.bottombar)
-            implementation(projects.feature.ai.core)
-            implementation(projects.feature.search.core)
-            implementation(projects.feature.settings.core)
+            implementation(libs.compose.material.icons.extended)
         }
     }
 }

@@ -8,7 +8,7 @@ data class HomeState(
     val recentGames: ImmutableList<GameSession> = persistentListOf(),
     val resources: ImmutableList<Resource> = persistentListOf(),
     val selectedResource: Resource? = null,
-    val strings: HomeStrings = HomeStrings.Default
+    val strings: HomeStrings = HomeStrings.Default,
 ) {
     companion object {
         val Default = HomeState()

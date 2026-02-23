@@ -1,7 +1,6 @@
 package gr.questweaver.home
 
 import gr.questweaver.navigation.Route
-import gr.questweaver.navigation.SheetRoute
 import kotlinx.serialization.Serializable
 
 sealed interface HomeRoute : Route {
@@ -26,13 +25,13 @@ sealed interface HomeRoute : Route {
     }
 
     @Serializable
-    data class ResourceDetails(val resourceId: String, val title: String) : HomeRoute, SheetRoute {
+    data class ResourceDetails(val resourceId: String, val title: String) : HomeRoute {
         override val path: String = "resource_sheet/$resourceId?title=$title"
         override val id: String = resourceId
     }
 
     @Serializable
-    data object CreateGame : HomeRoute, SheetRoute {
+    data object CreateGame : HomeRoute {
         override val path: String = "create_game"
         override val id: String = "create_game"
     }

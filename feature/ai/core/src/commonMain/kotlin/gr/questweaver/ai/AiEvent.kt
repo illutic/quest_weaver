@@ -1,6 +1,7 @@
 package gr.questweaver.ai
 
 sealed interface AiEvent {
+    data object OnBackClick : AiEvent
     data class OnInputChanged(val text: String) : AiEvent
     data object OnSendClick : AiEvent
     data class OnQuickActionClick(val action: QuickAction) : AiEvent
